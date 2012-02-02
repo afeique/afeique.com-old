@@ -1,0 +1,310 @@
+/**
+ * 	
+ * HEADER
+ * 
+ */
+
+header {
+	margin-bottom: .5em;
+}
+
+header h1, header h2 {
+	margin: 0;
+	padding: 0;
+}
+
+header h1 {
+	letter-spacing: .1em;
+}
+
+header h2 {
+	letter-spacing: .1em;
+	font-style: italic;
+}
+
+/**
+ * 
+ * #MAIN-NAV
+ * usually in the header	
+ * 
+ */
+
+#main-nav ul {
+	text-align: right;
+}
+
+#main-nav ul li {
+	list-style: none;
+	display: inline-block;
+	margin: 1em .5em;
+	font-size: 1.5em;
+}
+
+a {
+	text-decoration: none;
+}
+
+/**
+ * 
+ * #MAIN-CONTENT	
+ * 
+ */
+
+#main-content {
+	font-size: 1.3em;
+}
+
+#main-content h1 {
+	font-size: 1.5em;
+}
+
+#main-content h2 {
+	font-size: 1.2em;
+}
+
+#main-content p {
+	margin: .5em 0;
+}
+
+/**
+ * 	
+ * #COMMANDER
+ * a.k.a. sub-nav
+ * 
+ */
+
+#commander, .post-commander {
+	padding: 0;
+	font-size: .7em;
+}
+
+#commander li, .post-commander li {
+	list-style-type: none;
+	display: inline-block;
+	margin: 0 .2em;
+	vertical-align: bottom;
+}
+
+#commander li {
+	position: relative;
+	bottom: .4em;
+}
+
+/**
+ * 	
+ * MAIN CONTENT
+ * 
+ */
+
+#main-content input, #main-content textarea {
+	margin-bottom: 0;
+}
+
+textarea {
+	font-size: .9em;
+	font-family: Helvetica, sans-serif;
+}
+
+/**
+ * 	
+ * POST ROW
+ * 
+ */
+
+
+/**
+ * 	EDIT BUTTONS
+ */
+.post-row .edit-title, .post-row .edit-tags, .post-row .delete-post {
+	font-size: .7em;
+	vertical-align: top;
+}
+
+.post-row .delete-post {
+	float: right;
+}
+
+
+/**
+ * 	TITLE (h2), TAGS (.post-tags, .tags-list), DESCRIPTION (.post-description), META (.post-meta)
+ */
+.post-row h2 {
+	display: inline-block;
+	margin: 0;
+	margin-right: .3em;
+}
+
+.post-row .post-tags {
+	margin: 0;
+	line-height: 2em;
+}
+
+.post-row .post-description {
+	margin-bottom: .5em;
+}
+
+.post-row .post-meta li {
+	list-style-type: square;
+	margin: 0 .1em;
+}
+
+.tags-list, .tags-list li {
+	list-style-type: none;
+	display: inline-block;
+	margin: 0;
+	padding: 0;
+	margin-left: .1em;
+}
+
+.tags-list li:after {
+	content: ", ";
+}
+
+.tags-list li.last:after {
+	content: "";
+}
+
+/**
+ * 	POST ROW AND POST TAGS EDITORS
+ */
+.post-row #post-title-input, .post-row #post-tags-input {
+	font-size: 1.2em;
+	width: 25em;
+}
+
+.post-row #post-tags-input {
+	font-size: 1em;
+}
+
+.post-row #post-title-commander, .post-row #post-tags-commander {
+	display: inline-block;
+	vertical-align: middle;
+	margin: 0;
+	padding: 0;
+	position: relative;
+	bottom: .2em;
+	list-style-type: none;
+	font-size: .7em;
+}
+
+.post-row #post-title-commander li, .post-row #post-tags-commander li {
+	display: inline-block;
+	margin-right: .1em;
+}
+
+.post-row #post-title-commander .chars-left, .post-row #post-tags-commander .chars-left {
+	font-size: 1.1em;
+	margin: 0 .5em;
+}
+
+/**
+ * POST ROW DESCRIPTION EDITOR	
+ */
+.post-row #post-description-textarea {
+	width: 90%;
+	height: 4em;
+	font-size: 1.1em;
+}
+
+.post-row #post-description-commander {
+	display: inline-block;
+	vertical-align: top;
+	position: relative;
+	top: .5em;
+	list-style-type: none;
+	font-size: .7em;
+}
+
+.post-row #post-description-commander li {
+	margin-bottom: .1em;
+}
+
+.post-row #post-description-commander .chars-left {
+	font-size: 1.1em;
+}
+
+/**
+ * 	
+ * SMALL FORM
+ * 
+ */
+
+.small-form label {
+	display: block;
+	font-size: 1.1em;
+	letter-spacing: .1em;
+	margin-top: .3em;
+}
+
+.small-form input[type="text"], .small-form input[type="password"] {
+	display: block;
+	width: 25em;
+}
+
+
+.small-form input[type="submit"] {
+	font-size: .9em;
+	margin-top: 1em;
+}
+
+
+.small-form textarea {
+	width: 23.2em;
+	height: 4em;
+}
+
+/**
+ * 	
+ * FOOTER
+ * 
+ */
+
+footer {
+	/*
+	background-color: #e7e7e7;
+	-moz-border-radius: 2em;
+	-webkit-border-radius: 2em;
+	border-radius: 2em;
+	*/
+	margin-top: 1em;
+	padding: .5em;
+	font-size: 1.2em;
+}
+
+/**
+ * 	
+ * INLINE ERROR STYLING
+ * 
+ */
+
+span.error {
+	padding: 0;
+	background-color: transparent;
+	border: none;
+}
+
+
+/**
+ * 	
+ * HELPFUL CLASSES
+ * 
+ */
+
+
+.text-left {
+	text-align: left;
+}
+
+.text-right {
+	text-align: right;
+}
+
+.text-center {
+	text-align: center;
+}
+
+.chars-left {
+	margin-left: .3em;
+	font-style: italic;
+	color: #aaa;
+}
