@@ -20,13 +20,13 @@ class admin_crafter extends template_crafter {
     foreach ($vars as $v) {
       $$v = isset($_POST[$v]) ? $_POST[$v] : '';
       if (!empty($_POST)) {
-        $errors[$v] = validate::string($$v)->trim()->not_empty()->max_length(250);
+        $$v = validate::string($$v)->trim()->not_empty()->spacify()->max_length(250);
         if ($v == 'directory') {
-          $unpub = BASE_PATH.UNPUBLISHED_POSTS_DIR;
-          $errors[$v]->trim_slashes()->is_dir($unpub)->is_file($unpub, '/content.php');
+          $unpub = BASE_PATH.UNPUBLISHED_POSTS_DIR.$directory.'/';
+          $errors[$v]->trim_slashes()->is_dir($unpub)->is_file($unpub,'content.php');
         }
         
-        $errors[$v] = $errors[$v]->go();
+        $errors[$v] = $$v->errors();
       } else
         $errors[$v] = '';
     }
@@ -48,16 +48,16 @@ class admin_crafter extends template_crafter {
           l('div')->_c('span-9 prepend-8 append-7 last')->__(
               h1($this->title),
               l('label')->_f('post-title')->__('title', l('span')->_c('chars-left')->__('250')),
-              ll('input')->_t('text')->_n('title')->_i('post-title')->_v($title),
+              ll('input')->_t('text')->_n('title')->_i('post-title')->_v(htmlentities($title)),
               $errors['title'],
               l('label')->_f('post-tags')->__('space-separated tags', l('span')->_c('chars-left')->__('250')),
-              ll('input')->_t('text')->_n('tags')->_i('post-tags')->_v($tags),
+              ll('input')->_t('text')->_n('tags')->_i('post-tags')->_v(htmlentities($tags)),
               $errors['tags'],
               l('label')->_f('post-description')->__('description', l('span')->_c('chars-left')->__('250')),
-              l('textarea')->_n('description')->_i('post-description')->__($description),
+              l('textarea')->_n('description')->_i('post-description')->__(htmlentities($description)),
               $errors['description'],
               l('label')->_f('post-directory')->__(trim_slashes(UNPUBLISHED_POSTS_DIR).' directory'),
-              ll('input')->_t('text')->_n('directory')->_i('post-directory')->_v($directory),
+              ll('input')->_t('text')->_n('directory')->_i('post-directory')->_v(htmlentities($directory)),
               $errors['directory']
           ),
           l('div')->_c('span-8 prepend-8 append-8 last text-center')->__(
@@ -103,14 +103,6 @@ class admin_crafter extends template_crafter {
     }
   }
   
-  protected function notification($notification, $header=null) {
-    return
-    l('div')->_c('span-12 prepend-6 append-6 last')->__(
-        isset($header) ? h1($header) : '',
-        $notification
-    );
-  }
-  
   protected function _login() {
     $this->title = 'login';
     $this->use_commander = 0;
@@ -123,7 +115,7 @@ class admin_crafter extends template_crafter {
       $errors[$v] = '';
       if (isset($_POST[$v])) {
         $$v = $_POST[$v];
-        $errors[$v] = validate::string($$v)->trim()->not_empty()->go();
+        $errors[$v] = validate::string($$v)->trim()->not_empty()->spacify()->go();
       } else
         $$v = '';
     }
@@ -144,7 +136,7 @@ class admin_crafter extends template_crafter {
       $this->content = $this->notification(
           p(
               'You have successfully logged in. This page will reconstruct in '.META_REFRESH_TIME.' seconds. ',
-              l_link('admin/index', 'Speed it up?')
+              l_link('admin/index','Speed it up?')
           ),
           'logged in'
       );
@@ -185,9 +177,105 @@ class admin_crafter extends template_crafter {
     $this->content = $this->notification(
         p(
             'You have successfully logged out. This page will self-destruct in '.META_REFRESH_TIME.' seconds. ',
-            l_link('admin/index', 'Explode now?')
+            l_link('admin/index','Explode now?')
         ),
         'logged out'
+    );
+  }
+  
+  protected function _update() {
+    $this->use_template = 0;
+    $this->content = '';
+  
+    $message = $this->updater_prechecks();
+    if (!empty($message)) {
+      $this->content = $this->json_error($message);
+      return;
+    }
+    
+    $field = $GLOBALS[EXTRA][1];
+    $id = (int)$GLOBALS[EXTRA][2];
+    $post = Post::find($id);
+    $new_value = validate::string($_POST[$field])->trim()->not_empty()->max_length(250);
+    
+    if ($field == 'directory') {
+      $prepend = rtrim($this->post_path('', $post->time_first_published),'/').'/';
+      $new_value->is_dir($prepend,'/')->is_file($prepend,'/content.php');
+    }
+    
+    $errors = $new_value->errors();
+    if (empty($errors)) {
+      $post->$field = $new_value;
+      $post->save();
+    } else {
+      //if (!DEBUG) { header('Status: 400 Bad Request'); header('HTTP/1.0 400 Bad Request'); }
+      $this->content = $this->json_error($errors);
+      return;
+    }
+  
+    $post = Post::find($id);
+    if ($post->$field != $new_value) {
+      if (!DEBUG) { header('Status: 500 Internal Server Error'); header('HTTP/1.0 500 Internal Server Error'); }
+      $this->content = $this->json_error('problem updating database');
+      return;
+    }
+  
+    $this->content = json_encode(array($field => $post->$field));
+  }
+  
+  protected function json_error($message) {
+    return json_encode(array('error' => $message));
+  }
+  
+  protected function updater_prechecks() {
+    /**
+     * most of these errors really only apply for debugging.
+     * a stable production build should never encounter them.
+     */
+    if (!isset($GLOBALS[EXTRA][1])) {
+      if (!DEBUG) { header('Status: 400 Bad Request'); header('HTTP/1.0 400 Bad Request'); }
+      return 'field to update not specified in url';
+    }
+    
+    $field = $GLOBALS[EXTRA][1];
+    $valid_fields = array('title','tags','description','directory');
+    if (!in_array($field, $valid_fields)) {
+      if (!DEBUG) { header('Status: 400 Bad Request'); header('HTTP/1.0 400 Bad Request'); }
+      return 'invalid field "'.$field.'" specified in url; valid fields are: '.implode(', ', $valid_fields);
+    }
+    
+    if (!isset($GLOBALS[EXTRA][2])) {
+      if (!DEBUG) { header('Status: 400 Bad Request'); header('HTTP/1.0 400 Bad Request'); }
+      return 'no post id specified in url';
+    }
+    
+    $id = (int)$GLOBALS[EXTRA][2];
+    if (empty($id)) {
+      if (!DEBUG) { header('Status: 400 Bad Request'); header('HTTP/1.0 400 Bad Request'); }
+      return 'invalid post id "'.$id.'" specified in url; require nonzero positive integer';
+    }
+    
+    try {
+      $post = Post::find($id);
+    } catch (Exception $e) {
+      unset($post);
+    }
+    if (empty($post)) {
+      if (!DEBUG) { header('Status: 404 Not Found'); header('HTTP/1.0 404 Not Found'); }
+      return 'post with specified id "'.$id.'" not found';
+    }
+    
+    if (!isset($_POST[$field])) {
+      if (!DEBUG) { header('Status: 400 Bad Request'); header('HTTP/1.0 400 Bad Request'); }
+      return 'no data given for '.$field.' update via POST';
+    }
+  }
+  
+  protected function notification($notification, $header=null) {
+    return
+    l('div')->_c('span-12 prepend-6 append-6 last')->__(
+        isset($header) ? h1($header) : '',
+        $notification
     );
   }
   

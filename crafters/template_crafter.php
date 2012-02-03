@@ -59,29 +59,16 @@ class template_crafter extends crafter {
       $this->db_connect();
   }
   
-  public function craft() {
-    $this->{$this->request}();
-    
-    if (!$this->use_template)
-      return "{$this->content}";
-    
-    header('Content-Type: text/html; charset=utf-8');
-    return "{$this->page_template()}";
+  protected function _index() {
   }
-  
-  public function request($page) {
-    return parent::request($page);
-  }
-
-  protected function _index() {}
   
   protected function _browse() {
     $this->title = 'browse';
-    
+  
     $pagination = $this->paginate('Post','admin/index/', $page, $total_pages, $offset);
     if ($total_pages <= 1)
       $pagination = '&nbsp;';
-    
+  
     $posts = Post::find('all', array('limit' => $this->ppp, 'offset' => $offset, 'order' => 'time_last_modified desc'));
     $posts_html = o();
     if (!empty($posts)) {
@@ -95,7 +82,7 @@ class template_crafter extends crafter {
           )
       );
     }
-    
+  
     $middot = ' &middot; ';
     $this->content = o()->__(
         p('Posts are displayed in descending order of date last modified.'),
@@ -103,13 +90,21 @@ class template_crafter extends crafter {
         l('div')->_c('span-8 prepend-8 append-8 last text-center')->__($pagination)
     );
   }
-
+  
   protected function _404() {
-    $this->title = '(404) page not found';
+    header('Status: 404 Not Found'); header('HTTP/1.0 404 Not Found');
+    $this->title = '404 Not Found';
+    $this->content = p('The requested page does not seem to exist. Check the URL or try again some other time.');
+  }
+  
+  public function craft() {
+    $this->{$this->request}();
     
-    header("Status: 404 Not Found");
+    if (!$this->use_template)
+      return "{$this->content}";
     
-    $this->content = l('div')->_c('span-24')->__(p('Page not found.'));
+    header('Content-Type: text/html; charset=utf-8');
+    return "{$this->page_template()}";
   }
 
   protected function page_template() {
@@ -191,7 +186,10 @@ class template_crafter extends crafter {
     $this->db_error = '';
     $db = new mysqli($mysql_host, $mysql_user, $mysql_pass, $mysql_db);
     if ($db->connect_error) {
-      $this->db_error = 'Problem connecting to database.';
+      if (!DEBUG)
+        $this->db_error = 'Problem connecting to database.';
+      else
+        $this->db_error = '('.$db->connect_errno.') '.$db->connect_error;
     } else {
       $db->close();
       
@@ -296,7 +294,9 @@ class template_crafter extends crafter {
     $delete_post = '';
     if ($this->logged_in()) {
       $path = l('li')->_c('post-path')->__(
-          strong('path:'),' ', $this->post_path($post->directory, $post->time_first_published)
+          strong('path:'),' ',
+          htmlentities(rtrim($this->post_path('', $post->time_first_published),'/').'/'),
+          l('span')->_c('post-directory')->__(htmlentities($post->directory))
       );
       $edit_title = a_link('javascript: void(0)', 'edit title')->_c('edit-title edit-button')->_('title','edit title');
       $edit_tags = a_link('javascript: void(0)', 'edit tags')->_c('edit-tags edit-button')->_('title','edit tags');
@@ -324,19 +324,19 @@ class template_crafter extends crafter {
     l('div')->_i('post-'.$post->id.'-row')->_c('span-24 post-row')->__(
         l('div')->_c('span-24 post-title')->__(
             h2(
-                l_link('view/'.$post->id, htmlentities($post->title))->_('target','_blank')->_('title','link to post')
+                l_link('view/'.$post->id, htmlentities($post->title))->_('title','link to post')->_('target','_blank')
             ),
             $delete_post,
             $edit_title
         ),
         l('div')->_c('span-24 post-tags')->__(
-            l('div')->_c('post-tags')->__(strong('tagged'),' ', $tags_html,' ', $edit_tags)
+            strong('tagged'),' ', $tags_html,' ', $edit_tags
         ),
         l('div')->_c('span-24 post-description')->__(
-            l('div')->_c('post-description')->__(htmlentities($post->description))
+            p(htmlentities($post->description))
         ),
-        l('div')->_c('span-24')->__(
-            l('ul')->_c('post-meta')->__(
+        l('div')->_c('span-24 post-meta')->__(
+            l('ul')->__(
                 $path,
                 li(strong('published:'),' ', date(POST_DATE_FORMAT, $post->time_first_published)),
                 $last_modified

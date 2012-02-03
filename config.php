@@ -21,6 +21,10 @@ define('PASSWORD','password');
 
 define('EXTRA', 'extra'); // extra queries
 
+// stages things to give more detailed information useful for debugging
+// (e.g. ajax calls, database connects, etc)
+define('DEBUG', 0);
+
 define('META_REFRESH_TIME', 3);
 define('POST_DATE_FORMAT', 'M j, Y @ H:i');
 

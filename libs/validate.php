@@ -111,6 +111,18 @@ class validate {
     return $this;
   }
   
+  public function spacify() {
+    if ($this->type == STRING_VALIDATOR)
+      $this->what = preg_replace('/\s{2,}/', ' ', $this->what);
+    elseif ($this->type == ARRAY_VALIDATOR) {
+      foreach ($this->what as $i => $thing) {
+        $this->what[$i] = preg_replace('/\s{2,}/', ' ', $thing);
+      }
+    }
+  
+    return $this;
+  }
+  
   public function is_file($prepend, $append) {
     if ($this->type == STRING_VALIDATOR) {
       if (!is_file($prepend.$this->what.$append))
@@ -150,12 +162,12 @@ class validate {
     return $this;
   }
   
-  public function go() {
+  public function errors() {
     return implode(', ', $this->errors);
   }
   
   public function __toString() {
-    return $this->go();
+    return $this->what;
   }
 }
 
