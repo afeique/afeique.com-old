@@ -17,18 +17,18 @@ class admin_crafter extends template_crafter {
     
     $vars = array('title','tags','description','directory');
     $title = $tags = $description = $directory = '';
-    foreach ($vars as $var) {
-      $$var = isset($_POST[$var]) ? $_POST[$var] : '';
+    foreach ($vars as $v) {
+      $$v = isset($_POST[$v]) ? $_POST[$v] : '';
       if (!empty($_POST)) {
-        $errors[$var] = validate::string($$var)->trim()->not_empty()->max_length(250);
-        if ($var == 'directory') {
+        $errors[$v] = validate::string($$v)->trim()->not_empty()->max_length(250);
+        if ($v == 'directory') {
           $unpub = BASE_PATH.UNPUBLISHED_POSTS_DIR;
-          $errors[$var]->trim_slashes()->is_dir($unpub)->is_file($unpub, '/content.php');
+          $errors[$v]->trim_slashes()->is_dir($unpub)->is_file($unpub, '/content.php');
         }
         
-        $errors[$var] = $errors[$var]->go();
+        $errors[$v] = $errors[$v]->go();
       } else
-        $errors[$var] = '';
+        $errors[$v] = '';
     }
     
     $error_check = implode('', $errors);
@@ -85,16 +85,16 @@ class admin_crafter extends template_crafter {
       
       $time = time();
       
-      $post_data = array(
+      $post = array(
           'title' => $title,
           'tags' => $tags,
           'description' => $description,
-          'path' => str_replace(BASE_PATH.PUBLISHED_POSTS_DIR, '', $pub.$directory.'/'),
+          'directory' => $directory,
           'time_first_published' => $time,
           'time_last_modified' => $time    
       );
       
-      Post::create($post_data);
+      Post::create($post);
       
       $this->content = $this->notification(
           p('The post has been successfully published. Feel free to close this window.'), 
@@ -117,17 +117,25 @@ class admin_crafter extends template_crafter {
     
     $u = USERNAME;
     $p = PASSWORD;
+    $vars = array($u, $p);
+    $errors = array();
+    foreach ($vars as $v) {
+      $errors[$v] = '';
+      if (isset($_POST[$v])) {
+        $$v = $_POST[$v];
+        $errors[$v] = validate::string($$v)->trim()->not_empty()->go();
+      } else
+        $$v = '';
+    }
     
-    $$u = isset($_POST[$u]) ? $_POST[$u] : '';
-    $$p = isset($_POST[$p]) ? $_POST[$p] : '';
-    
+    $db_error = '';
     if (isset($_POST[$u], $_POST[$p])) {
       $this->db_connect($$u, $$p);
-      
       if (empty($this->db_error)) {
         $_SESSION[USERNAME] = $$u;
         $_SESSION[PASSWORD] = $$p;
-      }
+      } else
+        $db_error = $this->block_error($this->db_error);
     }
     
     if ($this->logged_in()) {
@@ -140,12 +148,12 @@ class admin_crafter extends template_crafter {
           ),
           'logged in'
       );
-    
-      return 1;
+      
+      return;
     }
     
     $this->content = l('form')->_c('small-form')->_a('admin/login')->_m('post')->__(
-        $this->db_error,
+        $db_error,
         l('div')->_c('span-9 prepend-8 append-7 last')->_i('login')->__(
             h1('admin login'),
             l('label')->_f("$u-input")->__($u),

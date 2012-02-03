@@ -85,6 +85,7 @@ if (!isset($crafter)) {
 if (!empty($page))
   $crafter->request($page);
 
+//$crafter->craft();
 echo $crafter;
 
 //var_dump($_SERVER);

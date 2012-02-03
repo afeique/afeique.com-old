@@ -237,6 +237,7 @@ textarea {
 }
 
 .small-form input[type="text"], .small-form input[type="password"] {
+	font-size: 1em;
 	display: block;
 	width: 25em;
 }

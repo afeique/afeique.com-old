@@ -172,35 +172,26 @@ class template_crafter extends crafter {
     );
   }
   
-  protected function db_connect($admin_username=null, $admin_password=null) {
+  protected function db_connect($admin_user=null, $admin_pass=null) {
     require BASE_PATH.'../mysql_credentials.php';
     
-    if (isset($admin_username, $admin_password)) {
-      if (!is_string($admin_username))
+    if (isset($admin_user, $admin_pass)) {
+      if (!is_string($admin_user))
         throw error::expecting_string();
-      if (!is_string($admin_password))
+      if (!is_string($admin_pass))
         throw error::expecting_string();
       
-      $GLOBALS['db_user'] = $admin_username;
-      $GLOBALS['db_pass'] = $admin_password;
+      $mysql_user = $admin_user;
+      $mysql_pass = $admin_pass;
     } else {
-      $GLOBALS['db_user'] = $GLOBALS['mysql_public_user'];
-      $GLOBALS['db_pass'] = $GLOBALS['mysql_public_pass'];
+      $mysql_user = $mysql_public_user;
+      $mysql_pass = $mysql_public_pass;
     }
     
-    $GLOBALS['db_host'] = $GLOBALS['mysql_host'];
-    $GLOBALS['db_name'] = $GLOBALS['mysql_blog_db'];
-    
     $this->db_error = '';
-    if ( empty($GLOBALS['db_user']) || empty($GLOBALS['db_pass']) )
-      $this->db_error = 'Must enter both username and password.';
-
-    $db = @new mysqli($GLOBALS['db_host'], $GLOBALS['db_user'], $GLOBALS['db_pass'], $GLOBALS['db_name']);
-    if (!empty($this->db_error) || $db->connect_error) {
-      if (empty($this->db_error))
-        $this->db_error = 'Incorrect username or password.';
-      
-      $this->db_error = $this->block_error($this->db_error);
+    $db = new mysqli($mysql_host, $mysql_user, $mysql_pass, $mysql_db);
+    if ($db->connect_error) {
+      $this->db_error = 'Problem connecting to database.';
     } else {
       $db->close();
       
@@ -209,23 +200,19 @@ class template_crafter extends crafter {
         $_SESSION[PASSWORD] = $admin_pass;
       }
       
+      $GLOBALS['mysql'] = array($mysql_user, $mysql_pass, $mysql_host, $mysql_db);
       ActiveRecord\Config::initialize(function($config) {
+        foreach (array('user','pass','host','db') as $i => $v)
+          ${'mysql_'.$v} = $GLOBALS['mysql'][$i];
+        
         $config->set_model_directory(BASE_PATH.'models');
         $config->set_connections(array(
-            'public' => "mysql://{$GLOBALS['db_user']}:{$GLOBALS['db_pass']}@{$GLOBALS['db_host']}/{$GLOBALS['db_name']};charset=utf8"
+            'auto' => "mysql://$mysql_user:$mysql_pass@$mysql_host/$mysql_db;charset=utf8",
         ));
-        $config->set_default_connection('public');
+        $config->set_default_connection('auto');
       });
-      
-      $vars = array('db_user', 'db_pass', 'db_host', 'db_name');
-      foreach ($vars as $var) {
-        unset($GLOBALS[$var]);
-      }
+      unset($GLOBALS['mysql']);
     }
-    
-    // closure below created in mysql_credentials file
-    $mysql_cleanup();
-    unset($mysql_cleanup);
   }
   
   protected function block_error($message) {
@@ -245,8 +232,8 @@ class template_crafter extends crafter {
     $total_pages = (int)ceil($total / $this->ppp);
     
     $offset = 0;
-    if (isset($GLOBALS[EQS]['page']))
-      $page = (int)$GLOBALS[EQS]['page'];
+    if (isset($GLOBALS[EXTRA]['page']))
+      $page = (int)$GLOBALS[EXTRA]['page'];
     if (empty($page))
       $page = 1;
     
@@ -308,7 +295,9 @@ class template_crafter extends crafter {
     $edit_tags = '';
     $delete_post = '';
     if ($this->logged_in()) {
-      $path = li(strong('path:'),' ', PUBLISHED_POSTS_DIR.$post->path)->_c('post-path');
+      $path = l('li')->_c('post-path')->__(
+          strong('path:'),' ', $this->post_path($post->directory, $post->time_first_published)
+      );
       $edit_title = a_link('javascript: void(0)', 'edit title')->_c('edit-title edit-button')->_('title','edit title');
       $edit_tags = a_link('javascript: void(0)', 'edit tags')->_c('edit-tags edit-button')->_('title','edit tags');
       $delete_post = l('div')->_c('delete-post')->__(
@@ -332,7 +321,7 @@ class template_crafter extends crafter {
     }
     
     return
-    l('div')->_i('post-'.$post->id.'-row')->_c("span-24 post-row")->__(
+    l('div')->_i('post-'.$post->id.'-row')->_c('span-24 post-row')->__(
         l('div')->_c('span-24 post-title')->__(
             h2(
                 l_link('view/'.$post->id, htmlentities($post->title))->_('target','_blank')->_('title','link to post')
@@ -354,6 +343,11 @@ class template_crafter extends crafter {
             )
         )
     );
+  }
+  
+  protected function post_path($directory, $time_first_published) {
+    $t = $time_first_published;
+    return PUBLISHED_POSTS_DIR.date('Y', $t).'/'.date('n', $t).'/'.date('j', $t).'/'.$directory.'/';
   }
   
   protected function logged_in() {

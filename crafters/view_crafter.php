@@ -15,7 +15,7 @@ class view_crafter extends template_crafter {
     $this->title = $this->post->title;
     
     ob_start();
-    require PUBLISHED_POSTS_PATH.$this->post->path.'content.php';
+    require $this->post_path($this->post->directory, $this->post->time_first_published).'content.php';
     $this->content = ob_get_clean();
     
     $this->use_template = (isset($no_template) ? 0 : 1);
