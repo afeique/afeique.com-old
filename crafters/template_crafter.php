@@ -67,13 +67,9 @@ class template_crafter extends crafter {
   }
   
   protected function _browse() {
-    $this->title = 'browse';
+    $this->title = 'browse';``
   
-    $pagination = $this->paginate('Post','admin/index/', $page, $total_pages, $offset);
-    if ($total_pages <= 1)
-      $pagination = '&nbsp;';
-  
-    $posts = Post::find('all', array('limit' => $this->ppp, 'offset' => $offset, 'order' => 'time_last_modified desc'));
+    $posts = Post::find('all');
     $posts_html = o();
     if (!empty($posts)) {
       foreach ($posts as $post) {
@@ -90,8 +86,7 @@ class template_crafter extends crafter {
     $middot = ' &middot; ';
     $this->content = o()->__(
         p('Posts are displayed in descending order of date last modified.'),
-        $posts_html,
-        l('div')->_c('span-8 prepend-8 append-8 last text-center')->__($pagination)
+        $posts_html
     );
   }
   
@@ -235,42 +230,6 @@ class template_crafter extends crafter {
   protected function inline_error($message) {
     return
     l('span')->_c('error')->__($message);
-  }
-  
-  protected function paginate($class, $rel_url, &$page, &$total_pages, &$offset) {
-    $total = (int)($class::count());
-    $total_pages = (int)ceil($total / $this->ppp);
-    
-    $offset = 0;
-    if (isset($GLOBALS[EXTRA]['page']))
-      $page = (int)$GLOBALS[EXTRA]['page'];
-    if (empty($page))
-      $page = 1;
-    
-    $page_buttons = o();
-    $e = 2; // epsilon
-    if ($total_pages > 1) {
-      if (!empty($page) && $page > 1)
-        $offset = $page * $this->ppp;
-      
-      $ellipses = 0;
-      for ($i=1; $i<=$total_pages; $i++) {
-        if ($i == 1 || $i == $total_pages || $i >= $page-$e || $i <= $page+$e) {
-          if ($i != $page)
-            $page_link = a_link(BASE_URL.$rel_url.'page/'.$i, $i);
-          else
-            $page_link = $i;
-          $page_buttons->__(l('li')->_c('page-button')->__($page_link));
-        } else {
-          if (($page-$e) > 1 && $i > 1 && $i < ($page-$e)) {
-            $page_buttons->__(li('…'));
-          } elseif (($page+$e) < $total_pages && $i > ($pages+$e) && $i < $total_pages) {
-            $page_buttons->__(li('…'));
-          }
-        }
-      }
-    }
-    return l('ul')->_i('pagination')->__($page_buttons);
   }
   
   protected function load_model($model) {
