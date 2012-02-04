@@ -28,6 +28,7 @@ class template_crafter extends crafter {
   protected $use_heading;
   
   // whether or not a post can override page heading
+  // also used by the commander to detect whether a page _has_ overridden the heading
   protected $post_can_override_heading;
   
   // enables anti-robot sentries
@@ -102,7 +103,7 @@ class template_crafter extends crafter {
   }
   
   protected function _404() {
-    heading('Status: 404 Not Found'); heading('HTTP/1.0 404 Not Found');
+    header('Status: 404 Not Found'); header('HTTP/1.0 404 Not Found');
     $this->title = '404 Not Found';
     $this->content = p('The requested page does not seem to exist. Check the URL or try again some other time.');
   }
@@ -254,14 +255,35 @@ class template_crafter extends crafter {
   }
   
   protected function commander() {
-    
-    // if commander is called without a post heading set, use the page title for the heading
+    // if commander is called without a heading set, use the page title for the heading
     if (empty($this->heading))
       $this->heading = $this->title;
     
+    // if a post can no longer override the heading,
+    // the header has already been overridden
+    $post_title = '';
+    $heading_id = '';
+    $heading_commanders = '';
+    if (!$this->post_can_override_heading) {
+      $post_title = ' post-title';
+      $this->post_commanders($edit_title, $edit_tags, $delete_post);
+      $heading_commanders = o()->__($edit_title, $delete_post);
+      
+      // parse post id from heading
+      $heading = "{$this->heading}";
+      preg_match('/href="([^"]+)"/', $heading, $match);
+      $href = $match[1];
+      preg_match('/(\d+)$/', $href, $match);
+      $post_id = (int)$match[1];
+      $heading_id = 'post-'.$post_id.'-title';
+    }
+    
     return !$this->use_commander ? '' :
-    l('div')->_c('span-24')->__(
-        h1(($this->use_heading ? $this->heading : '&nbsp;'))->_c('span-16'),
+    l('div')->_c('span-24'.$post_title)->__(
+        l('div')->_i($heading_id)->_c('span-16'.$post_title)->__(
+            h1(($this->use_heading ? $this->heading : '&nbsp;'))->_c($post_title),
+            $heading_commanders
+        ),
         l('nav')->_i('commander')->_c('span-8 last text-right')->__($this->commands())
     );
   }
@@ -277,30 +299,37 @@ class template_crafter extends crafter {
     }
   }
   
-  protected function post_row(Post $post) {
-    $path = '';
+  protected function post_commanders(&$edit_title, &$edit_tags, &$delete_post) {
     $edit_title = '';
     $edit_tags = '';
     $delete_post = '';
     if ($this->logged_in()) {
-      $path = l('li')->_c('post-path')->__(
-          strong('path:'),' ',
-          htmlentities(rtrim($this->post_path('', $post->time_first_published),'/').'/'),
-          l('span')->_c('post-directory')->__(htmlentities($post->directory))
-      );
       $edit_title = a_link('javascript: void(0)', 'edit title')->_c('edit-title edit-button')->_('title','edit title');
       $edit_tags = a_link('javascript: void(0)', 'edit tags')->_c('edit-tags edit-button')->_('title','edit tags');
       /*
-      $delete_post = l('div')->_c('delete-post')->__(
-          a_link('javascript: void(0)', 'delete post')->_c('x-button')->_('title','delete post')
-      );
+       $delete_post = l('div')->_c('delete-post')->__(
+           a_link('javascript: void(0)', 'delete post')->_c('x-button')->_('title','delete post')
+       );
       */
     }
+  }
   
+  protected function post_template(Post $post, $heading, $content) {
+    $this->post_commanders($edit_title, $edit_tags, $delete_post);
+    
+    $path = '';
+    if ($this->logged_in()) {
+      $path = l('li')->_c('post-path')->__(
+          strong('path:'),' ',
+          htmlentities(rtrim($this->post_path('', $post->time_first_published),'/').'/'),
+          l('span')->_i('post-'.$post->id.'-directory')->_c('post-directory')->__(htmlentities($post->directory))
+      );
+    }
+    
     $last_modified = '';
     if ($post->time_first_published != $post->time_last_modified)
       $last_modified = li(strong('last modified:'),' ', date(POST_DATE_FORMAT, $post->time_last_modified))->_c('post-last-modified');
-    
+  
     $tags_html = l('ul')->_c('tags-list');
     $tags = explode(' ', $post->tags);
     $num_tags = count($tags);
@@ -312,22 +341,18 @@ class template_crafter extends crafter {
       $li->__(htmlentities($tags[$i]));
       $tags_html->__($li);
     }
-    
+  
     return
     l('div')->_i('post-'.$post->id.'-row')->_c('span-24 post-row')->__(
-        l('div')->_c('span-24 post-title')->__(
-            h2(
-                l_link('view/'.$post->id, htmlentities($post->title))->_('title','link to post')->_('target','_blank')
-            ),
+        l('div')->_i('post-'.$post->id.'-title')->_c('span-24 post-title')->__(
+            $heading,
             $delete_post,
             $edit_title
         ),
-        l('div')->_c('span-24 post-tags')->__(
+        l('div')->_i('post-'.$post->id.'-tags')->_c('span-24 post-tags')->__(
             strong('tagged'),' ', $tags_html,' ', $edit_tags
         ),
-        l('div')->_c('span-24 post-description')->__(
-            p(htmlentities($post->description))
-        ),
+        $content,
         l('div')->_c('span-24 post-meta')->__(
             l('ul')->__(
                 $path,
@@ -338,78 +363,41 @@ class template_crafter extends crafter {
     );
   }
   
+  protected function post_row(Post $post) {
+    $heading = 
+    l('h2')->_c('post-title')->__(
+        l_link('view/'.$post->id, htmlentities($post->title))->_('title','link to post')->_('target','_blank')
+    );
+    $content = 
+    l('div')->_i('post-'.$post->id.'-description')->_c('span-24 post-description')->__(
+        p(htmlentities($post->description))
+    );
+    
+    return $this->post_template($post, $heading, $content);
+  }
+  
   protected function view_posts(array $posts) {
     $posts_html = o();
     foreach ($posts as $post) {
-      $path = '';
-      $edit_title = '';
-      $edit_tags = '';
-      $delete_post = '';
-      if ($this->logged_in()) {
-        $path = l('li')->_c('post-path')->__(
-            strong('path:'),' ',
-            htmlentities(rtrim($this->post_path('', $post->time_first_published),'/').'/'),
-            l('span')->_c('post-directory')->__(htmlentities($post->directory))
-        );
-        $edit_title = a_link('javascript: void(0)', 'edit title')->_c('edit-title edit-button')->_('title','edit title');
-        $edit_tags = a_link('javascript: void(0)', 'edit tags')->_c('edit-tags edit-button')->_('title','edit tags');
-        /*
-         $delete_post = l('div')->_c('delete-post')->__(
-             a_link('javascript: void(0)', 'delete post')->_c('x-button')->_('title','delete post')
-         );
-        */
-      }
-    
-      $last_modified = '';
-      if ($post->time_first_published != $post->time_last_modified)
-        $last_modified = li(strong('last modified:'),' ', date(POST_DATE_FORMAT, $post->time_last_modified))->_c('post-last-modified');
-    
-      $tags_html = l('ul')->_c('tags-list');
-      $tags = explode(' ', $post->tags);
-      $num_tags = count($tags);
-      for ($i=0; $i<$num_tags; $i++) {
-        $li = l('li');
-        if ($i == $num_tags-1)
-          $li->_c('last');
-        $li->__( l_link('tag-search/'.urlencode($tags[$i]), htmlentities($tags[$i])) );
-        $tags_html->__($li);
-      }
-    
       $content = $this->get_post_content($post);
       
       if (!$this->post_can_override_heading) {
         $heading = 
-        l('div')->_c('span-24 post-title')->__(
-            h1(
-                l_link('view/'.$post->id, htmlentities($post->title))->_('title','link to post')->_('target','_blank')
-            ),
-            $delete_post,
-            $edit_title
+        l('h1')->_c('post-title')->__(
+            l_link('view/'.$post->id, htmlentities($post->title))->_('title','link to post')->_('target','_blank')
         );
       } else {
         $heading = '';
         $this->heading = l_link('view/'.$post->id, htmlentities($post->title))->_('title','link to post')->_('target','_blank');
         $this->post_can_override_heading = 0;
       }
-    
-      $posts_html->__(
-          l('div')->_i('post-'.$post->id.'-row')->_c('span-24 post-row')->__(
-              $heading,
-              l('div')->_c('span-24 post-tags')->__(
-                  strong('tagged'),' ', $tags_html,' ', $edit_tags
-              ),
-              l('div')->_c('span-24 post-content')->__(
-                  $content
-              ),
-              l('div')->_c('span-24 post-meta')->__(
-                  l('ul')->__(
-                      $path,
-                      li(strong('published:'),' ', date(POST_DATE_FORMAT, $post->time_first_published)),
-                      $last_modified
-                  )
-              )
-          )
+      
+      $content =
+      l('div')->_c('span-24 post-content')->__(
+          $content
       );
+    
+      $posts_html->__($this->post_template($post, $heading, $content));
     }
     
     return $posts_html;

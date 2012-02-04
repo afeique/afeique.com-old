@@ -80,11 +80,11 @@ $(function() {
   /**
    * POST ROW TITLE EDITOR
    */
-  $('div.post-row div.post-title a.edit-title').click(function() {
+  $('div.post-title a.edit-title').click(function() {
     var abel = $(this).parent();
-    var old_title = abel.children('h2').text();
+    var old_title = abel.children('.post-title').text();
     var original_title_html = abel.contents().clone(true);
-    var post_id = abel.parent().attr('id').replace(/[a-z\-]/g,'');
+    var post_id = abel.attr('id').replace(/[a-z\-]/g,'');;
     
     var editor = $(document.createElement('input'))
     .attr('type','text')
@@ -191,7 +191,7 @@ $(function() {
     old_tags = old_tags.replace(/^\s+/,'');
     
     var original_tags_html = abel.contents().clone(true);
-    var post_id = abel.parent().attr('id').replace(/[a-z\-]/g,'');
+    var post_id = abel.attr('id').replace(/[a-z\-]/g,'');
     
     var editor = $(document.createElement('input'))
     .attr('type','text')
@@ -311,7 +311,7 @@ $(function() {
     var abel = $(this).parent();
     var old_description = $(this).text();
     var original_description_html = abel.contents().clone(true);
-    var post_id = abel.parent().attr('id').replace(/[a-z\-]/g,'');
+    var post_id = abel.attr('id').replace(/[a-z\-]/g,'');
     
     var editor = $(document.createElement('textarea'))
     .attr('class','post-description-textarea')
@@ -413,7 +413,7 @@ $(function() {
     var abel = $(this).parent();
     var old_directory = $(this).text();
     var original_directory_html = abel.contents().clone(true);
-    var post_id = abel.parent().parent().parent().attr('id').replace(/[a-z\-]/g,'');
+    var post_id = $(this).attr('id').replace(/[a-z\-]/g,'');
     
     var editor = $(document.createElement('input'))
     .attr('type','text')

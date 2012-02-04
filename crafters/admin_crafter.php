@@ -46,7 +46,7 @@ class admin_crafter extends template_crafter {
       }
       $this->content = l('form')->_i('publish-post-form')->_c('small-form')->_a('admin/publish')->_m('post')->__(
           $block_error,
-          l('div')->_c('span-9 prepend-8 append-7 last')->__(
+          l('div')->_c('span-9 prepend-7 append-8 last')->__(
               h1($this->title),
               l('div')->_c('span-24')->__(
                   l('label')->_f('post-title')->__('title', l('span')->_c('chars-left')->__('250')),
@@ -124,8 +124,9 @@ class admin_crafter extends template_crafter {
     foreach ($vars as $v) {
       $errors[$v] = '';
       if (isset($_POST[$v])) {
-        $$v = $_POST[$v];
-        $errors[$v] = validate::string($$v)->trim()->not_empty()->spacify()->go();
+        $$v = validate::string($_POST[$v])->trim()->not_empty()->spacify();
+        $errors[$v] = $$v->errors();
+        $$v = "{$$v}";
       } else
         $$v = '';
     }
@@ -156,7 +157,7 @@ class admin_crafter extends template_crafter {
     
     $this->content = l('form')->_c('small-form')->_a('admin/login')->_m('post')->__(
         $db_error,
-        l('div')->_c('span-9 prepend-8 append-7 last')->_i('login')->__(
+        l('div')->_c('span-9 prepend-7 append-8 last')->_i('login')->__(
             h1('admin login'),
             l('label')->_f("$u-input")->__($u),
             l('div')->_c('text-center')->__(

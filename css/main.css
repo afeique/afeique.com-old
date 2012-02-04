@@ -115,12 +115,12 @@ textarea {
 /**
  * 	EDIT BUTTONS
  */
-.post-row .edit-title, .post-row .edit-tags, .post-row .delete-post {
+.edit-title, .edit-tags, .delete-post {
 	font-size: .7em;
 	vertical-align: top;
 }
 
-.post-row .delete-post {
+.delete-post {
 	float: right;
 }
 
@@ -128,21 +128,21 @@ textarea {
 /**
  * 	TITLE (h2), TAGS (.post-tags, .tags-list), DESCRIPTION (.post-description), META (.post-meta)
  */
-.post-row h2 {
+.post-title h1, .post-title h2 {
 	display: inline-block;
 	margin: 0;
 	margin-right: .3em;
 	line-height: 2em;
 }
 
-.post-row .post-tags {
+.post-tags {
 	margin: 0;
 }
 
-.post-row .post-description {
+.post-description {
 }
 
-.post-row .post-meta li {
+.post-meta li {
 	list-style-type: square;
 	margin: 0 .1em;
 }
@@ -168,19 +168,19 @@ textarea {
 /**
  * 	POST ROW EDITOR INPUTS
  */
-.post-row .post-title-input, 
-.post-row .post-tags-input,
-.post-row .post-directory-input {
+.post-title-input, 
+.post-tags-input,
+.post-directory-input {
 	font-size: 1.2em;
 	width: 25em;
 }
 
-.post-row .post-tags-input,
-.post-row .post-directory-input {
+.post-tags-input,
+.post-directory-input {
 	font-size: 1em;
 }
 
-.post-row .post-description-textarea {
+.post-description-textarea {
 	width: 30em;
 	height: 6em;
 	font-size: 1.1em;
@@ -190,9 +190,9 @@ textarea {
  * 	POST ROW EDITOR COMMANDERS
  */
 
-.post-row .post-title-commander, 
-.post-row .post-tags-commander,
-.post-row .post-directory-commander {
+.post-title-commander, 
+.post-tags-commander,
+.post-directory-commander {
 	display: inline-block;
 	height: 1.5em;
 	vertical-align: middle;
@@ -204,7 +204,7 @@ textarea {
 	font-size: .7em;
 }
 
-.post-row .post-description-commander {
+.post-description-commander {
 	display: inline-block;
 	vertical-align: top;
 	position: relative;
@@ -214,45 +214,45 @@ textarea {
 }
 
 /**
- * 	POST ROW EDITOR LI
+ * 	POST COMMANDER LI
  */
-.post-row .post-title-commander li, 
-.post-row .post-tags-commander li,
-.post-row .post-directory-commander li {
+.post-title-commander li, 
+.post-tags-commander li,
+.post-directory-commander li {
 	display: inline-block;
 	margin-right: .1em;
 }
 
-.post-row .post-description-commander li {
+.post-description-commander li {
 	margin-bottom: .1em;
 }
 
 /**
  * 	POST ROW EDITOR CHARS LEFT
  */
-.post-row .post-title-commander .chars-left, 
-.post-row .post-tags-commander .chars-left, 
-.post-row .post-directory-commander .chars-left {
+.post-title-commander .chars-left, 
+.post-tags-commander .chars-left, 
+.post-directory-commander .chars-left {
 	font-size: 1.1em;
 	margin: 0 .5em;
 }
 
-.post-row .post-description-commander .chars-left {
+.post-description-commander .chars-left {
 	font-size: 1.1em;
 }
 
 /**
  * 	POST ROW EDITOR SPINNERS
  */
-.post-row .post-title-spinner,
-.post-row .post-tags-spinner,
-.post-row .post-directory-spinner {
+.post-title-spinner,
+.post-tags-spinner,
+.post-directory-spinner {
 	float: right;
 	position: relative;
 	left: .5em;
 }
 
-.post-row .post-description-spinner {
+.post-description-spinner {
 	position: relative;
 	left: .2em;
 	top: .3em;
