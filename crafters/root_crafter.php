@@ -5,7 +5,8 @@ class root_crafter extends template_crafter {
     $this->title = 'home';
     try {
       $r = Post::find('all', array('limit' => 1, 'order' => 'id desc'));
-      $post = $r[0];
+      if (!empty($r))
+        $post = $r[0];
     } catch (Exception $e) {
       unset($post);
     }
