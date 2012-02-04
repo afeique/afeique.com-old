@@ -120,6 +120,11 @@ textarea {
 	vertical-align: top;
 }
 
+.edit-title {
+	position: relative;
+	top: .5em;
+}
+
 .delete-post {
 	float: right;
 }
