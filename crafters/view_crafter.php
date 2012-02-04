@@ -18,7 +18,7 @@ class view_crafter extends template_crafter {
     $this->content = ob_get_clean();
     
     $this->use_template = (isset($no_template) ? 0 : 1);
-    $this->use_header = (isset($no_header) ? 0 : 1);
+    $this->alt_header = (isset($header) ? $header : '');
     
     if (isset($styles)) {
       if (!is_array($styles))
@@ -69,6 +69,7 @@ class view_crafter extends template_crafter {
       return;
     }
     
+    $path = $this->post_path($this->post->directory, $this->post->time_first_published);
     if (!is_file($path.'content.php')) {
       $this->_404();
       return;

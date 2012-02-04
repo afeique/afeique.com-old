@@ -20,6 +20,9 @@ class template_crafter extends crafter {
   // whether or not to use the commander header
   protected $use_header;
   
+  // alternate header
+  protected $alt_header;
+  
   // enables anti-robot sentries
   protected $no_robots;
   
@@ -43,6 +46,7 @@ class template_crafter extends crafter {
     $this->use_template = 1;
     $this->use_commander = 1;
     $this->use_header = 1;
+    $this->alt_header = '';
     $this->no_robots = 0;
     
     $this->db_error = '';
@@ -117,8 +121,13 @@ class template_crafter extends crafter {
       array_unshift($this->scripts, 'admin.js');
     array_unshift($this->scripts, 'jquery-1.7.1.min.js', 'jquery-ui-1.8.17.min.js', 'buttons.js');
     
+    /*
     foreach ($this->scripts as $i => $script) {
       $this->scripts[$i] = '"'.$script.'"';
+    }
+    */
+    foreach ($this->scripts as $i => $script) {
+      $this->scripts[$i] = script_src($script);
     }
     
     $this->meta_redirect = trim_slashes($this->meta_redirect);
@@ -132,6 +141,8 @@ class template_crafter extends crafter {
                 ($this->no_robots ? ll('meta')->_n('robots')->_('content','noindex, noarchive, nofollow') : ''),
                 (!empty($this->meta_redirect) ? ll('meta')->_('http-equiv','refresh')->_('content', META_REFRESH_TIME.'; '.BASE_URL.$this->meta_redirect) : ''),
                 title($this->title.' @ afeique.com'),
+                implode('', $this->scripts)
+                /*
                 l('script')->_t('text/javascript')->__('
                     // Add a script element as a child of the body
                     function deferred_js() {
@@ -151,6 +162,7 @@ class template_crafter extends crafter {
                     else 
                       window.onload = deferred_js;
                 ')
+                */
             ),
 
             body(
@@ -271,7 +283,7 @@ class template_crafter extends crafter {
   protected function commander() {
     return !$this->use_commander ? '' :
     l('div')->_c('span-24')->__(
-        h1(($this->use_header ? $this->title : '&nbsp;'))->_c('span-16'),
+        h1(($this->use_header ? (empty($this->alt_header) ? $this->title : $this->alt_header) : '&nbsp;'))->_c('span-16'),
         l('nav')->_i('commander')->_c('span-8 last text-right')->__($this->commands())
     );
   }

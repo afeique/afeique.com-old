@@ -168,19 +168,19 @@ textarea {
 /**
  * 	POST ROW EDITOR INPUTS
  */
-.post-row #post-title-input, 
-.post-row #post-tags-input,
-.post-row #post-directory-input {
+.post-row .post-title-input, 
+.post-row .post-tags-input,
+.post-row .post-directory-input {
 	font-size: 1.2em;
 	width: 25em;
 }
 
-.post-row #post-tags-input,
-.post-row #post-directory-input {
+.post-row .post-tags-input,
+.post-row .post-directory-input {
 	font-size: 1em;
 }
 
-.post-row #post-description-textarea {
+.post-row .post-description-textarea {
 	width: 30em;
 	height: 6em;
 	font-size: 1.1em;
@@ -190,9 +190,9 @@ textarea {
  * 	POST ROW EDITOR COMMANDERS
  */
 
-.post-row #post-title-commander, 
-.post-row #post-tags-commander,
-.post-row #post-directory-commander {
+.post-row .post-title-commander, 
+.post-row .post-tags-commander,
+.post-row .post-directory-commander {
 	display: inline-block;
 	height: 1.5em;
 	vertical-align: middle;
@@ -204,7 +204,7 @@ textarea {
 	font-size: .7em;
 }
 
-.post-row #post-description-commander {
+.post-row .post-description-commander {
 	display: inline-block;
 	vertical-align: top;
 	position: relative;
@@ -216,43 +216,43 @@ textarea {
 /**
  * 	POST ROW EDITOR LI
  */
-.post-row #post-title-commander li, 
-.post-row #post-tags-commander li,
-.post-row #post-directory-commander li {
+.post-row .post-title-commander li, 
+.post-row .post-tags-commander li,
+.post-row .post-directory-commander li {
 	display: inline-block;
 	margin-right: .1em;
 }
 
-.post-row #post-description-commander li {
+.post-row .post-description-commander li {
 	margin-bottom: .1em;
 }
 
 /**
  * 	POST ROW EDITOR CHARS LEFT
  */
-.post-row #post-title-commander .chars-left, 
-.post-row #post-tags-commander .chars-left, 
-.post-row #post-directory-commander .chars-left {
+.post-row .post-title-commander .chars-left, 
+.post-row .post-tags-commander .chars-left, 
+.post-row .post-directory-commander .chars-left {
 	font-size: 1.1em;
 	margin: 0 .5em;
 }
 
-.post-row #post-description-commander .chars-left {
+.post-row .post-description-commander .chars-left {
 	font-size: 1.1em;
 }
 
 /**
  * 	POST ROW EDITOR SPINNERS
  */
-.post-row #post-title-spinner,
-.post-row #post-tags-spinner,
-.post-row #post-directory-spinner {
+.post-row .post-title-spinner,
+.post-row .post-tags-spinner,
+.post-row .post-directory-spinner {
 	float: right;
 	position: relative;
 	left: .5em;
 }
 
-.post-row #post-description-spinner {
+.post-row .post-description-spinner {
 	position: relative;
 	left: .2em;
 	top: .3em;
@@ -285,7 +285,7 @@ textarea {
 
 
 .small-form textarea {
-	width: 23.2em;
+	width: 27em;
 	height: 4em;
 }
 

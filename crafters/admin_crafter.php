@@ -21,9 +21,10 @@ class admin_crafter extends template_crafter {
       $$v = isset($_POST[$v]) ? $_POST[$v] : '';
       if (!empty($_POST)) {
         $$v = validate::string($$v)->trim()->not_empty()->spacify()->max_length(250);
+        
         if ($v == 'directory') {
-          $unpub = BASE_PATH.UNPUBLISHED_POSTS_DIR.$directory.'/';
-          $errors[$v]->trim_slashes()->is_dir($unpub)->is_file($unpub,'content.php');
+          $unpub = UNPUBLISHED_POSTS_PATH;
+          $errors[$v] = $directory->trim_slashes()->is_dir($unpub)->is_file($unpub,'/content.php');
         }
         
         $errors[$v] = $$v->errors();
@@ -47,26 +48,35 @@ class admin_crafter extends template_crafter {
           $block_error,
           l('div')->_c('span-9 prepend-8 append-7 last')->__(
               h1($this->title),
-              l('label')->_f('post-title')->__('title', l('span')->_c('chars-left')->__('250')),
-              ll('input')->_t('text')->_n('title')->_i('post-title')->_v(htmlentities($title)),
-              $errors['title'],
-              l('label')->_f('post-tags')->__('space-separated tags', l('span')->_c('chars-left')->__('250')),
-              ll('input')->_t('text')->_n('tags')->_i('post-tags')->_v(htmlentities($tags)),
-              $errors['tags'],
-              l('label')->_f('post-description')->__('description', l('span')->_c('chars-left')->__('250')),
-              l('textarea')->_n('description')->_i('post-description')->__(htmlentities($description)),
-              $errors['description'],
-              l('label')->_f('post-directory')->__(trim_slashes(UNPUBLISHED_POSTS_DIR).' directory'),
-              ll('input')->_t('text')->_n('directory')->_i('post-directory')->_v(htmlentities($directory)),
-              $errors['directory']
+              l('div')->_c('span-24')->__(
+                  l('label')->_f('post-title')->__('title', l('span')->_c('chars-left')->__('250')),
+                  ll('input')->_t('text')->_n('title')->_i('post-title')->_v(htmlentities($title)),
+                  $errors['title']
+              ),
+              l('div')->_c('span-24')->__(
+                  l('label')->_f('post-tags')->__('space-separated tags', l('span')->_c('chars-left')->__('250')),
+                  ll('input')->_t('text')->_n('tags')->_i('post-tags')->_v(htmlentities($tags)),
+                  $errors['tags']
+              ),
+              l('div')->_c('span-24')->__(
+                  l('label')->_f('post-description')->__('description', l('span')->_c('chars-left')->__('250')),
+                  l('textarea')->_n('description')->_i('post-description')->__(htmlentities($description)),
+                  $errors['description']
+              ),
+              l('div')->_c('span-24')->__(
+                  l('label')->_f('post-directory')->__(
+                      trim_slashes(UNPUBLISHED_POSTS_DIR).' directory',
+                      l('span')->_c('chars-left')->__('250')
+                  ),
+                  ll('input')->_t('text')->_n('directory')->_i('post-directory')->_v(htmlentities($directory)),
+                  $errors['directory']
+              )
           ),
           l('div')->_c('span-8 prepend-8 append-8 last text-center')->__(
               ll('input')->_t('submit')->_n('submit')->_c('publish-button')->_v('publish')
           )
       );
     } else {
-      $directory = trim_slashes($directory);
-      
       $pub = PUBLISHED_POSTS_PATH;
       if (!is_dir($pub))
         mkdir($pub);
