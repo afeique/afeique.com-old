@@ -12,7 +12,7 @@ class view_crafter extends template_crafter {
   
   protected function _index() {
     $this->title = $this->post->title;
-    $this->content = $this->view_post($this->post);
+    $this->content = $this->view_posts(array($this->post));
   }
   
   protected function _400() {

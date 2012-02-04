@@ -1,11 +1,18 @@
 <?php
 
 class template_crafter extends crafter {
+  // page title, also sets page heading (below) when only the title is set
   protected $title;
+  
+  // the page heading
+  protected $heading;
+  
+  // additional stylesheets to use
   protected $styles;
   
-  // array containing urls of javascript files relative to JS_URL
-  // loads all scripts via deferment
+  // array containing relative urls of all javascript files (relative to JS_URL)
+  // originally used for js deferment, but that is no longer used due to race conditions
+  // still in place as we will eventually switch back to deferment
   protected $scripts;
   
   // array of css links
@@ -17,11 +24,11 @@ class template_crafter extends crafter {
   // whether or not to use the commander
   protected $use_commander;
   
-  // whether or not to use the commander header
-  protected $use_header;
+  // whether or not to use the commander heading
+  protected $use_heading;
   
-  // alternate header
-  protected $alt_header;
+  // whether or not a post can override page heading
+  protected $post_can_override_heading;
   
   // enables anti-robot sentries
   protected $no_robots;
@@ -39,14 +46,18 @@ class template_crafter extends crafter {
     parent::__construct();
   
     $this->title = 'Fipple';
+    $this->heading = '';
+    
     $this->content = o()->__(
         p('This page currently has no content. Try again some other time?')
     );
     
     $this->use_template = 1;
     $this->use_commander = 1;
-    $this->use_header = 1;
-    $this->alt_header = '';
+    $this->use_heading = 1;
+    
+    $this->post_can_override_heading = 1;
+    
     $this->no_robots = 0;
     
     $this->db_error = '';
@@ -67,8 +78,8 @@ class template_crafter extends crafter {
   }
   
   protected function _browse() {
-    $this->title = 'browse';``
-  
+    $this->title = 'browse posts';
+    
     $posts = Post::find('all');
     $posts_html = o();
     if (!empty($posts)) {
@@ -91,13 +102,16 @@ class template_crafter extends crafter {
   }
   
   protected function _404() {
-    header('Status: 404 Not Found'); header('HTTP/1.0 404 Not Found');
+    heading('Status: 404 Not Found'); heading('HTTP/1.0 404 Not Found');
     $this->title = '404 Not Found';
     $this->content = p('The requested page does not seem to exist. Check the URL or try again some other time.');
   }
   
   public function craft() {
     $this->{$this->request}();
+    
+    if (empty($this->heading))
+      $this->heading = $this->title;
     
     if (!$this->use_template)
       return "{$this->content}";
@@ -240,9 +254,14 @@ class template_crafter extends crafter {
   }
   
   protected function commander() {
+    
+    // if commander is called without a post heading set, use the page title for the heading
+    if (empty($this->heading))
+      $this->heading = $this->title;
+    
     return !$this->use_commander ? '' :
     l('div')->_c('span-24')->__(
-        h1(($this->use_header ? (empty($this->alt_header) ? $this->title : $this->alt_header) : '&nbsp;'))->_c('span-16'),
+        h1(($this->use_heading ? $this->heading : '&nbsp;'))->_c('span-16'),
         l('nav')->_i('commander')->_c('span-8 last text-right')->__($this->commands())
     );
   }
@@ -289,7 +308,8 @@ class template_crafter extends crafter {
       $li = l('li');
       if ($i == $num_tags-1)
         $li->_c('last');
-      $li->__( l_link('tag-search/'.urlencode($tags[$i]), htmlentities($tags[$i])) );
+      //$li->__( l_link('tag-search/'.urlencode($tags[$i]), htmlentities($tags[$i])) );
+      $li->__(htmlentities($tags[$i]));
       $tags_html->__($li);
     }
     
@@ -318,68 +338,89 @@ class template_crafter extends crafter {
     );
   }
   
-  protected function view_post(Post $post) {
-    $path = '';
-    $edit_title = '';
-    $edit_tags = '';
-    $delete_post = '';
-    if ($this->logged_in()) {
-      $path = l('li')->_c('post-path')->__(
-          strong('path:'),' ',
-          htmlentities(rtrim($this->post_path('', $post->time_first_published),'/').'/'),
-          l('span')->_c('post-directory')->__(htmlentities($post->directory))
+  protected function view_posts(array $posts) {
+    $posts_html = o();
+    foreach ($posts as $post) {
+      $path = '';
+      $edit_title = '';
+      $edit_tags = '';
+      $delete_post = '';
+      if ($this->logged_in()) {
+        $path = l('li')->_c('post-path')->__(
+            strong('path:'),' ',
+            htmlentities(rtrim($this->post_path('', $post->time_first_published),'/').'/'),
+            l('span')->_c('post-directory')->__(htmlentities($post->directory))
+        );
+        $edit_title = a_link('javascript: void(0)', 'edit title')->_c('edit-title edit-button')->_('title','edit title');
+        $edit_tags = a_link('javascript: void(0)', 'edit tags')->_c('edit-tags edit-button')->_('title','edit tags');
+        /*
+         $delete_post = l('div')->_c('delete-post')->__(
+             a_link('javascript: void(0)', 'delete post')->_c('x-button')->_('title','delete post')
+         );
+        */
+      }
+    
+      $last_modified = '';
+      if ($post->time_first_published != $post->time_last_modified)
+        $last_modified = li(strong('last modified:'),' ', date(POST_DATE_FORMAT, $post->time_last_modified))->_c('post-last-modified');
+    
+      $tags_html = l('ul')->_c('tags-list');
+      $tags = explode(' ', $post->tags);
+      $num_tags = count($tags);
+      for ($i=0; $i<$num_tags; $i++) {
+        $li = l('li');
+        if ($i == $num_tags-1)
+          $li->_c('last');
+        $li->__( l_link('tag-search/'.urlencode($tags[$i]), htmlentities($tags[$i])) );
+        $tags_html->__($li);
+      }
+    
+      $content = $this->get_post_content($post);
+      
+      if (!$this->post_can_override_heading) {
+        $heading = 
+        l('div')->_c('span-24 post-title')->__(
+            h1(
+                l_link('view/'.$post->id, htmlentities($post->title))->_('title','link to post')->_('target','_blank')
+            ),
+            $delete_post,
+            $edit_title
+        );
+      } else {
+        $heading = '';
+        $this->heading = l_link('view/'.$post->id, htmlentities($post->title))->_('title','link to post')->_('target','_blank');
+        $this->post_can_override_heading = 0;
+      }
+    
+      $posts_html->__(
+          l('div')->_i('post-'.$post->id.'-row')->_c('span-24 post-row')->__(
+              $heading,
+              l('div')->_c('span-24 post-tags')->__(
+                  strong('tagged'),' ', $tags_html,' ', $edit_tags
+              ),
+              l('div')->_c('span-24 post-content')->__(
+                  $content
+              ),
+              l('div')->_c('span-24 post-meta')->__(
+                  l('ul')->__(
+                      $path,
+                      li(strong('published:'),' ', date(POST_DATE_FORMAT, $post->time_first_published)),
+                      $last_modified
+                  )
+              )
+          )
       );
-      $edit_title = a_link('javascript: void(0)', 'edit title')->_c('edit-title edit-button')->_('title','edit title');
-      $edit_tags = a_link('javascript: void(0)', 'edit tags')->_c('edit-tags edit-button')->_('title','edit tags');
-      /*
-       $delete_post = l('div')->_c('delete-post')->__(
-           a_link('javascript: void(0)', 'delete post')->_c('x-button')->_('title','delete post')
-       );
-      */
     }
-  
-    $last_modified = '';
-    if ($post->time_first_published != $post->time_last_modified)
-      $last_modified = li(strong('last modified:'),' ', date(POST_DATE_FORMAT, $post->time_last_modified))->_c('post-last-modified');
-  
-    $tags_html = l('ul')->_c('tags-list');
-    $tags = explode(' ', $post->tags);
-    $num_tags = count($tags);
-    for ($i=0; $i<$num_tags; $i++) {
-      $li = l('li');
-      if ($i == $num_tags-1)
-        $li->_c('last');
-      $li->__( l_link('tag-search/'.urlencode($tags[$i]), htmlentities($tags[$i])) );
-      $tags_html->__($li);
-    }
-  
-    $content = $this->get_post_content($post);
-  
-    return
-    l('div')->_i('post-'.$post->id.'-row')->_c('span-24 post-row')->__(
-        l('div')->_c('span-24 post-tags')->__(
-            strong('tagged'),' ', $tags_html,' ', $edit_tags
-        ),
-        l('div')->_c('span-24 post-content')->__(
-            $content
-        ),
-        l('div')->_c('span-24 post-meta')->__(
-            l('ul')->__(
-                $path,
-                li(strong('published:'),' ', date(POST_DATE_FORMAT, $post->time_first_published)),
-                $last_modified
-            )
-        )
-    );
+    
+    return $posts_html;
   }
   
-  protected function get_post_content($post) {
+  protected function get_post_content(Post $post) {
     ob_start();
     require $this->post_path($post->directory, $post->time_first_published).'content.php';
     $content = ob_get_clean();
     
-    $this->use_template = (isset($no_template) ? 0 : 1);
-    $this->alt_header = (isset($header) ? $header : '');
+    $this->use_template = isset($no_template) ? 0 : 1;
     
     if (isset($styles)) {
       if (!is_array($styles))

@@ -11,7 +11,7 @@ class admin_crafter extends template_crafter {
   
   protected function _publish() {
     $this->title = 'publish post';
-    $this->use_header = 0;
+    $this->use_heading = 0;
     
     $errors = array();
     
@@ -225,8 +225,10 @@ class admin_crafter extends template_crafter {
     }
     
     if (empty($message)) {
-      $post->$field = $new_value;
-      $post->save();
+      if ($field != 'directory') {
+        $post->$field = $new_value;
+        $post->save();
+      }
     } else {
       //if (!DEBUG) { header('Status: 400 Bad Request'); header('HTTP/1.0 400 Bad Request'); }
       $this->content = $this->json_error($message);
@@ -291,10 +293,10 @@ class admin_crafter extends template_crafter {
     }
   }
   
-  protected function notification($notification, $header=null) {
+  protected function notification($notification, $heading=null) {
     return
     l('div')->_c('span-12 prepend-6 append-6 last')->__(
-        isset($header) ? h1($header) : '',
+        isset($heading) ? h1($heading) : '',
         $notification
     );
   }

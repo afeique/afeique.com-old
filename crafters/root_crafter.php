@@ -4,18 +4,16 @@ class root_crafter extends template_crafter {
   protected function _index() {
     $this->title = 'home';
     try {
-      $r = Post::find('all', array('limit' => 1, 'order' => 'id desc'));
-      if (!empty($r))
-        $post = $r[0];
+      $posts = Post::find('all', array('order' => 'id desc'));
     } catch (Exception $e) {
-      unset($post);
+      unset($posts);
     }
-    if (empty($post)) {
+    if (!empty($posts)) {
+      $this->content = $this->view_posts($posts);
+    } else {
       $this->content = l('h2')->_c('text-center')->__(
           em('no posts to display')
       );
-    } else {
-      $this->content = $this->view_post($post);
     }
   }
 }
