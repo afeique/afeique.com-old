@@ -81,7 +81,7 @@ class template_crafter extends crafter {
   protected function _browse() {
     $this->title = 'browse posts';
     
-    $posts = Post::find('all');
+    $posts = Post::find('all', array('order' => 'id desc'));
     $posts_html = o();
     if (!empty($posts)) {
       foreach ($posts as $post) {

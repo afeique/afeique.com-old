@@ -77,6 +77,38 @@ $(function() {
   var status404 = 'For some reason, the post you are editing could not be found.';
   var status500 = 'There was a problem with the database when editing your post. Try again.';
   
+  var input_editor = $(document.createElement('input'))
+  .attr('type','text')
+  .blur(function() { $(this).val($(this).val().trim().replace(/\s{2,}/,' ')); })
+  .bind('keyup blur', function(event) {
+    var chars_left = 250 - $(this).val().length;
+    abel.contents().find('.chars-left').text(chars_left);
+  });
+  
+  var chars_left = $(document.createElement('li'))
+  .append($(document.createElement('span'))
+    .addClass('chars-left')
+    .append(250 - abel.children('input').val().length)
+  );
+  
+  var submit_button = 
+  $(document.createElement('a')).append('submit').attr('title','submit').attr('href','javascript: void(0)')
+    .button({
+      text: false,
+      icons: {primary: 'ui-icon-check'}
+  });
+  
+  var cancel_button = 
+  $(document.createElement('a')).append('cancel').attr('title','cancel').attr('href','javascript: void(0)')
+    .button({
+      text: false,
+      icons: {primary: 'ui-icon-closethick'}
+  });
+  
+  var spinner = $(document.createElement('li'))
+  .append($(document.createElement('img')).attr('src', BASE_URL+'images/spinner.gif').attr('alt','loading'))
+  .hide();
+  
   /**
    * POST ROW TITLE EDITOR
    */
@@ -86,31 +118,15 @@ $(function() {
     var original_title_html = abel.contents().clone(true);
     var post_id = abel.attr('id').replace(/[a-z\-]/g,'');;
     
-    var editor = $(document.createElement('input'))
-    .attr('type','text')
+    editor = input_editor.clone(true)
     .attr('class','post-title-input')
-    .attr('value', old_title)
-    .blur(function() { $(this).val($(this).val().trim().replace(/\s{2,}/,' ')); })
-    .bind('keyup blur', function(event) {
-      var chars_left = 250 - $(this).val().length;
-      abel.contents().find('.chars-left').text(chars_left);
-    });
+    .attr('value', old_title);
     
     abel.empty().append(editor);
-
-    var chars_left = $(document.createElement('li'))
-    .append($(document.createElement('span'))
-      .addClass('chars-left')
-      .append(250 - abel.children('input').val().length)
-    );
     
-    var submit_button = $(document.createElement('li'))
+    var submit = $(document.createElement('li'))
     .append(
-        $(document.createElement('a')).append('submit').attr('title','submit').attr('href','javascript: void(0)')
-        .button({
-          text: false,
-          icons: {primary: 'ui-icon-check'}
-        })
+        submit_button.clone(true)
         .click(function() {
           abel.contents().find('.post-title-spinner').show();
           var new_title = abel.children('input').val().trim().replace(/\s{2,}/,' ');
@@ -151,30 +167,24 @@ $(function() {
           }
         })
     );
-
-    var cancel_button = $(document.createElement('li'))
+    
+    var cancel = $(document.createElement('li'))
     .append(
-        $(document.createElement('a')).append('cancel').attr('title','cancel').attr('href','javascript: void(0)')
-        .button({
-          text: false,
-          icons: {primary: 'ui-icon-closethick'}
-        })
+        cancel_button.clone(true)
         .click(function() {
           abel.empty().append(original_title_html);
         })
     );
     
-    var spinner = $(document.createElement('li'))
-    .append($(document.createElement('img')).attr('src', BASE_URL+'images/spinner.gif'))
-    .attr('class','post-title-spinner')
-    .hide();
+    var title_spinner = spinner.clone(true)
+    .attr('class','post-title-spinner');
 
     var commander = $(document.createElement('ul'))
     .attr('class','post-title-commander')
     .append(chars_left)
-    .append(submit_button)
-    .append(cancel_button)
-    .append(spinner);
+    .append(submit)
+    .append(cancel)
+    .append(title_spinner);
 
     abel.append(commander);
   });
@@ -193,34 +203,18 @@ $(function() {
     var original_tags_html = abel.contents().clone(true);
     var post_id = abel.attr('id').replace(/[a-z\-]/g,'');
     
-    var editor = $(document.createElement('input'))
-    .attr('type','text')
+    var editor = input_editor.clone(true)
     .attr('class','post-tags-input')
-    .attr('value', old_tags)
-    .blur(function() { $(this).val($(this).val().trim().replace(/\s{2,}/,' ')); })
-    .bind('keyup blur', function(event) {
-      var chars_left = 250 - $(this).val().length;
-      abel.contents().find('.chars-left').text(chars_left);
-    });
+    .attr('value', old_tags);
     
     abel.empty()
     .append($(document.createElement('strong')).append('tagged'))
     .append(' ')
     .append(editor);
-
-    var chars_left = $(document.createElement('li'))
-    .append($(document.createElement('span'))
-      .addClass('chars-left')
-      .append(250 - abel.children('input').val().length)
-    );
     
-    var submit_button = $(document.createElement('li'))
+    var submit = $(document.createElement('li'))
     .append(
-        $(document.createElement('a')).append('submit').attr('title','submit').attr('href','javascript: void(0)')
-        .button({
-          text: false,
-          icons: {primary: 'ui-icon-check'}
-        })
+        submit_button.clone(true)
         .click(function() {
           abel.contents().find('.post-tags-spinner').show();
           var new_tags = abel.children('input').val().trim().replace(/\s{2,}/,' ');
@@ -277,31 +271,32 @@ $(function() {
         })
     );
 
-    var cancel_button = $(document.createElement('li'))
+    var cancel = $(document.createElement('li'))
     .append(
-        $(document.createElement('a')).append('cancel').attr('title','cancel').attr('href','javascript: void(0)')
-        .button({
-          text: false,
-          icons: {primary: 'ui-icon-closethick'}
-        })
+        cancel_button.clone(true)
         .click(function() {
           abel.empty().append(original_tags_html);
         })
     );
     
-    var spinner = $(document.createElement('li'))
-    .append($(document.createElement('img')).attr('src', BASE_URL+'images/spinner.gif'))
-    .attr('class','post-tags-spinner')
-    .hide();
+    var tags_spinner = spinner.clone(true)
+    .attr('class','post-tags-spinner');
 
     var commander = $(document.createElement('ul'))
     .attr('class','post-tags-commander')
     .append(chars_left)
-    .append(submit_button)
-    .append(cancel_button)
-    .append(spinner);
+    .append(submit)
+    .append(cancel)
+    .append(tags_spinner);
 
     abel.append(commander);
+  });
+  
+  var textarea_editor = $(document.createElement('textarea'))
+  .blur(function() { $(this).val($(this).val().trim().replace(/\s{2,}/,' ')); })
+  .bind('keyup blur', function(event) {
+    var chars_left = 250 - $(this).val().length;
+    abel.contents().find('.chars-left').text(chars_left);
   });
   
   /**
@@ -313,24 +308,13 @@ $(function() {
     var original_description_html = abel.contents().clone(true);
     var post_id = abel.attr('id').replace(/[a-z\-]/g,'');
     
-    var editor = $(document.createElement('textarea'))
+    var editor = textarea_editor.clone(true)
     .attr('class','post-description-textarea')
-    .append(old_description)
-    .blur(function() { $(this).val($(this).val().trim().replace(/\s{2,}/,' ')); })
-    .bind('keyup blur', function(event) {
-      var chars_left = 250 - $(this).val().length;
-      abel.contents().find('.chars-left').text(chars_left);
-    });
+    .append(old_description);
     
     abel.empty().append(editor);
-
-    var chars_left = $(document.createElement('li'))
-    .append($(document.createElement('span'))
-      .addClass('chars-left')
-      .append(250 - abel.children('textarea').val().length)
-    );
     
-    var submit_button = $(document.createElement('li'))
+    var submit = $(document.createElement('li'))
     .append(
         $(document.createElement('a')).append('submit').attr('title','submit').attr('href','javascript: void(0)')
         .button({
@@ -379,29 +363,23 @@ $(function() {
         })
     );
 
-    var cancel_button = $(document.createElement('li'))
+    var cancel = $(document.createElement('li'))
     .append(
-        $(document.createElement('a')).append('cancel').attr('title','cancel').attr('href','javascript: void(0)')
-        .button({
-          text: false,
-          icons: {primary: 'ui-icon-closethick'}
-        })
+        cancel_button.clone(true)
         .click(function() {
           abel.empty().append(original_description_html);
         })
     );
     
-    var spinner = $(document.createElement('li'))
-    .append($(document.createElement('img')).attr('src', BASE_URL+'images/spinner.gif'))
-    .attr('class','post-description-spinner')
-    .hide();
+    var description_spinner = spinner.clone(true)
+    .attr('class','post-description-spinner');
 
     var commander = $(document.createElement('ul'))
     .attr('class','post-description-commander')
     .append(chars_left)
-    .append(submit_button)
-    .append(cancel_button)
-    .append(spinner);
+    .append(submit)
+    .append(cancel)
+    .append(description_spinner);
 
     abel.append(commander);
   });
@@ -415,32 +393,16 @@ $(function() {
     var original_directory_html = abel.contents().clone(true);
     var post_id = $(this).attr('id').replace(/[a-z\-]/g,'');
     
-    var editor = $(document.createElement('input'))
-    .attr('type','text')
+    var editor = input_editor.clone(true)
     .attr('class','post-directory-input')
-    .attr('value', old_directory)
-    .blur(function() { $(this).val($(this).val().trim().replace(/\s{2,}/,' ')); })
-    .bind('keyup blur', function(event) {
-      var chars_left = 250 - $(this).val().length;
-      abel.contents().find('.chars-left').text(chars_left);
-    });
+    .attr('value', old_directory);
     
     abel.children('.post-directory').remove();
     abel.append(editor);
     
-    var chars_left = $(document.createElement('li'))
-    .append($(document.createElement('span'))
-      .addClass('chars-left')
-      .append(250 - abel.children('input').val().length)
-    );
-    
-    var submit_button = $(document.createElement('li'))
+    var submit = $(document.createElement('li'))
     .append(
-        $(document.createElement('a')).append('submit').attr('title','submit').attr('href','javascript: void(0)')
-        .button({
-          text: false,
-          icons: {primary: 'ui-icon-check'}
-        })
+        submit_button.clone(true)
         .click(function() {
           abel.contents().find('.post-directory-spinner').show();
           var new_directory = abel.children('input').val().trim().replace(/\s{2,}/,' ');
@@ -482,29 +444,23 @@ $(function() {
         })
     );
 
-    var cancel_button = $(document.createElement('li'))
+    var cancel = $(document.createElement('li'))
     .append(
-        $(document.createElement('a')).append('cancel').attr('title','cancel').attr('href','javascript: void(0)')
-        .button({
-          text: false,
-          icons: {primary: 'ui-icon-closethick'}
-        })
+        cancel_button.clone(true)
         .click(function() {
           abel.empty().append(original_directory_html);
         })
     );
     
-    var spinner = $(document.createElement('li'))
-    .append($(document.createElement('img')).attr('src', BASE_URL+'images/spinner.gif'))
-    .attr('class','post-directory-spinner')
-    .hide();
+    var directory_spinner = spinner.clone(true)
+    .attr('class','post-directory-spinner');
 
     var commander = $(document.createElement('ul'))
     .attr('class','post-directory-commander')
     .append(chars_left)
-    .append(submit_button)
-    .append(cancel_button)
-    .append(spinner);
+    .append(submit)
+    .append(cancel)
+    .append(directory_spinner);
 
     abel.append(commander);
   });
