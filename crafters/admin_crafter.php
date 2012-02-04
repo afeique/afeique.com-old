@@ -212,8 +212,11 @@ class admin_crafter extends template_crafter {
       
       exec("mv $current_path $new_path");
       
+      $post->$field = $new_value;
+      $post->save();
+      
       $prepend = rtrim($this->post_path('', $post->time_first_published),'/').'/';
-      $new_value->is_dir($prepend,'/')->is_file($prepend,'/content.php');
+      $new_value->trim_slashes()->is_dir($prepend,'/')->is_file($prepend,'/content.php');
       
       $error_check = $new_value->errors();
       if (!empty($error_check)) {
