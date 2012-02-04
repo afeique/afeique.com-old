@@ -12,25 +12,7 @@ class view_crafter extends template_crafter {
   
   protected function _index() {
     $this->title = $this->post->title;
-    
-    ob_start();
-    require $this->post_path($this->post->directory, $this->post->time_first_published).'content.php';
-    $this->content = ob_get_clean();
-    
-    $this->use_template = (isset($no_template) ? 0 : 1);
-    $this->alt_header = (isset($header) ? $header : '');
-    
-    if (isset($styles)) {
-      if (!is_array($styles))
-        throw error::expecting_array();
-      $this->styles = array_merge($this->styles, $styles);
-    }
-    
-    if (isset($scripts)) {
-      if (!is_array($scripts))
-        throw error::expecting_array();
-      $this->scripts = array_merge($this->scripts, $scripts);
-    }
+    $this->content = $this->view_post($this->post);
   }
   
   protected function _400() {

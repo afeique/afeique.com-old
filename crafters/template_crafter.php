@@ -81,7 +81,7 @@ class template_crafter extends crafter {
       }
     } else {
       $posts_html->__(
-          l('h2')->_c("span-8 prepend-8 append-8 text-center")->__(
+          l('h2')->_c('text-center')->__(
               em('no posts to display')
           )
       );
@@ -357,6 +357,84 @@ class template_crafter extends crafter {
             )
         )
     );
+  }
+  
+  protected function view_post(Post $post) {
+    $path = '';
+    $edit_title = '';
+    $edit_tags = '';
+    $delete_post = '';
+    if ($this->logged_in()) {
+      $path = l('li')->_c('post-path')->__(
+          strong('path:'),' ',
+          htmlentities(rtrim($this->post_path('', $post->time_first_published),'/').'/'),
+          l('span')->_c('post-directory')->__(htmlentities($post->directory))
+      );
+      $edit_title = a_link('javascript: void(0)', 'edit title')->_c('edit-title edit-button')->_('title','edit title');
+      $edit_tags = a_link('javascript: void(0)', 'edit tags')->_c('edit-tags edit-button')->_('title','edit tags');
+      /*
+       $delete_post = l('div')->_c('delete-post')->__(
+           a_link('javascript: void(0)', 'delete post')->_c('x-button')->_('title','delete post')
+       );
+      */
+    }
+  
+    $last_modified = '';
+    if ($post->time_first_published != $post->time_last_modified)
+      $last_modified = li(strong('last modified:'),' ', date(POST_DATE_FORMAT, $post->time_last_modified))->_c('post-last-modified');
+  
+    $tags_html = l('ul')->_c('tags-list');
+    $tags = explode(' ', $post->tags);
+    $num_tags = count($tags);
+    for ($i=0; $i<$num_tags; $i++) {
+      $li = l('li');
+      if ($i == $num_tags-1)
+        $li->_c('last');
+      $li->__( l_link('tag-search/'.urlencode($tags[$i]), htmlentities($tags[$i])) );
+      $tags_html->__($li);
+    }
+  
+    $content = $this->get_post_content($post);
+  
+    return
+    l('div')->_i('post-'.$post->id.'-row')->_c('span-24 post-row')->__(
+        l('div')->_c('span-24 post-tags')->__(
+            strong('tagged'),' ', $tags_html,' ', $edit_tags
+        ),
+        l('div')->_c('span-24 post-content')->__(
+            $content
+        ),
+        l('div')->_c('span-24 post-meta')->__(
+            l('ul')->__(
+                $path,
+                li(strong('published:'),' ', date(POST_DATE_FORMAT, $post->time_first_published)),
+                $last_modified
+            )
+        )
+    );
+  }
+  
+  protected function get_post_content($post) {
+    ob_start();
+    require $this->post_path($post->directory, $post->time_first_published).'content.php';
+    $content = ob_get_clean();
+    
+    $this->use_template = (isset($no_template) ? 0 : 1);
+    $this->alt_header = (isset($header) ? $header : '');
+    
+    if (isset($styles)) {
+      if (!is_array($styles))
+        throw error::expecting_array();
+      $this->styles = array_merge($this->styles, $styles);
+    }
+    
+    if (isset($scripts)) {
+      if (!is_array($scripts))
+        throw error::expecting_array();
+      $this->scripts = array_merge($this->scripts, $scripts);
+    }
+    
+    return $content;
   }
   
   protected function post_path($directory, $time_first_published) {
