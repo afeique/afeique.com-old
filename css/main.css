@@ -132,15 +132,14 @@ textarea {
 	display: inline-block;
 	margin: 0;
 	margin-right: .3em;
+	line-height: 2em;
 }
 
 .post-row .post-tags {
 	margin: 0;
-	line-height: 2em;
 }
 
 .post-row .post-description {
-	margin-bottom: .5em;
 }
 
 .post-row .post-meta li {
@@ -167,7 +166,7 @@ textarea {
 }
 
 /**
- * 	POST ROW AND POST TAGS EDITORS
+ * 	POST ROW EDITOR INPUTS
  */
 .post-row #post-title-input, 
 .post-row #post-tags-input,
@@ -181,40 +180,28 @@ textarea {
 	font-size: 1em;
 }
 
+.post-row #post-description-textarea {
+	width: 30em;
+	height: 6em;
+	font-size: 1.1em;
+}
+
+/**
+ * 	POST ROW EDITOR COMMANDERS
+ */
+
 .post-row #post-title-commander, 
 .post-row #post-tags-commander,
 .post-row #post-directory-commander {
 	display: inline-block;
+	height: 1.5em;
 	vertical-align: middle;
 	margin: 0;
 	padding: 0;
 	position: relative;
-	bottom: .2em;
+	bottom: .8em;
 	list-style-type: none;
 	font-size: .7em;
-}
-
-.post-row #post-title-commander li, 
-.post-row #post-tags-commander li,
-.post-row #post-directory-commander li {
-	display: inline-block;
-	margin-right: .1em;
-}
-
-.post-row #post-title-commander .chars-left, 
-.post-row #post-tags-commander .chars-left, 
-.post-row #post-directory-commander .chars-left {
-	font-size: 1.1em;
-	margin: 0 .5em;
-}
-
-/**
- * POST ROW DESCRIPTION EDITOR	
- */
-.post-row #post-description-textarea {
-	width: 90%;
-	height: 4em;
-	font-size: 1.1em;
 }
 
 .post-row #post-description-commander {
@@ -226,12 +213,49 @@ textarea {
 	font-size: .7em;
 }
 
+/**
+ * 	POST ROW EDITOR LI
+ */
+.post-row #post-title-commander li, 
+.post-row #post-tags-commander li,
+.post-row #post-directory-commander li {
+	display: inline-block;
+	margin-right: .1em;
+}
+
 .post-row #post-description-commander li {
 	margin-bottom: .1em;
 }
 
+/**
+ * 	POST ROW EDITOR CHARS LEFT
+ */
+.post-row #post-title-commander .chars-left, 
+.post-row #post-tags-commander .chars-left, 
+.post-row #post-directory-commander .chars-left {
+	font-size: 1.1em;
+	margin: 0 .5em;
+}
+
 .post-row #post-description-commander .chars-left {
 	font-size: 1.1em;
+}
+
+/**
+ * 	POST ROW EDITOR SPINNERS
+ */
+.post-row #post-title-spinner,
+.post-row #post-tags-spinner,
+.post-row #post-directory-spinner {
+	float: right;
+	position: relative;
+	left: .5em;
+}
+
+.post-row #post-description-spinner {
+	position: relative;
+	left: .2em;
+	top: .3em;
 }
 
 /**

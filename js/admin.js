@@ -57,6 +57,7 @@ $(function() {
   /**
    * DELETE POST BUTTON
    */
+  /*
   $('.post-row')
   .mouseover(function() {
     $(this).contents().find('.delete-post').show();
@@ -64,6 +65,7 @@ $(function() {
   .mouseout(function() {
     $(this).contents().find('.delete-post').hide();
   });
+  */
   
   /**
    * 
@@ -115,6 +117,7 @@ $(function() {
           icons: {primary: 'ui-icon-check'}
         })
         .click(function() {
+          $('#post-title-spinner').show();
           var new_title = abel.children('input').val().trim().replace(/\s{2,}/,' ');
           if (new_title.length > 0 && new_title.length <= 250 && new_title != old_title) {
             $.ajax({
@@ -136,6 +139,7 @@ $(function() {
                 }
               },
               success: function(data) {
+                $('#post-title-spinner').hide();
                 if (data.error === undefined) {
                   var new_title_html = original_title_html;
                   var n = 0;
@@ -167,12 +171,18 @@ $(function() {
           editing_title = 0;
         })
     );
+    
+    var spinner = $(document.createElement('li'))
+    .append($(document.createElement('img')).attr('src', BASE_URL+'images/spinner.gif'))
+    .attr('id','post-title-spinner')
+    .hide();
 
     var commander = $(document.createElement('ul'))
     .attr('id','post-title-commander')
     .append(chars_left)
     .append(submit_button)
-    .append(cancel_button);
+    .append(cancel_button)
+    .append(spinner);
 
     abel.append(commander);
   });
@@ -206,7 +216,10 @@ $(function() {
       abel.contents().find('.chars-left').text(chars_left);
     });
     
-    abel.empty().append($(document.createElement('strong')).append('tagged')).append(' ').append(editor);
+    abel.empty()
+    .append($(document.createElement('strong')).append('tagged'))
+    .append(' ')
+    .append(editor);
 
     var chars_left = $(document.createElement('li'))
     .append($(document.createElement('span'))
@@ -222,6 +235,7 @@ $(function() {
           icons: {primary: 'ui-icon-check'}
         })
         .click(function() {
+          $('#post-tags-spinner').show();
           var new_tags = abel.children('input').val().trim().replace(/\s{2,}/,' ');
           if (new_tags != '' && new_tags != old_tags && new_tags.length <= 250) {
             $.ajax({
@@ -243,6 +257,7 @@ $(function() {
                 }
               },
               success: function(data) {
+                $('#post-tags-spinner').hide();
                 if (data.error === undefined) {
                   var new_tags_html = original_tags_html;
                   var n = 2;
@@ -289,12 +304,18 @@ $(function() {
           editing_tags = 0;
         })
     );
+    
+    var spinner = $(document.createElement('li'))
+    .append($(document.createElement('img')).attr('src', BASE_URL+'images/spinner.gif'))
+    .attr('id','post-tags-spinner')
+    .hide();
 
     var commander = $(document.createElement('ul'))
     .attr('id','post-tags-commander')
     .append(chars_left)
     .append(submit_button)
-    .append(cancel_button);
+    .append(cancel_button)
+    .append(spinner);
 
     abel.append(commander);
   });
@@ -338,6 +359,7 @@ $(function() {
           icons: {primary: 'ui-icon-check'}
         })
         .click(function() {
+          $('#post-description-spinner').show();
           var new_description = abel.children('textarea').val().trim().replace(/\s{2,}/,' ');
           if (new_description.length > 0 && new_description.length <= 250 && new_description != old_description) {
             $.ajax({
@@ -359,6 +381,7 @@ $(function() {
                 }
               },
               success: function(data) {
+                $('#post-description-spinner').hide();
                 if (data.error === undefined) {
                   var new_description_html = original_description_html;
                   var n = 0;
@@ -391,12 +414,18 @@ $(function() {
           editing_description = 0;
         })
     );
+    
+    var spinner = $(document.createElement('li'))
+    .append($(document.createElement('img')).attr('src', BASE_URL+'images/spinner.gif'))
+    .attr('id','post-description-spinner')
+    .hide();
 
     var commander = $(document.createElement('ul'))
     .attr('id','post-description-commander')
     .append(chars_left)
     .append(submit_button)
-    .append(cancel_button);
+    .append(cancel_button)
+    .append(spinner);
 
     abel.append(commander);
   });
@@ -425,9 +454,9 @@ $(function() {
       abel.contents().find('.chars-left').text(chars_left);
     });
     
-    abel.contents('.post-directory').remove();
+    abel.children('.post-directory').remove();
     abel.append(editor);
-
+    
     var chars_left = $(document.createElement('li'))
     .append($(document.createElement('span'))
       .addClass('chars-left')
@@ -442,6 +471,7 @@ $(function() {
           icons: {primary: 'ui-icon-check'}
         })
         .click(function() {
+          $('#post-directory-spinner').show();
           var new_directory = abel.children('input').val().trim().replace(/\s{2,}/,' ');
           if (new_directory.length > 0 && new_directory.length <= 250 && new_directory != old_directory) {
             $.ajax({
@@ -463,11 +493,12 @@ $(function() {
                 }
               },
               success: function(data) {
+                $('#post-directory-spinner').hide();
                 if (data.error === undefined) {
                   var new_directory_html = original_directory_html;
-                  var n = 0;
+                  var n = 2;
                   
-                  $(new_directory_html[n]).find('.post-directory').text(data.directory);
+                  $(new_directory_html[n]).text(new_directory);
                   abel.empty().append(new_directory_html);
                   editing_directory = 0;
                 } else {
@@ -494,12 +525,18 @@ $(function() {
           editing_directory = 0;
         })
     );
+    
+    var spinner = $(document.createElement('li'))
+    .append($(document.createElement('img')).attr('src', BASE_URL+'images/spinner.gif'))
+    .attr('id','post-directory-spinner')
+    .hide();
 
     var commander = $(document.createElement('ul'))
     .attr('id','post-directory-commander')
     .append(chars_left)
     .append(submit_button)
-    .append(cancel_button);
+    .append(cancel_button)
+    .append(spinner);
 
     abel.append(commander);
   });

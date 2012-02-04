@@ -300,9 +300,11 @@ class template_crafter extends crafter {
       );
       $edit_title = a_link('javascript: void(0)', 'edit title')->_c('edit-title edit-button')->_('title','edit title');
       $edit_tags = a_link('javascript: void(0)', 'edit tags')->_c('edit-tags edit-button')->_('title','edit tags');
+      /*
       $delete_post = l('div')->_c('delete-post')->__(
           a_link('javascript: void(0)', 'delete post')->_c('x-button')->_('title','delete post')
       );
+      */
     }
   
     $last_modified = '';

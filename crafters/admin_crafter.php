@@ -186,30 +186,37 @@ class admin_crafter extends template_crafter {
   protected function _update() {
     $this->use_template = 0;
     $this->content = '';
-  
-    $message = $this->updater_prechecks();
+    
+    $message = $this->updater_prechecks($id, $field, $post);
     if (!empty($message)) {
       $this->content = $this->json_error($message);
       return;
     }
     
-    $field = $GLOBALS[EXTRA][1];
-    $id = (int)$GLOBALS[EXTRA][2];
-    $post = Post::find($id);
     $new_value = validate::string($_POST[$field])->trim()->not_empty()->max_length(250);
     
-    if ($field == 'directory') {
+    $message = $new_value->errors();
+    if ($field == 'directory' && empty($message)) {
+      $current_path = rtrim($this->post_path($post->directory, $post->time_first_published),'/');
+      $new_path = rtrim($this->post_path($new_value, $post->time_first_published),'/');
+      
+      exec("mv $current_path $new_path");
+      
       $prepend = rtrim($this->post_path('', $post->time_first_published),'/').'/';
       $new_value->is_dir($prepend,'/')->is_file($prepend,'/content.php');
+      
+      $error_check = $new_value->errors();
+      if (!empty($error_check)) {
+        $message = 'problem moving file to new directory';
+      }
     }
     
-    $errors = $new_value->errors();
-    if (empty($errors)) {
+    if (empty($message)) {
       $post->$field = $new_value;
       $post->save();
     } else {
       //if (!DEBUG) { header('Status: 400 Bad Request'); header('HTTP/1.0 400 Bad Request'); }
-      $this->content = $this->json_error($errors);
+      $this->content = $this->json_error($message);
       return;
     }
   
@@ -227,7 +234,7 @@ class admin_crafter extends template_crafter {
     return json_encode(array('error' => $message));
   }
   
-  protected function updater_prechecks() {
+  protected function updater_prechecks(&$id, &$field, &$post) {
     /**
      * most of these errors really only apply for debugging.
      * a stable production build should never encounter them.
