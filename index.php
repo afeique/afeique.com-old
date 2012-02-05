@@ -102,23 +102,37 @@ foreach (array_reverse($request_parts, $preserve_keys=1) as $i => $p) {
   break;
 }
 
+// if $extra array nonempty, make it
+// superglobal for easy access
 if (!empty($extra)) {
   $extra = array_reverse($extra);
   $GLOBALS[EXTRA] = $extra;
 }
 
+/**
+ * if no crafter was found, create an instance
+ * of root_crafter
+ * 
+ * if there was a query string, pass on the first
+ * part of that request as the page request
+ */
 if (!isset($crafter)) {
   $crafter = new root_crafter;
   if (!empty($request_parts))
     $page = $request_parts[0];
 }
 
+// make the page request if it exists
 if (!empty($page))
   $crafter->request($page);
 
+/**
+ * render the crafter
+ * 
+ * note that if no page request was made,
+ * the crafter defaults to rendering the index
+ */
 //$crafter->craft();
 echo $crafter;
-
-//var_dump($_SERVER);
 
 ?>
