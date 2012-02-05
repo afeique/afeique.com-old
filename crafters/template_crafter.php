@@ -131,6 +131,7 @@ class template_crafter extends crafter {
     if (!is_array($this->scripts))
       throw error::expecting_array();
     
+    array_unshift($this->styles, (DEBUG ? 'main.css' : 'main.min.css'));
     if ($this->logged_in()) {
       array_unshift($this->styles, 'jquery-ui-lightness/jquery-ui-1.8.17.min.css');
       array_unshift($this->scripts,'jquery-1.7.1.min.js','jquery-ui-1.8.17.min.js',

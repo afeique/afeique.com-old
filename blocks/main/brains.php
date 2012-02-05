@@ -9,7 +9,6 @@ $content = o()->__(
     '),
     css_link('blueprint/screen.min.css'),
     html_if('lt IE 8', css_link('blueprint/ie.css')),
-    css_link(DEBUG ? 'main.css' : 'main.min.css'),
     html_if('lt IE 9', script_src('html5shiv.min.js'))
 );
 
