@@ -10,10 +10,15 @@ class template_crafter extends crafter {
   // additional stylesheets to use
   protected $styles;
   
-  // arrays containing relative paths of all javascript files (relative to JS_URL)
-  // originally used for js deferment, but that is currently unused due to race conditions
-  protected $scripts; // scripts loaded using <script src="..."></script>
-  protected $inline_scripts; // scripts whose contents are loaded inline into the page
+  /**
+   * arrays containing relative paths of all javascript files (relative to JS_URL)
+   * scripts are loaded using <script src="..."></script>
+   * 
+   * originally used page deferment as per google pagespeed's recommendations, but
+   * that caused race conditions with jquery that led to pages sometimes rendering
+   * jquery ui elements incorrectly
+   */
+  protected $scripts;
   
   // array of css links
   protected $content;
@@ -128,8 +133,11 @@ class template_crafter extends crafter {
       throw error::expecting_array();
     
     if ($this->logged_in()) {
-      array_unshift($this->scripts,'jquery-1.7.1.min.js','jquery-ui-1.8.17.min.js','admin.js');
-      array_unshift($this->inline_scripts,'buttons.js');
+      array_unshift($this->scripts,'jquery-1.7.1.min.js','jquery-ui-1.8.17.min.js','buttons.js','admin.js');
+    }
+    
+    foreach ($this->scripts as $i => $script) {
+      $this->scripts[$i] = script_src($script);
     }
     
     /*
@@ -137,14 +145,6 @@ class template_crafter extends crafter {
       $this->scripts[$i] = '"'.$script.'"';
     }
     */
-    foreach ($this->scripts as $i => $script) {
-      $this->scripts[$i] = script_src($script);
-    }
-    foreach ($this->inline_scripts as $i => $script) {
-      ob_start();
-      readfile(JS_PATH.$script);
-      $this->inline_scripts[$i] = ob_get_clean();
-    }
     
     $this->meta_redirect = trim($this->meta_redirect,'/');
     
@@ -157,8 +157,7 @@ class template_crafter extends crafter {
                 ($this->no_robots ? ll('meta')->_n('robots')->_('content','noindex, noarchive, nofollow') : ''),
                 (!empty($this->meta_redirect) ? ll('meta')->_('http-equiv','refresh')->_('content', META_REFRESH_TIME.'; '.BASE_URL.$this->meta_redirect) : ''),
                 title($this->title.' @ afeique.com'),
-                implode('', $this->scripts),
-                implode('', $this->inline_scripts)
+                implode('', $this->scripts)
                 /*
                 l('script')->_t('text/javascript')->__('
                     // Add a script element as a child of the body
