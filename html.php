@@ -4,6 +4,11 @@ require_once 'config.php';
 require_once 'libs/tag.php';
 
 /**
+ * this file simply contains numerous helper methods
+ * used to generate oohtml
+ */
+
+/**
  * doesn't o look like a container?
  */
 function o() {
@@ -11,7 +16,15 @@ function o() {
 }
 
 /**
- * grab a block
+ * blocks are chunks of static oohtml
+ * 
+ * for example, most pages have the same basic
+ * styles in the head, so that html is good to
+ * place into a block
+ * 
+ * content that changes between each page, for
+ * example the page title, is not good to put into
+ * a block
  */
 function b($block) {
   require "blocks/$block.php";

@@ -3,8 +3,28 @@
 require 'container.php';
 
 /**
- * tag! you're it!
- *
+ * a tag represents an html tag
+ * it is a container so it can contain other tags as well
+ * 
+ * besides having shortcuts for setting common attributes,
+ * the ::__toString method automatically renders opening/closing
+ * tags as well as all attributes
+ * 
+ * in addition, the tag can be specified as self-closing
+ * per valid XHTML practices, in which case contained content
+ * will not be rendered
+ * 
+ * note that in the case of self-closing tags, the content
+ * is still added to the inherited internal content array
+ * as this class does not override the parent (container)
+ * embed method ::__
+ * 
+ * using this class, it is possible to construct any html tag
+ * 
+ * like with real html however, the validity of the tag is left
+ * to your discretion - for simplicity, this class does no validity
+ * checking
+ * 
  */
 class tag extends container {
   protected $name;
@@ -14,8 +34,6 @@ class tag extends container {
 
   /**
    *
-   * @param string $name
-   * @param array $specifications
    */
   public function __construct($name, $self_closing=0) {
     if (!is_string($name))
@@ -32,9 +50,9 @@ class tag extends container {
   }
 
   /**
-   * Set the specified html $attribute.
+   * set the specified html $attribute.
    * 
-   * Returns $this for chaining.
+   * returns $this for chaining.
    * 
    */
   public function _($attribute, $value=null) {
@@ -53,9 +71,9 @@ class tag extends container {
   }
   
   /**
-   * Shortcut for setting html attribute 'id'
+   * shortcut for setting html attribute 'id'
    * 
-   * Returns $this for chaining.
+   * returns $this for chaining.
    * 
    */
   public function _i($id) {
@@ -63,9 +81,9 @@ class tag extends container {
   }
   
   /**
-   * Shortcut for setting html attribute 'href'
+   * shortcut for setting html attribute 'href'
    * 
-   * Returns $this for chaining.
+   * returns $this for chaining.
    * 
    */
   public function _h($href) {
@@ -73,9 +91,9 @@ class tag extends container {
   }
   
   /**
-   * Shortcut for setting html attribute 'for'
+   * shortcut for setting html attribute 'for'
    *
-   * Returns $this for chaining.
+   * returns $this for chaining.
    *
    */
   public function _f($for) {
@@ -83,9 +101,9 @@ class tag extends container {
   }
   
   /**
-   * Shortcut for setting html attribute 'action'
+   * shortcut for setting html attribute 'action'
    *
-   * Returns $this for chaining.
+   * returns $this for chaining.
    *
    */
   public function _a($action) {
@@ -93,9 +111,9 @@ class tag extends container {
   }
   
   /**
-   * Shortcut for setting html attribute 'method'
+   * shortcut for setting html attribute 'method'
    *
-   * Returns $this for chaining.
+   * returns $this for chaining.
    *
    */
   public function _m($method) {
@@ -103,9 +121,9 @@ class tag extends container {
   }
   
   /**
-   * Shortcut for setting html attribute 'name'
+   * shortcut for setting html attribute 'name'
    *
-   * Returns $this for chaining.
+   * returns $this for chaining.
    *
    */
   public function _n($name) {
@@ -113,9 +131,9 @@ class tag extends container {
   }
   
   /**
-   * Shortcut for setting html attribute 'type'
+   * shortcut for setting html attribute 'type'
    *
-   * Returns $this for chaining.
+   * returns $this for chaining.
    *
    */
   public function _t($type) {
@@ -123,9 +141,9 @@ class tag extends container {
   }
   
   /**
-   * Shortcut for setting html attribute 'value'
+   * shortcut for setting html attribute 'value'
    *
-   * Returns $this for chaining.
+   * returns $this for chaining.
    *
    */
   public function _v($value) {
@@ -133,9 +151,9 @@ class tag extends container {
   }
   
   /**
-   * Shortcut for setting html attribute 'style'
+   * shortcut for setting html attribute 'style'
    *
-   * Returns $this for chaining.
+   * returns $this for chaining.
    *
    */
   public function _s($value) {
@@ -143,25 +161,21 @@ class tag extends container {
   }
 
   /**
-   * Adds the given class(es) to the internal
-   * array.
+   * merges the given class(es) into the internal
+   * array
    *
-   * Explodes by ' ' if multiple classes are
-   * provided.
+   * returns $this for chaining
    *
-   * Returns 0 if a non-string class
-   * name is given. Returns $this for
-   * chaining.
-   *
-   * @param string $class
    */
   public function _c($class) {
     if (!is_string($class))
       throw error::expecting_string();
 
+    $class = preg_replace('/\s{2,}/',' ', $class);
     $tmp = explode(' ', $class);
-    foreach ($tmp as $class_name)
-      $this->class[$class_name] = 1;
+    foreach ($tmp as $class) { 
+      $this->class[$class] = 1;
+    }
 
     return $this;
   }

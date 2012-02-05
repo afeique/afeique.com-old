@@ -140,7 +140,7 @@ class template_crafter extends crafter {
       $this->scripts[$i] = script_src($script);
     }
     
-    $this->meta_redirect = trim_slashes($this->meta_redirect);
+    $this->meta_redirect = trim($this->meta_redirect,'/');
     
     return o()->__(
         html5_doctype(),

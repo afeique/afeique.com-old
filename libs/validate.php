@@ -5,6 +5,28 @@ require_once 'error.php';
 define('STRING_VALIDATOR', 'string');
 define('ARRAY_VALIDATOR', 'array');
 
+/**
+ * the validate class is used to validate form inputs
+ * 
+ * it generates a validator corresponding to the type
+ * of input via the ::string and ::arryay methods
+ * 
+ * every instance method returns $this for chaining
+ * 
+ * not only are validations methods provided, but trivial
+ * sanitation methods as well - e.g. a ::trim method
+ * 
+ * the class stores an internal copy of the initial
+ * data provided for validation upon which it performs
+ * validation and sanitation methods in the order in
+ * which they are called
+ * 
+ * all validation errors are stored in the internal
+ * ->errors array
+ * 
+ * the ::errors method returns all errors as csv
+ * 
+ */
 class validate {
   protected $type;
   protected $what;
@@ -153,10 +175,10 @@ class validate {
   
   public function trim_slashes() {
     if ($this->type == STRING_VALIDATOR) {
-      $this->what = trim_slashes($this->what);
+      $this->what = trim($this->what,'/');
     } elseif ($this->type == ARRAY_VALIDATOR) {
       foreach ($this->what as $i => $thing)
-        $this->what[$i] = trim_slashes($thing);
+        $this->what[$i] = trim($thing,'/');
     }
     
     return $this;

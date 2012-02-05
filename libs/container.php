@@ -19,7 +19,12 @@ class container {
    * enter each piece of content as
    * as a separate arg
    * 
+   * e.g. $container->__($content, $more_content, ...)
+   * 
    * returns $this for chaining
+   * 
+   * renders content in the order it was embedded,
+   * see ::__toString method below
    */
   public function __() {
     $contents = func_get_args();

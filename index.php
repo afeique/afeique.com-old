@@ -33,14 +33,7 @@ $request = $_SERVER['QUERY_STRING'];
 $request = explode('&', $request);
 $request = $request[0];
 
-function trim_slashes($string) {
-  if (!is_string($string))
-    throw error::expecting_string();
-  
-  return trim($string, '/');
-}
-
-$request = trim_slashes($request);
+$request = trim($request,'/');
 
 $request = str_replace('-', '_', $request);
 $request_parts = explode('/', $request);

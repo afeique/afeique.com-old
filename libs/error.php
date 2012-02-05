@@ -1,5 +1,14 @@
 <?php
 
+/**
+ * error class contains only static functions that
+ * return Exception objects for throwing
+ * 
+ * its primary purpose is to simply store the most
+ * common errors in a single place and make throwing
+ * an Exception/error more succinct
+ * 
+ */
 class error {
   protected static function e($msg) {
     if (!is_string($msg))
