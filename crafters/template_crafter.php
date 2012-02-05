@@ -139,6 +139,9 @@ class template_crafter extends crafter {
       );
     }
     
+    foreach ($this->styles as $i => $stylesheet) {
+      $this->styles[$i] = css_link($stylesheet);
+    }
     foreach ($this->scripts as $i => $script) {
       $this->scripts[$i] = script_src($script);
     }
