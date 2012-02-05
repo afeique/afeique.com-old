@@ -3,8 +3,8 @@
 require_once 'error.php';
 
 /**
- * this contains magic
- *
+ * a container contains other renderable objects (anything with a __toString() method)
+ * used to group multiple renderable objects together into a single object to be passed around
  */
 class container {
   protected $content;
@@ -14,14 +14,12 @@ class container {
   }
 
   /**
-   * Embed renderable content.
+   * embed renderable content
    * 
-   * Enter each piece of content as
-   * as a separate arg.
+   * enter each piece of content as
+   * as a separate arg
    * 
-   * Returns $this for chaining.
-   * 
-   * @param mixed $content
+   * returns $this for chaining
    */
   public function __() {
     $contents = func_get_args();
