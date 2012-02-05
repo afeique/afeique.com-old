@@ -20,7 +20,6 @@ class template_crafter extends crafter {
    */
   protected $scripts;
   
-  // array of css links
   protected $content;
   
   // whether or not to use the page template
