@@ -33,11 +33,49 @@ $request = $_SERVER['QUERY_STRING'];
 $request = explode('&', $request);
 $request = $request[0];
 
+// clean up query string
 $request = trim($request,'/');
-
 $request = str_replace('-', '_', $request);
+
+// explode query string for looping and path generation
 $request_parts = explode('/', $request);
 
+/**
+ * determine what crafter file to call and what page to request
+ * 
+ * loop over the query string in reverse order;
+ * 
+ * starting with the full query string, each iteration generates
+ * a new path with one less part than the previous part;
+ * 
+ * the last part of the current iteration is reserved as the
+ * name of the crafter file and '_crafter.php' is appended to it;
+ * 
+ * if a crafter file is found in that path, reference the last part
+ * from the previous iteration and use that as the page request;
+ * 
+ * unused parts (including the page-request) are stored to the
+ * $extra array
+ * 
+ * example
+ * query-string = something/arbitrarily/random
+ * 
+ * 1st iteration
+ * path = CRAFTERS_PATH.'something/arbitrarily/'
+ * crafter-file = 'random_crafter.php'
+ * crafter-file doesn't exist: store 'random' to $extra, continue to next iteration
+ * 
+ * 2nd iteration
+ * path = CRAFTERS_PATH.'something/'
+ * crafter-file = 'arbitrarily_crafter.php'
+ * crafter-file exists!
+ * page request = 'random' (remember: $extra[0] = 'random' as well)
+ * 
+ * at which point an instance of arbitrarily_crafter (the crafter class
+ * also needs to be named arbitrarily_crafter) will be created and the
+ * page request passed to it
+ * 
+ */
 $page = '';
 $crafter = null;
 $extra = array();
