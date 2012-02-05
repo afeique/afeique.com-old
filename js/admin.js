@@ -12,14 +12,23 @@ $(function() {
    */
   
   /**
+   * BINDS CHARS LEFT UPDATER
+   */
+  function bind_chars_left(to_what, abel) {
+    if (abel === undefined)
+      abel = to_what;
+    return to_what
+    .blur(function() { $(this).val($(this).val().trim().replace(/\s{2,}/,' ')); })
+    .bind('keyup blur', function(event) {
+      var chars_left = 250 - $(this).val().length;
+      abel.contents().find('.chars-left').text(chars_left);
+    });
+  }
+  
+  /**
    * BIND CHARS LEFT TO TITLE, TAGS, DESCRIPTION
    */
-  $('#post-title, #post-tags, #post-description, #post-directory')
-  .blur(function() { $(this).val($(this).val().trim().replace(/\s{2,}/,' ')); })
-  .bind('keyup blur', function(event) {
-    var chars_left = 250 - $(this).val().length;
-    $(this).parent().contents().find('.chars-left').text(chars_left);
-  });
+  bind_chars_left($('#post-title, #post-tags, #post-description, #post-directory'));
   
   /**
    * 
@@ -96,29 +105,18 @@ $(function() {
   .hide();
   
   function input_editor(abel) {
-    return $(document.createElement('input'))
-    .attr('type','text')
-    .blur(function() { $(this).val($(this).val().trim().replace(/\s{2,}/,' ')); })
-    .bind('keyup blur', function(event) {
-      var chars_left = 250 - $(this).val().length;
-      abel.contents().find('.chars-left').text(chars_left);
-    });
+    return bind_chars_left($(document.createElement('input')).attr('type','text'));
   }
   
   function textarea_editor(abel) {
-    return $(document.createElement('textarea'))
-    .blur(function() { $(this).val($(this).val().trim().replace(/\s{2,}/,' ')); })
-    .bind('keyup blur', function(event) {
-      var chars_left = 250 - $(this).val().length;
-      abel.contents().find('.chars-left').text(chars_left);
-    });
+    return bind_chars_left($(document.createElement('textarea')), abel);
   }
 
-  function chars_left(abel) {
+  function chars_left_li(abel, field_type) {
     return $(document.createElement('li'))
     .append($(document.createElement('span'))
       .addClass('chars-left')
-      .append(250 - abel.children('input').val().length)
+      .append(250 - abel.children(field_type).val().length)
     );
   }
   
@@ -137,7 +135,7 @@ $(function() {
     
     abel.empty().append(editor);
     
-    var chars = chars_left(abel);
+    var chars_left = chars_left_li(abel, 'input');
     
     var submit = $(document.createElement('li'))
     .append(
@@ -196,7 +194,7 @@ $(function() {
 
     var commander = $(document.createElement('ul'))
     .attr('class','post-title-commander')
-    .append(chars)
+    .append(chars_left)
     .append(submit)
     .append(cancel)
     .append(title_spinner);
@@ -227,7 +225,7 @@ $(function() {
     .append(' ')
     .append(editor);
     
-    var chars = chars_left(abel);
+    var chars_left = chars_left_li(abel, 'input');
     
     var submit = $(document.createElement('li'))
     .append(
@@ -301,7 +299,7 @@ $(function() {
 
     var commander = $(document.createElement('ul'))
     .attr('class','post-tags-commander')
-    .append(chars)
+    .append(chars_left)
     .append(submit)
     .append(cancel)
     .append(tags_spinner);
@@ -324,7 +322,7 @@ $(function() {
     
     abel.empty().append(editor);
     
-    var chars = chars_left(abel);
+    var chars_left = chars_left_li(abel, 'textarea');
     
     var submit = $(document.createElement('li'))
     .append(
@@ -388,7 +386,7 @@ $(function() {
 
     var commander = $(document.createElement('ul'))
     .attr('class','post-description-commander')
-    .append(chars)
+    .append(chars_left)
     .append(submit)
     .append(cancel)
     .append(description_spinner);
@@ -412,7 +410,7 @@ $(function() {
     abel.children('.post-directory').remove();
     abel.append(editor);
     
-    var chars = chars_left(abel);
+    var chars_left = chars_left_li(abel, 'input');
     
     var submit = $(document.createElement('li'))
     .append(
@@ -471,7 +469,7 @@ $(function() {
 
     var commander = $(document.createElement('ul'))
     .attr('class','post-directory-commander')
-    .append(chars)
+    .append(chars_left)
     .append(submit)
     .append(cancel)
     .append(directory_spinner);
