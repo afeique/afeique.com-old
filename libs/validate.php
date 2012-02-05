@@ -22,7 +22,7 @@ define('ARRAY_VALIDATOR', 'array');
  * which they are called
  * 
  * all validation errors are stored in the internal
- * ->errors array
+ * ::$errors array
  * 
  * the ::errors method returns all errors as csv
  * 

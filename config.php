@@ -3,6 +3,7 @@
 define('BASE_PATH', dirname(__FILE__).'/');
 define('CRAFTERS_PATH', BASE_PATH.'crafters/');
 define('MODELS_PATH', BASE_PATH.'models/');
+define('JS_PATH', BASE_PATH.'js/');
 
 define('PUBLISHED_POSTS_DIR','posts/');
 define('UNPUBLISHED_POSTS_DIR','unpublished/');
