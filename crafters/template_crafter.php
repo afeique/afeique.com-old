@@ -206,7 +206,7 @@ class template_crafter extends crafter {
     }
     
     $this->db_error = '';
-    $db = new mysqli($mysql_host, $mysql_user, $mysql_pass, $mysql_db);
+    $db = @new mysqli($mysql_host, $mysql_user, $mysql_pass, $mysql_db);
     if ($db->connect_error) {
       if (!DEBUG)
         $this->db_error = 'Problem connecting to database.';

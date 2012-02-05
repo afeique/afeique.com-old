@@ -77,20 +77,6 @@ $(function() {
   var status404 = 'For some reason, the post you are editing could not be found.';
   var status500 = 'There was a problem with the database when editing your post. Try again.';
   
-  var input_editor = $(document.createElement('input'))
-  .attr('type','text')
-  .blur(function() { $(this).val($(this).val().trim().replace(/\s{2,}/,' ')); })
-  .bind('keyup blur', function(event) {
-    var chars_left = 250 - $(this).val().length;
-    abel.contents().find('.chars-left').text(chars_left);
-  });
-  
-  var chars_left = $(document.createElement('li'))
-  .append($(document.createElement('span'))
-    .addClass('chars-left')
-    .append(250 - abel.children('input').val().length)
-  );
-  
   var submit_button = 
   $(document.createElement('a')).append('submit').attr('title','submit').attr('href','javascript: void(0)')
     .button({
@@ -109,6 +95,33 @@ $(function() {
   .append($(document.createElement('img')).attr('src', BASE_URL+'images/spinner.gif').attr('alt','loading'))
   .hide();
   
+  function input_editor(abel) {
+    return $(document.createElement('input'))
+    .attr('type','text')
+    .blur(function() { $(this).val($(this).val().trim().replace(/\s{2,}/,' ')); })
+    .bind('keyup blur', function(event) {
+      var chars_left = 250 - $(this).val().length;
+      abel.contents().find('.chars-left').text(chars_left);
+    });
+  }
+  
+  function textarea_editor(abel) {
+    return $(document.createElement('textarea'))
+    .blur(function() { $(this).val($(this).val().trim().replace(/\s{2,}/,' ')); })
+    .bind('keyup blur', function(event) {
+      var chars_left = 250 - $(this).val().length;
+      abel.contents().find('.chars-left').text(chars_left);
+    });
+  }
+
+  function chars_left(abel) {
+    return $(document.createElement('li'))
+    .append($(document.createElement('span'))
+      .addClass('chars-left')
+      .append(250 - abel.children('input').val().length)
+    );
+  }
+  
   /**
    * POST ROW TITLE EDITOR
    */
@@ -118,11 +131,13 @@ $(function() {
     var original_title_html = abel.contents().clone(true);
     var post_id = abel.attr('id').replace(/[a-z\-]/g,'');;
     
-    editor = input_editor.clone(true)
+    editor = input_editor(abel)
     .attr('class','post-title-input')
     .attr('value', old_title);
     
     abel.empty().append(editor);
+    
+    var chars = chars_left(abel);
     
     var submit = $(document.createElement('li'))
     .append(
@@ -181,7 +196,7 @@ $(function() {
 
     var commander = $(document.createElement('ul'))
     .attr('class','post-title-commander')
-    .append(chars_left)
+    .append(chars)
     .append(submit)
     .append(cancel)
     .append(title_spinner);
@@ -203,7 +218,7 @@ $(function() {
     var original_tags_html = abel.contents().clone(true);
     var post_id = abel.attr('id').replace(/[a-z\-]/g,'');
     
-    var editor = input_editor.clone(true)
+    var editor = input_editor(abel)
     .attr('class','post-tags-input')
     .attr('value', old_tags);
     
@@ -211,6 +226,8 @@ $(function() {
     .append($(document.createElement('strong')).append('tagged'))
     .append(' ')
     .append(editor);
+    
+    var chars = chars_left(abel);
     
     var submit = $(document.createElement('li'))
     .append(
@@ -284,19 +301,12 @@ $(function() {
 
     var commander = $(document.createElement('ul'))
     .attr('class','post-tags-commander')
-    .append(chars_left)
+    .append(chars)
     .append(submit)
     .append(cancel)
     .append(tags_spinner);
 
     abel.append(commander);
-  });
-  
-  var textarea_editor = $(document.createElement('textarea'))
-  .blur(function() { $(this).val($(this).val().trim().replace(/\s{2,}/,' ')); })
-  .bind('keyup blur', function(event) {
-    var chars_left = 250 - $(this).val().length;
-    abel.contents().find('.chars-left').text(chars_left);
   });
   
   /**
@@ -308,11 +318,13 @@ $(function() {
     var original_description_html = abel.contents().clone(true);
     var post_id = abel.attr('id').replace(/[a-z\-]/g,'');
     
-    var editor = textarea_editor.clone(true)
+    var editor = textarea_editor(abel)
     .attr('class','post-description-textarea')
     .append(old_description);
     
     abel.empty().append(editor);
+    
+    var chars = chars_left(abel);
     
     var submit = $(document.createElement('li'))
     .append(
@@ -376,7 +388,7 @@ $(function() {
 
     var commander = $(document.createElement('ul'))
     .attr('class','post-description-commander')
-    .append(chars_left)
+    .append(chars)
     .append(submit)
     .append(cancel)
     .append(description_spinner);
@@ -393,12 +405,14 @@ $(function() {
     var original_directory_html = abel.contents().clone(true);
     var post_id = $(this).attr('id').replace(/[a-z\-]/g,'');
     
-    var editor = input_editor.clone(true)
+    var editor = input_editor(abel)
     .attr('class','post-directory-input')
     .attr('value', old_directory);
     
     abel.children('.post-directory').remove();
     abel.append(editor);
+    
+    var chars = chars_left(abel);
     
     var submit = $(document.createElement('li'))
     .append(
@@ -457,7 +471,7 @@ $(function() {
 
     var commander = $(document.createElement('ul'))
     .attr('class','post-directory-commander')
-    .append(chars_left)
+    .append(chars)
     .append(submit)
     .append(cancel)
     .append(directory_spinner);
