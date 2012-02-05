@@ -6,8 +6,8 @@ $content = o()->__(
     css_link('jquery-ui-lightness/jquery-ui-1.8.17.min.css'),
     css_link('blueprint/screen.min.css'),
     html_if('lt IE 8', css_link('blueprint/ie.css')),
-    css_link('main.css'),
-    html_if('lt IE 9', script_src('html5shiv.js')),
+    css_link(DEBUG ? 'main.css' : 'main.min.css'),
+    html_if('lt IE 9', script_src('html5shiv.min.js')),
     l('script')->_t('text/javascript')->__('
         var BASE_URL = "'.BASE_URL.'";
         var PUBLISHED_POSTS_DIR = "'.PUBLISHED_POSTS_DIR.'";
