@@ -9,6 +9,5 @@
 </div>
 
 <p>
-  Feel free to contact me with any questions, thoughts, or comments you have. I enjoy listening to other
-  people's ideas and becoming acquainted, so don't hesitate!
+  Feel free to contact me with regarding any questions, thoughts, or comments :D
 </p>
