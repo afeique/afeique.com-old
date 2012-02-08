@@ -5,6 +5,9 @@ if ((int)date('Y') > 2011)
 else
   $date = '2011';
 
-$content = l('footer')->_c('span-24 text-center')->__(
-    "&copy; $date"
+echo l('footer')->_c('span-24 text-center')->__(
+    "&copy; $date",
+    ul(
+        li(l_link('source'))->_c('last')
+    )
 );

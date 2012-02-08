@@ -16,6 +16,12 @@ class root_crafter extends template_crafter {
       );
     }
   }
+  
+  protected function _source() {
+    $this->title = 'site source';
+    
+    
+  }
 }
 
 ?>

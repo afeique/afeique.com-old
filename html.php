@@ -27,7 +27,9 @@ function o() {
  * a block
  */
 function b($block) {
+  ob_start();
   require "blocks/$block.php";
+  $content = ob_get_clean();
   
   return $content;
 }
@@ -142,7 +144,9 @@ function a_link($href, $content) {
   return l('a')->_h($href)->__($content);
 }
 
-function l_link($href, $content) {
+function l_link($href, $content='') {
+  if (empty($content))
+    $content = $href;
   return l('a')->_h(BASE_URL.$href)->__($content);
 }
 

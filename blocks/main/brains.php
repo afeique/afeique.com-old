@@ -2,7 +2,7 @@
 
 // 'brains' is a silly moniker for the contents of the head
 
-$content = o()->__(
+echo o()->__(
     l('script')->_t('text/javascript')->__('
         var BASE_URL = "'.BASE_URL.'";
         var PUBLISHED_POSTS_DIR = "'.PUBLISHED_POSTS_DIR.'";

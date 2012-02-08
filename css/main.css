@@ -312,6 +312,29 @@ footer {
 	font-size: 1.2em;
 }
 
+footer ul {
+  	display: block;
+  	list-style-type: none;
+}
+
+footer li {
+	display: inline-block;
+	margin: 0;
+	padding: 0;
+}
+
+footer li:after {
+	content: "-";
+	margin-right: .3em;
+	padding-right: .3em;
+}
+
+footer li.last:after {
+	content: "";
+	margin-right: 0;
+	padding-right: 0;
+}
+
 /**
  * 	
  * INLINE ERROR STYLING
@@ -323,7 +346,6 @@ span.error {
 	background-color: transparent;
 	border: none;
 }
-
 
 /**
  * 	
