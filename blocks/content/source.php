@@ -3,7 +3,7 @@
   <?=a_link('http://github.com/afeique/afeique.com.git','this repository')?>.
 </p>
 
-<h2>Git on Windows 7</h2>
+<h2>git on windows</h2>
 <p>
   On Windows 7, I currently use <?=a_link('http://code.google.com/p/msysgit/','msysGit')?>.
   To get started, download the installer and run. 
@@ -24,16 +24,16 @@
   screen.
 </p>
 
-<h1>Introduction to the Source</h1>
+<h1>introduction to the source</h1>
 
-<h2>Statement of Intent</h2>
+<h2>statement of intent</h2>
 <p>
   This site's code was written by me for me, with the sole intention of having fun programming. Being 
   used by other people was never on the agenda. Nevertheless, below is a general overview of the
   framework I wrote, provided in part as documentation and in part as reading for anyone interested.
 </p>
 
-<h2>Thoughts on MVC</h2>
+<h2>thoughts on mvc</h2>
 <p>
   Through the course of working with MVC for the past several years, I have a few times been curious
   about whether the mixing of view and logic is really an issue. In my experience, the real gripe
@@ -58,7 +58,7 @@
   amongst 10+ open tabs in my IDE, most of which are views.
 </p>
 
-<h2>HTML as PHP Objects</h2>
+<h2>html as php objects</h2>
 <p>
   At some point, I somehow decided the solution was to be able to describe and form HTML using PHP objects.
   I reasoned that the HTML could be embedded seamlessly within the logic, could be loaded into helper
@@ -90,7 +90,7 @@
   Lastly, the /html.php file contains helper functions and shortcuts for using oohtml more efficiently.
 </p>
 
-<h2>Crafters, not Controllers</h2>
+<h2>crafters, not controllers</h2>
 <p>
   With oohtml, every controller is no longer just a controller - but an entire self-contained
   unit for generating pages. Every method isn't just the logic for a particular page, but
@@ -136,14 +136,14 @@
   Within the site source, all child crafters are located within the /crafters directory.
 </p>
 
-<h2>Template Crafter</h2>
+<h2>template crafter</h2>
 <p>
   There is one intermediary parent between the abstract crafter class and all other child crafters: the template_crafter.
   This crafter is responsible for defining the template for the entire website, as well as all helper methods for
   generating content and database (model) access.
 </p>
 
-<h2>Models</h2>
+<h2>models</h2>
 <p>
   Currently, the site uses <?=a_link('http://www.phpactiverecord.org/','php.activerecord')?> as a database
   ORM. There is only one table: 'posts'. Here is the CREATE TABLE SQL:
@@ -172,7 +172,7 @@ CREATE TABLE IF NOT EXISTS `posts` (
   and setting up FOREIGN KEY constraints. 
 </p>
 
-<h2>Database Access</h2>
+<h2>database access</h2>
 <p>
   In my current setup, I have two users configured for access to the site database: a single public user who can
   only perform SELECT queries; and an admin user who can do shenanigans. No admin credentials are stored in any
@@ -184,20 +184,20 @@ CREATE TABLE IF NOT EXISTS `posts` (
   users on my current webhost.
 </p>
 
-<h2>Admin Database Connections</h2>
+<h2>admin access</h2>
 <p>
   In order to login as an admin, one must know the actual SQL admin credentials. Once logged in, the
   credentials are stored in PHP $_SESSION variables. The template_crafter always checks whether 
   these variables are set and uses their contents to establish an admin connection automatically.
 </p>
 
-<h2>Security Concerns</h2>
+<h2>security concerns</h2>
 <p>
   I am no security expert. I don't know what flaws are presented with the above scheme. If you have any thoughts
   on the matter, feel free to contact me.
 </p>
 
-<h2>Helper Classes</h2>
+<h2>helper classes</h2>
 <p>
   There are only two helper classes: /libs/validate.php and /libs/error.php. The former is a helper for validating
   form inputs. It uses method-chaining to quickly apply a series of operations and validations on a particular input

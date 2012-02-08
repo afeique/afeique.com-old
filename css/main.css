@@ -51,19 +51,19 @@ a {
  */
 
 #main-content {
-	font-size: 1.3em;
-}
-
-#main-content h1 {
-	font-size: 1.5em;
-}
-
-#main-content h2 {
 	font-size: 1.2em;
 }
 
+#main-content h1 {
+	font-size: 1.6em;
+}
+
+#main-content h2 {
+	font-size: 1.3em;
+}
+
 #main-content p {
-	margin: .5em 0;
+	margin: .5em 0 1em 0;
 }
 
 /**
