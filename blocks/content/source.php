@@ -34,7 +34,7 @@
 </p>
 <p>
   In my workflow, I have a tendency to modify the view right after making changes in the logic. I've
-  long felt it would be more convenient if the view were at least in the same file. At least I wouldn't 
+  long felt it would be more convenient if the view were at least in the same file. I wouldn't 
   have to go searching for it amongst the other files in the project (sometimes numbering the hundreds), or 
   amongst 10+ open tabs in my IDE, most of which are views.
 </p>
