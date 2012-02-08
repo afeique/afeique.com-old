@@ -133,6 +133,6 @@ if (!empty($page))
  * the crafter defaults to rendering the index
  */
 //$crafter->craft();
-echo $crafter;
+echo $crafter->craft();
 
 ?>

@@ -8,7 +8,8 @@ echo l('header')->_c('span-24')->__(
     l('nav')->_i('main-nav')->_c('span-14 prepend-6 last')->__(
         ul(
             li(l_link('', 'home')),
-            li(l_link('browse'))
+            li(l_link('browse')),
+            li(l_link('contact'))
         )
     )
 );
