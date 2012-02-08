@@ -41,7 +41,7 @@
 
 <h2>html as php objects</h2>
 <p>
-  At some point, I somehow decided the solution was to be able to describe and form HTML using PHP objects.
+  At some point, I decided the solution was to be able to describe and form HTML using PHP objects.
   I reasoned that the HTML could be embedded seamlessly within the logic, could be loaded into helper
   functions within the same class (representing sub-views), and best of all, could be inherited for use
   in child classes. It would enable a whole system of simple inheritance-based templating.
@@ -115,6 +115,33 @@
 </p>
 <p>
   Within the site source, all child crafters are located within the /crafters directory.
+</p>
+
+<h2>nothing's perfect</h2>
+<p>
+  In the same vein of the complaints I levied against MVC at large, one can find similar small nitpicks with
+  the oohtml this site goes with.
+</p>
+<p>
+  For one thing, a lot of IDEs have HTML autocomplete features that speed up writing HTML drastically.
+  However, the oohtml syntax has poor autocompletion in Eclipse, meaning it is actually more cumbersome to
+  write oohtml than actual HTML, despite oohtml being more compact.
+</p>
+<p>
+  Moreover, because the view is now integrated into the logic, crafter page-method code is generally larger
+  than its counterpart view-controller (VC) code. This means that page-method code becomes less navigable despite
+  not having to flip files every five seconds.
+</p>
+
+<h2>potential workarounds</h2>
+<p>
+  Using helper functions dedicated to generating HTML rather than embedding HTML in the middle of page-methods is the
+  biggest one. This greatly minimizes the area taken up by page-methods while retaining overall code navigability.
+  The code navigability part is true primarily if you use "find" to navigate code quickly.
+</p>
+<p>
+  This also has the advantage of reducing code duplication by consistently favoring the creation of reusable methods
+  and code.
 </p>
 
 <h2>template crafter</h2>
