@@ -9,5 +9,5 @@
 </div>
 
 <p>
-  Feel free to contact me with regarding any questions, thoughts, or comments :D
+  Feel free to contact me with regarding any questions, thoughts, or comments <strong>:</strong>D
 </p>
