@@ -26,7 +26,8 @@
 <ul>
   <li>having to navigate to those separate files when making modifications;</li>
   <li>needing "sub-views" for chunks of content that are reused across multiple page.</li>
-  <li>"repeating" the logic of looping over content, first when retrieving from the model, then again when displaying it;</li>
+  <li>"repeating" the logic of looping over content, first when retrieving from the model, then 
+  again when displaying it;</li>
 </ul>
 <p>
   I don't really consider any of these to be serious issues, but they are minor nuisances to me,
@@ -146,9 +147,7 @@
 <p>
   Consequently, unlike in <?=b_link('http://codeigniter.com/','CodeIgniter')?> where this
   information is passed automatically to page-methods as arguments, the page-method must itself make an effort 
-  to get the information. The reason this isn't done via arguments is simple: it avoids having to perform reflection 
-  and dynamically pass arguments, an advantage considering the vast majority of my site's page-methods don't require
-  any extra query-string information.
+  to get the information.
 </p>
 
 <h2>nothing's perfect</h2>
