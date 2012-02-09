@@ -181,6 +181,14 @@
   and code.
 </p>
 
+<h2>'b' for 'blocks'</h2>
+<p>
+  One thing is for sure: you don't want to catch yourself writing out entire sections of static content in oohtml.
+  So save yourself the time. In <?=code('/html.php')?> there is a helper function called <?=code('b($block)')?> which
+  specifically grabs a chunk of static content in <?=code('/blocks')?>, fetches it through output buffering (so php
+  content is still processed), and returns the resulting output.
+</p>
+
 <h2>template crafter</h2>
 <p>
   There is one intermediary parent between the abstract crafter class and all other child crafters: the template_crafter.
