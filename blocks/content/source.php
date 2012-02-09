@@ -62,11 +62,7 @@
   represents a set of "renderable" elements: 
   anything that is either a scalar or contains a <?=code('__toString()')?> method. It has code for embedding n-many 
   elements using <?=b_link('http://php.net/manual/en/function.func-get-args.php', code('func_get_args'))?> and then 
-  rendering all its contents to a single run-on string. Thanks to 
-  <?=b_link('https://www.google.com/chrome','Chrome')?> and
-  <?=b_link('http://www.mozilla.org/en-US/firefox/new/?from=getfirefox','Firefox')?>,
-  outputting nice indented HTML is no longer necessary for debugging. In fact, eliminating whitespace is actually
-  preferable in order to minimize size.
+  rendering all its contents to a single run-on string. 
 </p>
 <p>
   The tag class in contrast is specifically for creating an HTML tag. It has to be passed a name and whether
