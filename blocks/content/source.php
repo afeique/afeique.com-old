@@ -48,7 +48,7 @@
   templating.
 </p>
 <p>
-  HTML, like XML and JSON, already notates "objects." The objects themselves are HTML elements, each element
+  HTML, like XML and JSON, already notates "objects." The objects are HTML elements, each element
   with its own set of attributes such as id, class, style, etc. Consequently, it is very simple to write a 
   small library capable of generating PHP objects that represent HTML.
 </p>
