@@ -41,10 +41,11 @@
 
 <h2>html as php objects</h2>
 <p>
-  At some point, I decided the solution was to be able to describe and form HTML using PHP objects.
-  I reasoned that the HTML could be embedded seamlessly within the logic, could be loaded into helper
-  functions within the same class (representing sub-views), and best of all, could be inherited for use
-  in child classes. It would enable a whole system of simple inheritance-based templating.
+  At some point, I decided the solution was to be able to form HTML using PHP objects.
+  I reasoned that the PHP objects representing HTML could be embedded seamlessly within the logic, 
+  could be loaded into helper functions within the same class (representing sub-views), and best of all, 
+  could be inherited for use in child classes. It would enable a whole system of simple inheritance-based 
+  templating.
 </p>
 <p>
   HTML, like XML and JSON, already notates "objects." The objects themselves are HTML elements, each element
