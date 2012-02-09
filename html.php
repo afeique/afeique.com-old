@@ -144,6 +144,10 @@ function a_link($href, $content) {
   return l('a')->_h($href)->__($content);
 }
 
+function b_link($href, $content) {
+  return a_link($href, $content)->_('target','_blank');
+}
+
 function l_link($href, $content='') {
   if (empty($content))
     $content = $href;
@@ -156,4 +160,11 @@ function checkbox() {
 
 function header_redirect($rel_url) {
   header('Location: '.BASE_URL.$rel_url);
+}
+
+function code($text) {
+  if (!is_string($text))
+    throw error::expecting_string();
+  
+  return l('span')->_c('code')->__($text);
 }

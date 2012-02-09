@@ -371,3 +371,7 @@ span.error {
 	font-style: italic;
 	color: #aaa;
 }
+
+span.code {
+	font-family: "Lucida Console", monospace;
+}

@@ -1,6 +1,13 @@
 <?php
 
-date_default_timezone_set('US/Eastern');
+require_once 'config.php';
+
+if (DEBUG)
+  error_reporting(E_ALL);
+else
+  error_reporting(0);
+
+date_default_timezone_set(TIMEZONE);
 
 session_start();
 

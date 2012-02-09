@@ -1,5 +1,12 @@
 <?php
 
+// stages things to give more detailed information useful for debugging
+// (e.g. ajax calls, database connects, etc)
+// sets php error_reporting to E_ALL
+define('DEBUG', 0);
+
+define('TIMEZONE', 'US/Eastern');
+
 define('BASE_PATH', dirname(__FILE__).'/');
 define('CRAFTERS_PATH', BASE_PATH.'crafters/');
 define('MODELS_PATH', BASE_PATH.'models/');
@@ -22,9 +29,7 @@ define('PASSWORD','password');
 
 define('EXTRA', 'extra'); // extra queries
 
-// stages things to give more detailed information useful for debugging
-// (e.g. ajax calls, database connects, etc)
-define('DEBUG', 0);
+
 
 define('META_REFRESH_TIME', 3);
 define('POST_DATE_FORMAT', 'M j, Y @ H:i');
