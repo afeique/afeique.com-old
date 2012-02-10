@@ -36,4 +36,8 @@ $(function() {
     text: false,
     icons: {primary: 'ui-icon-check'}
   });
+  $('.pack-button').button({
+  	text: false,
+  	icons: {primary: 'ui-icon-gear'}
+  });
 });

@@ -139,19 +139,24 @@ class template_crafter extends crafter {
     }
     
     // render scripts
-    $scripts = '';
+    $scripts = array('jquery-1.7.1.min.js','jquery-ui-1.8.17.min.js','buttons.js');
     if (DEBUG) {
-      array_unshift($this->scripts,'jquery-1.7.1.min.js','jquery-ui-1.8.17.min.js','buttons.js','admin.js');
+      if ($this->logged_in())
+        $scripts[] = 'admin.js';
+      foreach (array_reverse($scripts) as $script)
+        array_unshift($this->scripts, $script);
     } else {
-      array_unshift($this->scripts,'meshed.min.js');
+      if ($this->logged_in())
+        array_unshift($this->scripts,'admin-meshed.min.js');
+      else
+        array_unshift($this->scripts,'public-meshed.min.js');
     }
     
+    $scripts = '';
     foreach ($this->scripts as $i => $script) {
-      if (INLINE_JS) {
-        ob_start();
-        readfile(JS_PATH.$script);
-        $scripts .= ob_get_clean();
-      } elseif (DEBUG)
+      if (INLINE_JS)
+        $scripts .= file_get_contents(JS_PATH.$script);
+      elseif (DEBUG)
         $this->scripts[$i] = script_src($script);
       else
         $this->scripts[$i] = '"'.$script.'"';
