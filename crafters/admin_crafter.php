@@ -90,7 +90,7 @@ class admin_crafter extends template_crafter {
       if (!is_dir($pub))
         mkdir($pub);
       
-      $unpub = UNPUBLISHED_POSTS_PATH.$directory;
+      $unpub = escapeshellarg(UNPUBLISHED_POSTS_PATH.$directory);
       exec("mv $unpub/ $pub/");
       
       $time = time();
@@ -209,7 +209,7 @@ class admin_crafter extends template_crafter {
     $message = $new_value->errors();
     if ($field == 'directory' && empty($message)) {
       $current_path = rtrim($this->post_path($post->directory, $post->time_first_published),'/');
-      $new_path = rtrim($this->post_path($new_value, $post->time_first_published),'/');
+      $new_path = escapeshellarg(rtrim($this->post_path($new_value, $post->time_first_published),'/'));
       
       exec("mv $current_path $new_path");
       
