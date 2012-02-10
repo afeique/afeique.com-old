@@ -92,21 +92,37 @@
   <li><?=code('protected static function _index()')?> - not valid, method cannot be static</li>
   <li><?=code('protected function index()')?> - not valid, no preceding underscore</li>
 </ul>
+
 <p>
-  Two abstract methods are: <?=code('public function _index()')?> and <?=code('public function _404()')?>. These 
-  represent the index and 404 pages respectively.
+  The abstract crafter class has three abstract methods:
+</p>
+
+<ul>
+  <li><?=code('public abstract function _index()')?></li>
+  <li><?=code('public abstract function _404()')?></li>
+  <li><?=code('public abstract function craft()')?></li>
+</ul>
+<p>
+  The first two methods above (<?=code('_index()')?> and <?=code('_404()')?>) define the index and 404 pages. These
+  two pages are mandatory for all child crafters, either to define themselves or to inherit. This is because two
+  methods within the abstract crafter class (<?=code('__construct()')?> and <?=code('craft()')?>&mdash;which are expected
+  to be inherited by all children to some degree) specifically point to <?=code('_index()')?> and <?=code('_404()')?>.
 </p>
 <p>
-  The method <?=code('public function craft()')?> is also left as an abstract method, in order that child crafters
-  may define their own method for crafting pages. For example, the <?=code('admin_crafter')?> checks to ensure the
-  user is logged in as an admin before rendering any admin pages; else it renders the login page.
+  The third abstract method, <?=code('craft()')?>, allows children to define their own method of crafting pages.
+  Since each child crafter class will be responsible for its own set of related pages, it follows that each set
+  of pages might have a different methodology for crafting pages, either for styling, functionality, or security.
+  For example, the <?=code('admin_crafter')?> checks to ensure the user is logged in as an admin before rendering 
+  any admin pages; else it renders a login page.
 </p>
+
+<h2>requesting pages from crafters</h2>
 <p>
   Since page-methods are protected, one must externally <em>request</em> a crafter to craft a page. This is done
   in my implementation via the <?=code('request($page)')?> method.
 </p>
 <p>
-  Internally, the crafter also keeps track of all the valid page-methods it contains. This is done using reflection
+  Internally, the crafter also keeps track of all valid page-methods it contains. This is done using reflection
   within the crafter's <?=code('__construct()')?> method.
 </p>
 <p>
