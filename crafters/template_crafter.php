@@ -131,27 +131,25 @@ class template_crafter extends crafter {
     if (!is_array($this->scripts))
       throw error::expecting_array();
     
-    array_unshift($this->styles, (DEBUG ? 'main.css' : 'main.min.css'));
-    if ($this->logged_in()) {
-      array_unshift($this->styles, 'jquery-ui-lightness/jquery-ui-1.8.17.min.css');
-      array_unshift($this->scripts,'jquery-1.7.1.min.js','jquery-ui-1.8.17.min.js',
-          (DEBUG ? 'buttons.js' : 'buttons.min.js'), 
-          (DEBUG ? 'admin.js' : 'admin.min.js')
-      );
-    }
+    array_unshift($this->styles, 'jquery-ui-lightness/jquery-ui-1.8.17.min.css',
+        (DEBUG ? 'main.css' : 'main.min.css'));
+    array_unshift($this->scripts,'meshed.min.js');
     
     foreach ($this->styles as $i => $stylesheet) {
       $this->styles[$i] = css_link($stylesheet);
     }
-    foreach ($this->scripts as $i => $script) {
-      $this->scripts[$i] = script_src($script);
-    }
     
     /*
     foreach ($this->scripts as $i => $script) {
-      $this->scripts[$i] = '"'.$script.'"';
+      $this->scripts[$i] = script_src($script);
     }
     */
+    
+    
+    foreach ($this->scripts as $i => $script) {
+      $this->scripts[$i] = '"'.$script.'"';
+    }
+    
     
     $this->meta_redirect = trim($this->meta_redirect,'/');
     
@@ -164,8 +162,8 @@ class template_crafter extends crafter {
                 ($this->no_robots ? ll('meta')->_n('robots')->_('content','noindex, noarchive, nofollow') : ''),
                 (!empty($this->meta_redirect) ? ll('meta')->_('http-equiv','refresh')->_('content', META_REFRESH_TIME.'; '.BASE_URL.$this->meta_redirect) : ''),
                 title($this->title.' @ afeique.com'),
-                implode('', $this->scripts)
-                /*
+                //implode('', $this->scripts)
+                
                 l('script')->_t('text/javascript')->__('
                     // Add a script element as a child of the body
                     function deferred_js() {
@@ -185,7 +183,7 @@ class template_crafter extends crafter {
                     else 
                       window.onload = deferred_js;
                 ')
-                */
+                
             ),
 
             body(
