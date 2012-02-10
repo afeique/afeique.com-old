@@ -296,35 +296,3 @@ CREATE TABLE IF NOT EXISTS `posts` (
   is passed to a method. Some classes extend the error class in order that the error class only contain the most 
   widely applicable Exceptions.
 </p>
-
-<h2>satire on code style</h2>
-<p>
-  <em>This section is purposely a satirical farce.</em>
-</p>
-<p>
-  Let me tell you, I am waging a war against capitalism. And by that, I mean capital letters. Like with all things,
-  I don't actually mind camel-caps or camel-hats. When it comes to personal preference though, there's nothing like 
-  a quality underscore.
-</p>
-<p>
-  Like with many things I do, this derives from nothing more than a pure aesthetic dislike of camelish situations.
-  For example, having a class called <?=code('DBConnect')?>. That's just one too many capital letters running into each 
-  other. I'm somehow equally averse to <?=code('DB_Connect')?>. A good <?=code('db_connect')?> is the most pleasing to 
-  my eye. There is no way you are getting me to type out <?=code('DatabaseConnect')?>. Wait. Except that one time.
-</p>
-<p>
-  I also greatly dislike "mixing" in the manner PHP does. Some functions adhere to the underscore mafia, while
-  other functions are part of the camel conglomerate. Sure you can say it's the best of both worlds, but I think
-  it's more like drinking orange juice while brushing your teeth. Try it some time. I dares ya.
-</p>
-<p>
-  When I say "averse" and "war" please don't misunderstand me - I cannot emphasize this enough, it's simply a minor
-  preference, not something I'm OCD about. If I was paid to write code in camel-caps to adhere to certain guidelines,
-  I would do it at the drop of a camel hat. If I was writing a library that required conformancy to certain coding 
-  standards, I wouldn't bat a long camel eyelash. If I'm using an external library (e.g. php.activerecord) that uses 
-  CamelCaps, I wouldn't go off and refactor the entire library. But if I'm writing for myself, you can bet your 
-  camel-hides I'm going to use whatever darn well tootin' pleases me.
-</p>
-<p>
-  <?=code('// END TRANSMISSION')?>
-</p>

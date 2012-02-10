@@ -372,6 +372,6 @@ span.error {
 	color: #aaa;
 }
 
-span.code {
+.code {
 	font-family: "Lucida Console", monospace;
 }

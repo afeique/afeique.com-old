@@ -53,7 +53,7 @@ class template_crafter extends crafter {
     $this->title = 'Fipple';
     $this->heading = '';
     
-    $this->content = o()->__(
+    $this->content = o(
         p('This page currently has no content. Try again some other time?')
     );
     
@@ -100,7 +100,7 @@ class template_crafter extends crafter {
     }
   
     $middot = ' &middot; ';
-    $this->content = o()->__(
+    $this->content = o(
         p('Posts are displayed in descending order of date last modified.'),
         $posts_html
     );
@@ -155,7 +155,7 @@ class template_crafter extends crafter {
     
     $this->meta_redirect = trim($this->meta_redirect,'/');
     
-    return o()->__(
+    return o(
         html5_doctype(),
         html(
             head(
@@ -280,7 +280,7 @@ class template_crafter extends crafter {
     if (!$this->post_can_override_heading) {
       $post_title = ' post-title';
       $this->post_commanders($edit_title, $edit_tags, $delete_post);
-      $heading_commanders = o()->__($edit_title, $delete_post);
+      $heading_commanders = o($edit_title, $delete_post);
       
       // parse post id from heading
       $heading = "{$this->heading}";

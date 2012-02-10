@@ -1,13 +1,13 @@
+<?php
 
-<div class="span-24">
-  <ul>
-    <li><strong>email and gtalk</strong> afeique at gmail dot com</li>
-    <li><strong>aim</strong> afeique</li>
-    <li><strong>msn</strong> afeique at gmail dot com</li>
-    <li><strong>skype</strong> afeique</li>
-  </ul>
-</div>
+echo o(
+    l('div')->_c('span-24')->__(
+        ul(
+            li(strong('email, msn, and gtalk'),' ','afeique at gmail dot com'),
+            li(strong('aim and skype'),' ','afeique')
+        )    
+    ),
+    p('Feel free to contact me with for any reason you find justifiable ', strong(':'),'D')
+);
 
-<p>
-  Feel free to contact me with regarding any questions, thoughts, or comments <strong>:</strong>D
-</p>
+?>

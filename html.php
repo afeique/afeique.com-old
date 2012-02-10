@@ -12,7 +12,13 @@ require_once 'libs/tag.php';
  * doesn't o look like a container?
  */
 function o() {
-  return new container();
+  $o = new container();
+  $args = func_get_args();
+  foreach ($args as $content) {
+    $o->__($content);
+  }
+  
+  return $o;
 }
 
 /**
