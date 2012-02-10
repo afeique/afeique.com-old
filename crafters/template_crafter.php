@@ -133,23 +133,36 @@ class template_crafter extends crafter {
     
     array_unshift($this->styles, 'jquery-ui-lightness/jquery-ui-1.8.17.min.css',
         (DEBUG ? 'main.css' : 'main.min.css'));
-    array_unshift($this->scripts,'meshed.min.js');
     
     foreach ($this->styles as $i => $stylesheet) {
       $this->styles[$i] = css_link($stylesheet);
     }
     
-    /*
-    foreach ($this->scripts as $i => $script) {
-      $this->scripts[$i] = script_src($script);
-    }
-    */
-    
-    
-    foreach ($this->scripts as $i => $script) {
-      $this->scripts[$i] = '"'.$script.'"';
+    // render scripts
+    $scripts = '';
+    if (DEBUG) {
+      array_unshift($this->scripts,'jquery-1.7.1.min.js','jquery-ui-1.8.17.min.js','buttons.js','admin.js');
+    } else {
+      array_unshift($this->scripts,'meshed.min.js');
     }
     
+    foreach ($this->scripts as $i => $script) {
+      if (INLINE_JS) {
+        ob_start();
+        readfile(JS_PATH.$script);
+        $scripts .= ob_get_clean();
+      } elseif (DEBUG)
+        $this->scripts[$i] = script_src($script);
+      else
+        $this->scripts[$i] = '"'.$script.'"';
+    }
+    
+    if (INLINE_JS)
+      $scripts = l('script')->_t('text/javascript')->__($scripts);
+    elseif (DEBUG)
+      $scripts = implode('', $this->scripts);
+    else
+      $scripts = l('script')->_t('text/javascript')->__('function deferred_js(){var a=['.implode(',', $this->scripts).'];for(var b=0;b<a.length;b++){var c=document.createElement("script");c.src="'.JS_URL.'"+a[b];document.body.appendChild(c)}}if(window.addEventListener)window.addEventListener("load",deferred_js,false);else if(window.attachEvent)window.attachEvent("onload",deferred_js);else window.onload=deferred_js');
     
     $this->meta_redirect = trim($this->meta_redirect,'/');
     
@@ -162,28 +175,7 @@ class template_crafter extends crafter {
                 ($this->no_robots ? ll('meta')->_n('robots')->_('content','noindex, noarchive, nofollow') : ''),
                 (!empty($this->meta_redirect) ? ll('meta')->_('http-equiv','refresh')->_('content', META_REFRESH_TIME.'; '.BASE_URL.$this->meta_redirect) : ''),
                 title($this->title.' @ afeique.com'),
-                //implode('', $this->scripts)
-                
-                l('script')->_t('text/javascript')->__('
-                    // Add a script element as a child of the body
-                    function deferred_js() {
-                      var scripts = ['.implode(',', $this->scripts).']
-                      for (var i=0; i<scripts.length; i++) {
-                        var script = document.createElement("script");
-                        script.src = "'.JS_URL.'"+scripts[i];
-                        document.body.appendChild(script);
-                      }
-                    }
-                
-                    // Check for browser support of event handling capability
-                    if (window.addEventListener)
-                      window.addEventListener("load", deferred_js, false);
-                    else if (window.attachEvent)
-                      window.attachEvent("onload", deferred_js);
-                    else 
-                      window.onload = deferred_js;
-                ')
-                
+                $scripts
             ),
 
             body(

@@ -1,9 +1,15 @@
 <?php
-
-// stages things to give more detailed information useful for debugging
-// (e.g. ajax calls, database connects, etc)
-// sets php error_reporting to E_ALL
+/**
+ * stages things to give more detailed information useful for debugging
+ * (e.g. ajax calls, database connects, etc)
+ * sets php error_reporting to E_ALL
+ */
 define('DEBUG', 0);
+
+/**
+ * loads all javascript inline instead of via deferment
+ */
+define('INLINE_JS', 0);
 
 define('TIMEZONE', 'US/Eastern');
 
