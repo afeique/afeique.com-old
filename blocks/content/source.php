@@ -103,7 +103,7 @@
   <li><?=code('public abstract function craft()')?></li>
 </ul>
 <p>
-  The first two methods above (<?=code('_index()')?> and <?=code('_404()')?>) define the index and 404 pages. These
+  The first two methods, <?=code('_index()')?> and <?=code('_404()')?>, define those respective pages. These
   two pages are mandatory for all child crafters, either to define themselves or to inherit. This is because two
   methods within the abstract crafter class (<?=code('__construct()')?> and <?=code('craft()')?>&mdash;which are expected
   to be inherited by all children to some degree) specifically point to <?=code('_index()')?> and <?=code('_404()')?>.
