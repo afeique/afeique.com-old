@@ -25,7 +25,7 @@ define('PUBLISHED_POSTS_PATH', BASE_PATH.PUBLISHED_POSTS_DIR);
 define('UNPUBLISHED_POSTS_PATH', BASE_PATH.UNPUBLISHED_POSTS_DIR);
 
 define('BASE_URL', 'http://'.$_SERVER['HTTP_HOST'].($_SERVER['HTTP_HOST'] == 'localhost' ? '/afeique.com/' : '/'));
-define('STATIC_URL', 'http://'.($_SERVER['HTTP_HOST'] == 'localhost' ? $_SERVER['HTTP_HOST'] : 'static.'.$_SERVER['HTTP_HOST']).($_SERVER['HTTP_HOST'] == 'localhost' ? '/afeique.com/static/' : '/'));
+define('STATIC_URL', 'http://'.($_SERVER['HTTP_HOST'] == 'localhost' ? $_SERVER['HTTP_HOST'] : 'static.afeique.com').($_SERVER['HTTP_HOST'] == 'localhost' ? '/afeique.com/static/' : '/'));
 define('CSS_URL', STATIC_URL.'css/');
 define('JS_URL', STATIC_URL.'js/');
 
