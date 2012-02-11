@@ -101,7 +101,7 @@ $(function() {
   });
   
   var spinner = $(document.createElement('li'))
-  .append($(document.createElement('img')).attr('src', BASE_URL+'images/spinner.gif').attr('alt','loading'))
+  .append($(document.createElement('img')).attr('src', STATIC_URL+'images/spinner.gif').attr('alt','loading'))
   .hide();
   
   function input_editor(abel) {

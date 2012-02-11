@@ -1,6 +1,4 @@
-RewriteEngine On
-RewriteCond $1 !^(index\.php|favicon\.ico|favicon\.gif|js|css|images|posts)
-RewriteRule ^(.*)$ index.php?$1 [QSA,L]
+RewriteEngine Off
 
 <ifmodule mod_expires.c>
 ExpiresActive On
@@ -8,9 +6,7 @@ ExpiresDefault "access plus 604800 seconds"
 </ifmodule>
 
 <ifmodule mod_deflate.c>
-<filesmatch ".(js|css|ico|txt|htm|html|php)$">
 SetOutputFilter DEFLATE
-</filesmatch>
 </ifmodule>
 
 <ifmodule mod_gzip.c>
