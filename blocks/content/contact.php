@@ -7,7 +7,7 @@ echo o(
             li(strong('aim and skype'),' ','afeique')
         )    
     ),
-    p('Feel free to contact me with for any reason you find justifiable ', strong(':'),'D')
+    p('Feel free to contact me for any reason you find justifiable ', strong(':'),'D')
 );
 
 ?>
