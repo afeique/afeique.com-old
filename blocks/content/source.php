@@ -169,7 +169,7 @@
 <h2>nothing's perfect</h2>
 <p>
   In the same vein of the complaints I levied against MVC at large, one can find similar small nitpicks with
-  the oohtml this site comes with.
+  oohtml and the manner in which I utilize it.
 </p>
 <p>
   For one thing, a lot of IDEs have HTML autocomplete features that speed up writing HTML drastically.
