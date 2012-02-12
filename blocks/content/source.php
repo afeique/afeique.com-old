@@ -25,9 +25,9 @@
 </p>
 <ul>
   <li>having to navigate to those separate files when making modifications;</li>
-  <li>needing "sub-views" for chunks of content that are reused across multiple page.</li>
+  <li>needing "sub-views" for chunks of content that are reused across multiple pages;</li>
   <li>"repeating" the logic of looping over content, first when retrieving from the model, then 
-  again when displaying it;</li>
+  again when displaying it.</li>
 </ul>
 <p>
   I don't really consider any of these to be serious issues, but they are minor nuisances to me,
