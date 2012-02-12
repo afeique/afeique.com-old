@@ -203,7 +203,8 @@
 
 <h2>template crafter</h2>
 <p>
-  There is one intermediary parent between the abstract crafter class and all other child crafters: the template_crafter.
+  There is one intermediary parent between the abstract <?=code('crafter')?> class and all other child crafters: the 
+  <?=code('template_crafter')?> class.
   This crafter is responsible for defining the template for the entire website, as well as all helper methods for
   generating content and database (model) access.
 </p>
