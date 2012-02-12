@@ -288,10 +288,11 @@ CREATE TABLE IF NOT EXISTS `posts` (
 <h2>useful constants</h2>
 <p>
   Perhaps the single-most useful constant is the <?=code('DEBUG')?> constant defined in <?=code('/config.php')?>.
-  Setting this to <?=code('1')?> will set PHP <?=code('error_reporting')?> to <?=code('E_ALL')?> and will make
+  Setting this to a nonzero value will set PHP <?=code('error_reporting')?> to <?=code('E_ALL')?> and will make
   admin AJAX calls return more detailed debug information via JSON. These responses are currently rendered by
-  the administrative JavaScript as alerts. More useful still, setting <?=code('DEBUG')?> to <?=code('1')?> will
-  also make the template crafter use development CSS and JavaScript files instead of their minified counterparts.
+  the administrative JavaScript as alerts. More useful still, setting <?=code('DEBUG')?> to a nonzero value will
+  also make the template crafter use development CSS and JavaScript files instead of their compressed counterparts
+  (the subject of JavaScript and CSS compression is covered in greater detail in another section below).
 </p>
 <p>
   <?=code('DEBUG')?> aside, if you're using this framework for your own personal cahoots, you will probably want
@@ -313,7 +314,7 @@ CREATE TABLE IF NOT EXISTS `posts` (
   widely applicable Exceptions.
 </p>
 
-<h2>javascript and css assets</h2>
+<h2>javascript and css compression</h2>
 <p>
   I will begin first by describing how the JavaScript delivery system works.
 </p>
