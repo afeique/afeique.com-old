@@ -345,3 +345,19 @@ CREATE TABLE IF NOT EXISTS `posts` (
   Additionally, it's worth mentioning that you can force JavaScript to be rendered inline via the <?=code('INLINE_JS')?>
   option in <?=code('config.php')?>.
 </p>
+
+<h2>htaccess</h2>
+<p>
+  The default <?=code('.htaccess')?> that comes bundled in the git repository will enable mod_gzip output
+  compression if it's available. It will also set <?=code('Expires')?> headers to access plus a week.
+</p>
+
+<h2>static assets</h2>
+<p>
+  Static assets such as JavaScript, CSS, and images are placed into the individual directory <?=code('/static')?>. 
+  On my webhost, this directory is pointed to by the subdomain <?=code('static.afeique.com')?>, a cookieless domain.
+  It's worth noting I also set my webhost to redirect <?=code('afeique.com')?> to <?=code('www.afeique.com')?> in order 
+  that <?=code('static.afeique.com')?> could be a cookie-less domain. Otherwise, cookies set from people accessing the 
+  root domain  <?=code('afeique.com')?> would still be  sent to the subdomain <?=code('static.afeique.com')?> and in 
+  some cases it would no longer be a cookieless domain.
+</p>
