@@ -16,7 +16,7 @@ define('ADMIN_JS','admin.js');
 define('PUBLIC_MESHED_JS','public-meshed.packed.js');
 define('ADMIN_MESHED_JS','admin-meshed.packed.js');
 
-$GLOBALS[BASE_JS] = array('jquery-1.7.1.min.js','jquery-ui-1.8.17.min.js','buttons.js');
+$GLOBALS[BASE_JS] = array('jquery-1.7.1.min.js','jquery-ui-1.8.17.min.js','base.js');
 
 define('BASE_CSS', 'base');
 define('ADMIN_CSS', 'admin');

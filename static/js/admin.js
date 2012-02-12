@@ -5,6 +5,40 @@
  */
 
 $(function() {
+	/**
+   * 
+   * BUTTONS
+   * 
+   */
+  $('.publish-button').button({
+    text: false,
+    icons: {primary: 'ui-icon-script'}
+  });
+  $('.logout-button').button({
+    text: false,
+    icons: {primary: 'ui-icon-arrowreturnthick-1-w'}
+  });
+  $('.edit-button').button({
+    text: false,
+    icons: {primary: 'ui-icon-pencil'}
+  });
+  $('.x-button').button({
+    text: false,
+    icons: {primary: 'ui-icon-closethick'}
+  });
+  $('.publish-button').button({
+    text: false,
+    icons: {primary: 'ui-icon-script'}  
+  });
+  $('.checkmark-button').button({
+    text: false,
+    icons: {primary: 'ui-icon-check'}
+  });
+  $('.compress-button').button({
+    text: false,
+    icons: {primary: 'ui-icon-gear'}
+  });
+	
   /**
    * 
    * POST PUBLISHER
