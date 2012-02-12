@@ -332,7 +332,7 @@ CREATE TABLE IF NOT EXISTS `posts` (
 <p>
   This single file is ideal for dynamic deferment (i.e. using JavaScript to load JavaScript once the
   document is ready). Performing dynamic deferment without the use of a special library such as
-  <?=b_linkg('http://labjs.com/','LABjs')?> leads to potential race conditions wherein dependencies are not loaded
+  <?=b_link('http://labjs.com/','LABjs')?> leads to potential race conditions wherein dependencies are not loaded
   before their dependents. However, because the tool mentioned above meshed the scripts together in the correct
   order, race conditions are eliminated when the single meshed file is loaded via dynamic deferment.
 </p>
