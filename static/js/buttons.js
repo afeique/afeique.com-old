@@ -36,7 +36,7 @@ $(function() {
     text: false,
     icons: {primary: 'ui-icon-check'}
   });
-  $('.pack-button').button({
+  $('.compress-button').button({
   	text: false,
   	icons: {primary: 'ui-icon-gear'}
   });

@@ -186,10 +186,8 @@ class admin_crafter extends template_crafter {
     unset($_SESSION[USERNAME], $_SESSION[PASSWORD]);
     
     $this->content = $this->notification(
-        p(
-            'You have successfully logged out. This page will self-destruct in '.META_REFRESH_TIME.' seconds. ',
-            l_link('admin/index','Explode now?')
-        ),
+        p('You have successfully logged out. This page will self-destruct in '.META_REFRESH_TIME.' seconds. ',
+            l_link('admin/index','Explode now?')),
         'logged out'
     );
   }
@@ -292,6 +290,59 @@ class admin_crafter extends template_crafter {
       if (!DEBUG) { header('Status: 400 Bad Request'); header('HTTP/1.0 400 Bad Request'); }
       return 'no data given for '.$field.' update via POST';
     }
+  }
+  
+  protected function _compress_assets() {
+    $this->title = 'compress assets';
+    $this->use_commander = 0;
+    $this->content = $this->notification(
+        p('JavaScript assets have been packed and meshed; CSS assets have been minified!'),
+        'success!'
+    );
+    
+    /**
+     * pack and mesh scripts
+     */
+    require LIBS_PATH.'JavaScriptPacker.php';
+    
+    // grab contents of base scripts
+    $scripts = '';
+    foreach ($GLOBALS[BASE_JS] as $filename) 
+      $scripts .= file_get_contents(JS_PATH.$filename);
+    
+    // initialize packer for base scripts, and create public mesh
+    $packer = new JavaScriptPacker($scripts);
+    $mesh = $packer->pack();
+    
+    // write mesh into public meshed file
+    $meshfile = fopen(JS_PATH.PUBLIC_MESHED_JS,'w+');
+    fwrite($meshfile, $mesh);
+    fclose($meshfile);
+    
+    // append admin script, init new packer, and create admin mesh
+    $scripts .= file_get_contents(JS_PATH.ADMIN_JS);
+    $packer = new JavaScriptPacker($scripts);
+    $mesh = $packer->pack();
+    
+    // write admin mesh to admin meshed file
+    $meshfile = fopen(JS_PATH.ADMIN_MESHED_JS,'w+');
+    fwrite($meshfile, $mesh);
+    fclose($meshfile);
+    
+    /**
+     * minify css
+     */
+    require LIBS_PATH.'cssmin.php';
+    
+    // minify base css
+    $minfile = fopen(CSS_PATH.BASE_CSS.'.min.css','w+');
+    fwrite($minfile, CssMin::minify(file_get_contents(CSS_PATH.BASE_CSS.'.css')));
+    fclose($minfile);
+    
+    // minify admin css
+    $minfile = fopen(CSS_PATH.ADMIN_CSS.'.min.css','w+');
+    fwrite($minfile, CssMin::minify(file_get_contents(CSS_PATH.ADMIN_CSS.'.css')));
+    fclose($minfile);
   }
   
   protected function notification($notification, $heading=null) {

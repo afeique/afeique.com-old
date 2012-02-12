@@ -1,0 +1,183 @@
+/**
+ * 	
+ * HEADER
+ * 
+ */
+
+header {
+	margin-bottom: .5em;
+}
+
+header h1, header h2 {
+	margin: 0;
+	padding: 0;
+}
+
+header h1 {
+	letter-spacing: .1em;
+}
+
+header h2 {
+	letter-spacing: .1em;
+	font-style: italic;
+}
+
+/**
+ * 
+ * #MAIN-NAV
+ * usually in the header	
+ * 
+ */
+
+#main-nav ul {
+	text-align: right;
+}
+
+#main-nav ul li {
+	list-style: none;
+	display: inline-block;
+	margin: 1em .5em;
+	font-size: 1.5em;
+}
+
+a {
+	text-decoration: none;
+}
+
+/**
+ * 
+ * #MAIN-CONTENT	
+ * 
+ */
+
+#main-content {
+	font-size: 1.2em;
+}
+
+#main-content h1 {
+	font-size: 1.6em;
+}
+
+#main-content h2 {
+	font-size: 1.3em;
+}
+
+#main-content p {
+	margin: .5em 0 1em 0;
+}
+
+#main-content input, #main-content textarea {
+	margin-bottom: 0;
+}
+
+textarea {
+	font-size: .9em;
+	font-family: Helvetica, sans-serif;
+}
+
+/**
+ * 	
+ * SMALL FORM
+ * 
+ */
+
+.small-form label {
+	display: block;
+	font-size: 1.1em;
+	letter-spacing: .1em;
+	margin-top: .3em;
+}
+
+.small-form input[type="text"], .small-form input[type="password"] {
+	font-size: 1em;
+	display: block;
+	width: 25em;
+}
+
+
+.small-form input[type="submit"] {
+	font-size: .9em;
+	margin-top: 1em;
+}
+
+
+.small-form textarea {
+	width: 27em;
+	height: 4em;
+}
+
+/**
+ * 	
+ * FOOTER
+ * 
+ */
+
+footer {
+	margin-top: 1em;
+	padding: .5em;
+	font-size: 1.2em;
+}
+
+footer ul {
+  	display: block;
+  	list-style-type: none;
+}
+
+footer li {
+	display: inline-block;
+	margin: 0;
+	padding: 0;
+}
+
+footer li:after {
+	content: "-";
+	margin-right: .3em;
+	padding-right: .3em;
+}
+
+footer li.last:after {
+	content: "";
+	margin-right: 0;
+	padding-right: 0;
+}
+
+/**
+ * 	
+ * INLINE ERROR STYLING
+ * 
+ */
+
+span.error {
+	padding: 0;
+	background-color: transparent;
+	border: none;
+}
+
+/**
+ * 	
+ * HELPFUL CLASSES
+ * 
+ */
+
+
+.text-left {
+	text-align: left;
+}
+
+.text-right {
+	text-align: right;
+}
+
+.text-center {
+	text-align: center;
+}
+
+.chars-left {
+	margin-left: .3em;
+	font-style: italic;
+	color: #aaa;
+}
+
+.code {
+	font-family: "Lucida Console", monospace;
+}

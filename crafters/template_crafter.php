@@ -131,25 +131,31 @@ class template_crafter extends crafter {
     if (!is_array($this->scripts))
       throw error::expecting_array();
     
-    array_unshift($this->styles, 'jquery-ui-lightness/jquery-ui-1.8.17.min.css',
-        (DEBUG ? 'main.css' : 'main.min.css'));
+    /**
+     * render styles
+     */
+    if ($this->logged_in())
+      array_unshift($this->styles, ADMIN_CSS. (DEBUG ? '.css' : '.min.css'));
+    array_unshift($this->styles, BASE_CSS.(DEBUG ? '.css' : '.min.css'));
     
-    foreach ($this->styles as $i => $stylesheet) {
-      $this->styles[$i] = css_link($stylesheet);
+    foreach ($this->styles as $i => $style) {
+      $this->styles[$i] = css_link($style);
     }
     
-    // render scripts
-    $scripts = array('jquery-1.7.1.min.js','jquery-ui-1.8.17.min.js','buttons.js');
+    /**
+     * render scripts
+     */
+    $scripts = $GLOBALS[BASE_JS];
     if (DEBUG) {
       if ($this->logged_in())
-        $scripts[] = 'admin.js';
+        $scripts[] = ADMIN_JS.'.js';
       foreach (array_reverse($scripts) as $script)
         array_unshift($this->scripts, $script);
     } else {
       if ($this->logged_in())
-        array_unshift($this->scripts,'admin-meshed.min.js');
+        array_unshift($this->scripts, ADMIN_MESHED_JS);
       else
-        array_unshift($this->scripts,'public-meshed.min.js');
+        array_unshift($this->scripts, PUBLIC_MESHED_JS);
     }
     
     $scripts = '';
@@ -169,14 +175,24 @@ class template_crafter extends crafter {
     else
       $scripts = l('script')->_t('text/javascript')->__('function deferred_js(){var a=['.implode(',', $this->scripts).'];for(var b=0;b<a.length;b++){var c=document.createElement("script");c.src="'.JS_URL.'"+a[b];document.body.appendChild(c)}}if(window.addEventListener)window.addEventListener("load",deferred_js,false);else if(window.attachEvent)window.attachEvent("onload",deferred_js);else window.onload=deferred_js');
     
+    /**
+     * trim slashes from meta redirect
+     */
     $this->meta_redirect = trim($this->meta_redirect,'/');
     
+    /**
+     * generate page
+     */
     return o(
         html5_doctype(),
         html(
             head(
-                b('main/brains'),
+                css_link('blueprint/screen.min.css'),
+                html_if('lt IE 8', css_link('blueprint/ie.css')),
+                css_link('jquery-ui-lightness/jquery-ui-1.8.17.min.css'),
                 implode('', $this->styles),
+                html_if('lt IE 9', script_src('html5shiv.min.js')),
+                l('script')->_t('text/javascript')->__('var BASE_URL="'.BASE_URL.'";var STATIC_URL="'.STATIC_URL.'";'),
                 ($this->no_robots ? ll('meta')->_n('robots')->_('content','noindex, noarchive, nofollow') : ''),
                 (!empty($this->meta_redirect) ? ll('meta')->_('http-equiv','refresh')->_('content', META_REFRESH_TIME.'; '.BASE_URL.$this->meta_redirect) : ''),
                 title($this->title.' @ afeique.com'),
@@ -300,6 +316,7 @@ class template_crafter extends crafter {
     if ($this->logged_in()) {
       return l('ul')->__(
           li(l_link('admin/publish','publish post')->_c('publish-button')->_('target','_blank')->_('title','publish post')),
+          li(l_link('admin/compress-assets','compress assets')->_c('compress-button')->_('target','_blank')->_('title','compress assets')),
           li(l_link('admin/logout','logout')->_c('logout-button')->_('title','logout'))
       );
     } else {
