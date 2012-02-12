@@ -349,8 +349,8 @@ CREATE TABLE IF NOT EXISTS `posts` (
 
 <h2>htaccess</h2>
 <p>
-  The default <?=code('.htaccess')?> that comes bundled in the git repository will enable mod_gzip output
-  compression if it's available. It will also set <?=code('Expires')?> headers to access plus a week.
+  The default <?=code('.htaccess')?> that comes bundled in the git repository will enable <?=code('mod_gzip')?> 
+  output compression if it's available. It will also set <?=code('Expires')?> headers to access plus a week.
 </p>
 
 <h2>static assets</h2>
