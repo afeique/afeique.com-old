@@ -5,10 +5,6 @@ ExpiresActive On
 ExpiresDefault "access plus 604800 seconds"
 </ifmodule>
 
-<ifmodule mod_deflate.c>
-SetOutputFilter DEFLATE
-</ifmodule>
-
 <ifmodule mod_gzip.c>
 mod_gzip_on Yes
 mod_gzip_can_negotiate Yes
