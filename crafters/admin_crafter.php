@@ -150,10 +150,8 @@ class admin_crafter extends template_crafter {
       $this->title = 'logged in';
       $this->meta_redirect = 'admin/index';
       $this->content = $this->notification(
-          p(
-              'You have successfully logged in. This page will reconstruct in '.META_REFRESH_TIME.' seconds. ',
-              l_link('admin/index','Speed it up?')
-          ),
+          p('You have successfully logged in. This page will reconstruct in '.META_REFRESH_TIME.' seconds. ',
+              l_link('admin/index','Speed it up?')),
           'logged in'
       );
       

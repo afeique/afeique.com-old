@@ -89,6 +89,7 @@ class template_crafter extends crafter {
     $posts_html = o();
     if (!empty($posts)) {
       foreach ($posts as $post) {
+        $post->get_tags();
         $posts_html->__($this->post_row($post));
       }
     } else {
