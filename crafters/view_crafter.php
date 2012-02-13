@@ -53,9 +53,7 @@ class view_crafter extends template_crafter {
     }
     
     try {
-      $posts = Post::find($id);
-      $this->post = $posts[0];
-      $this->post->get_tags();
+      $this->post = Post::find($id);
     } catch (Exception $e) {
       unset($this->post);
       if (DEBUG)

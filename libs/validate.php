@@ -122,7 +122,7 @@ class validate {
         $this->errors[] = 'cannot be empty';
     } elseif ($this->type == ARRAY_VALIDATOR) {
       if (sizeof($this->what) < $length)
-        $this->errors[] = 'need at least one element';
+        $this->errors[] = 'need at least one entry';
     }
     
     return $this;

@@ -18,23 +18,24 @@ class admin_crafter extends template_crafter {
     $vars = array('title','tags','description','directory');
     $title = $tags = $description = $directory = '';
     foreach ($vars as $v) {
-      $$v = isset($_POST[$v]) ? $_POST[$v] : '';
       if (!empty($_POST)) {
-        if ($v != 'tags')
-          $$v = validate::string($$v)->trim()->not_empty()->spacify()->max_length(250);
-        else {
-          $$v = explode(',', $$v);
-          $$v = validate::ray($$v)->trim()->not_empty()->max_length(250);
-        }
+        $validate_type = 'string';
+        if ($field == 'tags') {
+          $_POST[$field] = explode(',', $_POST[$field]);
+          $$field = validate::ray($_POST[$field]);
+        } else
+          $$field = validate::string($_POST[$field]);
         
-        if ($v == 'directory') {
+        $$field->trim()->not_empty()->spacify()->max_length(250);
+        
+        if ($field == 'directory') {
           $unpub = UNPUBLISHED_POSTS_PATH;
-          $errors[$v] = $directory->trim_slashes()->is_dir($unpub)->is_file($unpub,'/content.php');
+          $errors[$field] = $directory->trim_slashes()->is_dir($unpub)->is_file($unpub,'/content.php');
         }
         
-        $errors[$v] = $$v->errors();
+        $errors[$field] = $$field->errors();
       } else
-        $errors[$v] = '';
+        $errors[$field] = '';
     }
     
     $error_check = implode('', $errors);
@@ -49,6 +50,7 @@ class admin_crafter extends template_crafter {
         else
           $errors[$key] = '';
       }
+      
       $this->content = l('form')->_i('publish-post-form')->_c('small-form')->_a('admin/publish')->_m('post')->__(
           $block_error,
           l('div')->_c('span-9 prepend-7 append-8 last')->__(
@@ -102,14 +104,24 @@ class admin_crafter extends template_crafter {
       
       $post = array(
           'title' => $title,
-          'tags' => $tags,
           'description' => $description,
           'directory' => $directory,
           'time_first_published' => $time,
           'time_last_modified' => $time    
       );
       
-      Post::create($post);
+      $post = Post::create($post);
+      
+      // create tags if they don't exist, and create tag relations
+      foreach ($tags as $value) {
+        try {
+          $tag = Tag::find_by_value($value);
+        } catch (ActiveRecord\RecordNotFound $e) {
+          $tag = Tag::create(array('value' => $value));
+        }
+        
+        PostTagRelation::create(array('post_id' => $post->id, 'tag_id' => $tag->id));
+      }
       
       $this->content = $this->notification(
           p('The post has been successfully published. Feel free to close this window.'), 
@@ -127,13 +139,13 @@ class admin_crafter extends template_crafter {
     $vars = array($u, $p);
     $errors = array();
     foreach ($vars as $v) {
-      $errors[$v] = '';
-      if (isset($_POST[$v])) {
-        $$v = validate::string($_POST[$v])->trim()->not_empty()->spacify();
-        $errors[$v] = $$v->errors();
-        $$v = "{$$v}";
+      $errors[$field] = '';
+      if (isset($_POST[$field])) {
+        $$field = validate::string($_POST[$field])->trim()->not_empty()->spacify();
+        $errors[$field] = $$field->errors();
+        $$field = "{$$field}";
       } else
-        $$v = '';
+        $$field = '';
     }
     
     $db_error = '';
@@ -178,8 +190,8 @@ class admin_crafter extends template_crafter {
   }
   
   /**
-   * Small note: we don't need to check if the user is logged in
-   * The craft() method ensures that he/she is.
+   * small note: we don't need to check if the user is logged in
+   * the craft() method ensures that he/she is.
    */
   protected function _logout() {
     $this->title = 'logged out';
@@ -205,41 +217,75 @@ class admin_crafter extends template_crafter {
       return;
     }
     
-    $new_value = validate::string($_POST[$field])->trim()->not_empty()->max_length(250);
+    if ($field == 'tags') {
+      $_POST[$field] = explode(',', $_POST[$field]);
+      $$field = validate::ray($_POST[$field]);
+    } else
+      $$field = validate::string($_POST[$field]);
     
-    $message = $new_value->errors();
-    if ($field == 'directory' && empty($message)) {
-      $current_path = rtrim($this->post_path($post->directory, $post->time_first_published),'/');
-      $new_path = escapeshellarg(rtrim($this->post_path($new_value, $post->time_first_published),'/'));
-      
-      exec("mv $current_path $new_path");
-      
-      $post->$field = $new_value;
-      $post->save();
-      
-      $prepend = rtrim($this->post_path('', $post->time_first_published),'/').'/';
-      $new_value->trim_slashes()->is_dir($prepend,'/')->is_file($prepend,'/content.php');
-      
-      $error_check = $new_value->errors();
-      if (!empty($error_check)) {
-        $message = 'problem moving file to new directory';
-      }
-    }
+    $$field->trim()->not_empty()->spacify()->max_length(250);
     
-    if (empty($message)) {
-      if ($field != 'directory') {
-        $post->$field = $new_value;
+    $errors = $$field->errors();
+    if (empty($errors)) {
+      if ($field == 'tags') {
+        // delete old tag relations that are no longer used
+        foreach ($post->tags as $old_tag) {
+          if (!in_array($old_tag->value, $tags)) {
+            $relation = PostTagRelations::find('first', array('post_id' => $post->id, 'tag_id' => $old_tag->id));
+            $relation->delete();
+          }
+        }
+        
+        // create an array of old tag values
+        $old_tags = array();
+        foreach ($post->tags as $old_tag)
+          $old_tags[] = $old_tag->value;
+        
+        // create tags and tag relations if necessary
+        foreach ($tags as $new_tag) {
+          if (!in_array($new_tag, $old_tags)) {
+            try {
+              $tag = Tag::find_by_value($new_tag);
+            } catch (ActiveRecord\RecordNotFound $e) {
+              $tag = Tag::create(array('value' => $new_tag));
+            }
+            
+            PostTagRelation::create(array('post_id' => $id, 'tag_id' => $tag->id));
+          }
+        }
+      } elseif ($field == 'directory') {
+        $current_path = rtrim($this->post_path($post->directory, $post->time_first_published),'/');
+        $new_path = escapeshellarg(rtrim($this->post_path($$field, $post->time_first_published),'/'));
+        
+        exec("mv $current_path $new_path");
+        
+        $post->directory = $directory;
+        $post->save();
+        
+        $prepend = rtrim($this->post_path('', $post->time_first_published),'/').'/';
+        $new_value->trim_slashes()->is_dir($prepend,'/')->is_file($prepend,'/content.php');
+        
+        $errors = $directory->errors();
+        if (!empty($errors)) {
+          $message = 'problem moving file to new directory';
+        }
+      } else {
+        $post->$field = $$field;
         $post->save();
       }
     } else {
-      //if (!DEBUG) { header('Status: 400 Bad Request'); header('HTTP/1.0 400 Bad Request'); }
+      if (!DEBUG) { 
+        header('Status: 400 Bad Request'); header('HTTP/1.0 400 Bad Request');
+      }
       $this->content = $this->json_error($message);
       return;
     }
   
     $post = Post::find($id);
-    if ($post->$field != $new_value) {
-      if (!DEBUG) { header('Status: 500 Internal Server Error'); header('HTTP/1.0 500 Internal Server Error'); }
+    if ($post->$field != $$field) {
+      if (!DEBUG) { 
+        header('Status: 500 Internal Server Error'); header('HTTP/1.0 500 Internal Server Error'); 
+      }
       $this->content = $this->json_error('problem updating database');
       return;
     }
@@ -257,40 +303,52 @@ class admin_crafter extends template_crafter {
      * a stable production build should never encounter them.
      */
     if (!isset($GLOBALS[EXTRA][1])) {
-      if (!DEBUG) { header('Status: 400 Bad Request'); header('HTTP/1.0 400 Bad Request'); }
+      if (!DEBUG) {
+        header('Status: 400 Bad Request'); header('HTTP/1.0 400 Bad Request');
+      }
       return 'field to update not specified in url';
     }
     
     $field = $GLOBALS[EXTRA][1];
     $valid_fields = array('title','tags','description','directory');
     if (!in_array($field, $valid_fields)) {
-      if (!DEBUG) { header('Status: 400 Bad Request'); header('HTTP/1.0 400 Bad Request'); }
+      if (!DEBUG) {
+        header('Status: 400 Bad Request'); header('HTTP/1.0 400 Bad Request');
+      }
       return 'invalid field "'.$field.'" specified in url; valid fields are: '.implode(', ', $valid_fields);
     }
     
     if (!isset($GLOBALS[EXTRA][2])) {
-      if (!DEBUG) { header('Status: 400 Bad Request'); header('HTTP/1.0 400 Bad Request'); }
+      if (!DEBUG) {
+        header('Status: 400 Bad Request'); header('HTTP/1.0 400 Bad Request');
+      }
       return 'no post id specified in url';
     }
     
     $id = (int)$GLOBALS[EXTRA][2];
     if (empty($id)) {
-      if (!DEBUG) { header('Status: 400 Bad Request'); header('HTTP/1.0 400 Bad Request'); }
+      if (!DEBUG) {
+        header('Status: 400 Bad Request'); header('HTTP/1.0 400 Bad Request');
+      }
       return 'invalid post id "'.$id.'" specified in url; require nonzero positive integer';
     }
     
     try {
       $post = Post::find($id);
-    } catch (Exception $e) {
+    } catch (ActiveRecord\RecordNotFound $e) {
       unset($post);
     }
     if (empty($post)) {
-      if (!DEBUG) { header('Status: 404 Not Found'); header('HTTP/1.0 404 Not Found'); }
+      if (!DEBUG) {
+        header('Status: 404 Not Found'); header('HTTP/1.0 404 Not Found');
+      }
       return 'post with specified id "'.$id.'" not found';
     }
     
     if (!isset($_POST[$field])) {
-      if (!DEBUG) { header('Status: 400 Bad Request'); header('HTTP/1.0 400 Bad Request'); }
+      if (!DEBUG) {
+        header('Status: 400 Bad Request'); header('HTTP/1.0 400 Bad Request');
+      }
       return 'no data given for '.$field.' update via POST';
     }
   }
