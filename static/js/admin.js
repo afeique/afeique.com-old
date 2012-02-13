@@ -49,20 +49,23 @@ $(function() {
    * BINDS CHARS LEFT UPDATER
    */
   function bind_chars_left(to_what, abel) {
-    if (abel === undefined)
-      abel = to_what;
     return to_what
     .blur(function() { $(this).val($(this).val().trim().replace(/\s{2,}/,' ')); })
     .bind('keyup blur', function(event) {
+      if (abel === undefined)
+        this_abel = $(this).parent();
+      else
+        this_abel = abel;
+
       var chars_left = 250 - $(this).val().length;
-      abel.contents().find('.chars-left').text(chars_left);
+      this_abel.find('.chars-left').text(chars_left);
     });
   }
   
   /**
    * BIND CHARS LEFT TO TITLE, TAGS, DESCRIPTION
    */
-  bind_chars_left($('#post-title, #post-tags, #post-description, #post-directory'));
+  bind_chars_left($('#post-title, #post-description, #post-directory'));
   
   /**
    * 

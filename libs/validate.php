@@ -9,7 +9,7 @@ define('ARRAY_VALIDATOR', 'array');
  * the validate class is used to validate form inputs
  * 
  * it generates a validator corresponding to the type
- * of input via the ::string and ::arryay methods
+ * of input via the ::string and ::ray methods
  * 
  * every instance method returns $this for chaining
  * 
@@ -60,7 +60,7 @@ class validate {
     return $validator;
   }
   
-  public static function arryay(array $array) {
+  public static function ray(array $array) {
     $validator = new validate(VALIDATOR_TYPE_ARRAY, $array);
     
     return $validator;
@@ -72,10 +72,12 @@ class validate {
     
     if ($this->type == STRING_VALIDATOR) {
       if (strlen($this->what) < $length)
-        $this->errors[] = 'minimum length: '.$length;
+        $this->errors[] = 'min length: '.$length;
     } elseif ($this->type == ARRAY_VALIDATOR) {
-      if (sizeof($this->what) < $length)
-        $this->errors[] = 'need at least '.$length.' element'.($length > 1 ? 's' : '');
+      foreach ($this->what as $i => $what) {
+        if (strlen($what) < $length)
+          $this->errors[] = 'each entry min length: '.$length;
+      }
     }
     
     return $this;
@@ -87,10 +89,12 @@ class validate {
     
     if ($this->type == STRING_VALIDATOR) {
       if (strlen($this->what) > $length)
-        $this->errors[] = 'maximum length: '.$length;
+        $this->errors[] = 'max length: '.$length;
     } elseif ($this->type == ARRAY_VALIDATOR) {
-      if (sizeof($this->what) > $length)
-        $this->errors[] = 'at most '.$length.' element'.($length > 1 ? 's' : '');
+      foreach ($this->what as $i => $what) {
+        if (strlen($what) > $length)
+          $this->errors[] = 'each entry max length: '.$length;
+      }
     }
     
     return $this;
@@ -99,8 +103,13 @@ class validate {
   public function trim() {
     if ($this->type == STRING_VALIDATOR)
       $this->what = trim($this->what);
-    elseif ($this->type == ARRAY_VALIDATOR)
-      array_trim($this->what);
+    elseif ($this->type == ARRAY_VALIDATOR) {
+      foreach ($this->what as $i => $what) {
+        $this->what[$i] = trim($what);
+        if ($this->what[$i] == '')
+          unset($this->what[$i]);
+      }
+    }
     
     return $this;
   }
@@ -115,8 +124,6 @@ class validate {
       if (sizeof($this->what) < $length)
         $this->errors[] = 'need at least one element';
     }
-    
-    return $this;
     
     return $this;
   }
@@ -137,9 +144,8 @@ class validate {
     if ($this->type == STRING_VALIDATOR)
       $this->what = preg_replace('/\s{2,}/', ' ', $this->what);
     elseif ($this->type == ARRAY_VALIDATOR) {
-      foreach ($this->what as $i => $thing) {
+      foreach ($this->what as $i => $thing)
         $this->what[$i] = preg_replace('/\s{2,}/', ' ', $thing);
-      }
     }
   
     return $this;

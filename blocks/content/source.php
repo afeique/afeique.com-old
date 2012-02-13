@@ -1,8 +1,7 @@
 <p>
-  The site source code is available on <?=b_link('http://github.com/','github')?> in 
-  <?=b_link('http://github.com/afeique/afeique.com.git','this repository')?>. Git-specific discussion,
-  such as how to setup Git, how to clone a repository, and so on, are beyond the scope of this
-  page. Here we will focus on discussing the source itself.
+  The site source is available via a <?=b_link('http://github.com/afeique/afeique.com.git','github repository')?>. 
+  Git-specific discussion, such as how to setup Git, how to clone a repository, and so on, are beyond the scope of 
+  this page. Here we will focus on discussing the source itself.
 </p>
 
 <h1>introduction to the source</h1>
@@ -37,7 +36,9 @@
   In my workflow, I have a tendency to modify the view right after making changes in the logic. I've
   long felt it would be more convenient if the view were at least in the same file. I wouldn't 
   have to go searching for it amongst the other files in the project (sometimes numbering the hundreds), or 
-  amongst 10+ open tabs in my IDE, most of which are views.
+  amongst 10+ open tabs in my IDE, most of which are views. Granted, if I were using 
+  <?=b_link('http://www.gnu.org/software/emacs/','emacs')?> switching tabs would be much more streamlined,
+  but alas for numerous reasons I am bound to Windows machines for the foreseeable future.
 </p>
 
 <h2>html as php objects</h2>

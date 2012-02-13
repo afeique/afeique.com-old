@@ -20,7 +20,12 @@ class admin_crafter extends template_crafter {
     foreach ($vars as $v) {
       $$v = isset($_POST[$v]) ? $_POST[$v] : '';
       if (!empty($_POST)) {
-        $$v = validate::string($$v)->trim()->not_empty()->spacify()->max_length(250);
+        if ($v != 'tags')
+          $$v = validate::string($$v)->trim()->not_empty()->spacify()->max_length(250);
+        else {
+          $$v = explode(',', $$v);
+          $$v = validate::ray($$v)->trim()->not_empty()->max_length(250);
+        }
         
         if ($v == 'directory') {
           $unpub = UNPUBLISHED_POSTS_PATH;
@@ -54,7 +59,7 @@ class admin_crafter extends template_crafter {
                   $errors['title']
               ),
               l('div')->_c('span-24')->__(
-                  l('label')->_f('post-tags')->__('space-separated tags', l('span')->_c('chars-left')->__('250')),
+                  l('label')->_f('post-tags')->__('tags, comma separated'),
                   ll('input')->_t('text')->_n('tags')->_i('post-tags')->_v(htmlentities($tags)),
                   $errors['tags']
               ),
@@ -65,7 +70,7 @@ class admin_crafter extends template_crafter {
               ),
               l('div')->_c('span-24')->__(
                   l('label')->_f('post-directory')->__(
-                      trim_slashes(UNPUBLISHED_POSTS_DIR).' directory',
+                      trim(UNPUBLISHED_POSTS_DIR,'/').' directory',
                       l('span')->_c('chars-left')->__('250')
                   ),
                   ll('input')->_t('text')->_n('directory')->_i('post-directory')->_v(htmlentities($directory)),

@@ -148,7 +148,7 @@ class template_crafter extends crafter {
     $scripts = $GLOBALS[BASE_JS];
     if (DEBUG) {
       if ($this->logged_in())
-        $scripts[] = ADMIN_JS.'.js';
+        $scripts[] = ADMIN_JS;
       foreach (array_reverse($scripts) as $script)
         array_unshift($this->scripts, $script);
     } else {
