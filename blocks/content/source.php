@@ -31,7 +31,7 @@
   again when displaying it.</li>
 </ul>
 <p>
-  The first two bullets are critical, as they force the developer to navigate numerous tabs and files.
+  The first two bullets are important, as they force the developer to navigate numerous tabs and files.
   Doing so seems to have a considerable impact on workflow, though the observation is completely subjective. 
   This stance primarily applies to Windows-based development, as using 
   <?=b_link('http://www.gnu.org/software/emacs/','emacs')?> allows for a much more streamlined interface for
@@ -91,13 +91,12 @@
 </p>
 
 <pre class="code">
-<?=htmlentities('$html = l("p")->__("this content inside a ", htmlentities("<p>"))," element with class m.")->_c("m");
-$link = l("a")->__("this is a link that opens a new window on google")->_("href","google.com)->_("target","_blank");
-$html->__(" ", $link); # embed a space and a link in <p>')?>
+<?=htmlentities('$p = l("p")->__("this content inside a ", htmlentities("<p>"))," element with class m.")->_c("m");
+$link = l("a")->__("this is a link that opens a new window on google")->_("href","google.com)->_("target","_blank");')?>
 </pre>
 
 <p>
-  can both be reorganized into
+  can be reorganized into
 </p>
 
 <pre class="code">
@@ -106,7 +105,7 @@ $link = l("a")->_("href","google.com)->_("target","_blank")->__("this is a link 
 </pre>
 
 <p>
-  Moreover, using helper methods from <?=code('/oohtml.php')?>, one could instead use
+  Moreover, using helper methods from <?=code('/oohtml.php')?>, one could instead write
 </p>
 
 <pre class="code">
@@ -118,7 +117,8 @@ $link = b_link("google.com","this is a link that opens a new window on google");
   So what is the best way? For sake of consistency with the HTML that oohtml seeks to represent, it is recommended
   to do things in the same order. That is, follow the second example and set element attributes <em>before</em>
   embedding content. In cases where there are helper methods available, if there is an intent to set element
-  attributes, use <?=code('l($element_name)')?> to create the element and then immediately chain attributes to it.
+  attributes, use <?=code('l($element_name)')?> to create the element, immediately chain attributes to it, and
+  then embed the desired content.
 </p>
 <p>
   Additionally, one should have picked up on the fact that embedding content within an element does not automatically
@@ -166,6 +166,14 @@ $link = b_link("google.com","this is a link that opens a new window on google");
   that each set of pages might have a different methodology for crafting pages, either for styling, functionality, 
   or security. For example, the <?=code('admin_crafter')?> checks to ensure the user is logged in as an admin before 
   rendering any admin pages; else it renders a login page.
+</p>
+
+<h2>template crafter</h2>
+<p>
+  In the current implementation of this site, there is one intermediary parent between the abstract <?=code('crafter')?> 
+  class and all other child crafters: the <?=code('template_crafter')?> class. This crafter is responsible for defining 
+  the template for the entire website, as well as numerous helper methods for generating content and connecting to the 
+  database.
 </p>
 
 <h2>requesting pages from crafters</h2>
@@ -247,14 +255,6 @@ $link = b_link("google.com","this is a link that opens a new window on google");
   In <?=code('/oohtml.php')?> there is a helper function called <?=code('b($block)')?> which specifically grabs a chunk 
   of static content in <?=code('/blocks')?>, fetches it through output buffering (so PHP content is still processed), 
   and returns the resulting output.
-</p>
-
-<h2>template crafter</h2>
-<p>
-  There is one intermediary parent between the abstract <?=code('crafter')?> class and all other child crafters: the 
-  <?=code('template_crafter')?> class.
-  This crafter is responsible for defining the template for the entire website, as well as numerous helper methods for
-  generating content, and methods for connecting to the database.
 </p>
 
 <h2>models</h2>
