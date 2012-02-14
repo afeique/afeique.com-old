@@ -101,7 +101,7 @@
   to be inherited by all children to some degree) specifically point to <?=code('_index()')?> and <?=code('_404()')?>.
 </p>
 <p>
-  The third <?=code('abstract')?> method, <?=code('craft()')?>, allows children to define their own method of 
+  The third abstract method, <?=code('craft()')?>, allows children to define their own method of 
   crafting pages. Since each child crafter class will be responsible for its own set of related pages, it follows 
   that each set of pages might have a different methodology for crafting pages, either for styling, functionality, 
   or security. For example, the <?=code('admin_crafter')?> checks to ensure the user is logged in as an admin before 
