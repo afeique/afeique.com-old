@@ -362,9 +362,10 @@ ALTER TABLE `post_tag_relations`
   an error string compiling all the issues.
 </p>
 <p>
-  The latter is a helper for throwing Exceptions when an error occurs; namely when an incorrect argument type
-  is passed to a method. Some classes extend the error class in order that the error class only contain the most 
-  widely applicable Exceptions.
+  The latter is a helper for throwing Exceptions when an error occurs, primarily cases when an argument with the 
+  wrong type is passed to a function. Some classes extend the error class in order that the error class only contain 
+  the most widely applicable Exceptions, for exmaple the <?=code('validate')?> helper defines a <?=code('validate_error')?>
+  class.
 </p>
 
 <h2>javascript and css compression</h2>
