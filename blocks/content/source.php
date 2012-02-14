@@ -55,7 +55,8 @@
   represents a set of "renderable" elements: anything that is either a scalar or contains a <?=code('__toString()')?> 
   method. It has code for embedding n-many elements using 
   <?=b_link('http://php.net/manual/en/function.func-get-args.php',code('func_get_args'))?> and then rendering all its 
-  embedded content to a single run-on string. 
+  embedded content into a single run-on string (eliminating whitespace reduces output size without hindering debugging
+  thanks to browsers such as <?=b_link('https://www.google.com/chrome','Google Chrome')?>).
 </p>
 <p>
   Class <?=code('element')?> is specifically for creating an HTML element. It has to be passed a name and whether or
