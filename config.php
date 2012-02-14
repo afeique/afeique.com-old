@@ -4,7 +4,7 @@
  * (e.g. ajax calls, database connects, etc)
  * sets php error_reporting to E_ALL
  */
-define('DEBUG', 1);
+define('DEBUG', 0);
 
 /**
  * loads all javascript inline instead of via deferment
