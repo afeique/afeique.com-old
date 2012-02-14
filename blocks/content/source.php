@@ -308,7 +308,7 @@ ALTER TABLE `post_tag_relations`
 <p>
   By default, in <?=code('/config.php')?>, the "afeique.com" directory cloned from github is defined as the 
   <?=code('BASE_PATH')?> constant. The public access credentials are stored one directory above <?=code('BASE_PATH')?>, 
-  which is a directory inaccessible by remote users.
+  which is a directory inaccessible by remote users in this setup.
 </p>
 <p>
   The public access credentials are stored in <?=code('/../mysql_credentials.php')?>. It defines the following
