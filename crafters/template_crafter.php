@@ -354,16 +354,15 @@ class template_crafter extends crafter {
     $last_modified = '';
     if ($post->time_first_published != $post->time_last_modified)
       $last_modified = li(strong('last modified:'),' ', date(POST_DATE_FORMAT, $post->time_last_modified))->_c('post-last-modified');
-  
+    
     $tags_html = l('ul')->_c('tags-list');
-    $tags = explode(' ', $post->tags);
-    $num_tags = count($tags);
+    $num_tags = count($post->tags);
     for ($i=0; $i<$num_tags; $i++) {
       $li = l('li');
       if ($i == $num_tags-1)
         $li->_c('last');
       //$li->__( l_link('tag-search/'.urlencode($tags[$i]), htmlentities($tags[$i])) );
-      $li->__(htmlentities($tags[$i]));
+      $li->__(htmlentities($post->tags[$i]->value));
       $tags_html->__($li);
     }
   
