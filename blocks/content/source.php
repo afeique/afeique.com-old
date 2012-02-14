@@ -86,9 +86,9 @@
 </p>
 
 <pre class="code">
-$html = l('p')->__('this content inside a ', htmlentities('<?=htmlentities('<p>')?>'), ' element with class "m".')->_c('m');
-$link = l('a')->__('this is a link that opens a new window on google')->_('href','google.com')->_('target','_blank);
-$html->__(' ', $link); # embed a space and a link in <?=htmlentities('<p>')?>
+<?=htmlentities('$html = l("p")->__("this content inside a ", htmlentities("<p>"))," element with class m.")->_c("m");
+$link = l("a")->__("this is a link that opens a new window on google")->_("href","google.com)->_("target","_blank");
+$html->__(" ", $link); # embed a space and a link in <p>')?>
 </pre>
 
 <p>
@@ -96,8 +96,8 @@ $html->__(' ', $link); # embed a space and a link in <?=htmlentities('<p>')?>
 </p>
 
 <pre class="code">
-$html = l('p')->_c('m')->__('this content inside a ', htmlentities('<?=htmlentities('<p>')?>'), ' element with class "m".');
-$link = l('a')->_('href','google.com')->_('target','_blank)->__('this is a link that opens a new window on google');
+<?=htmlentities('$html = l("p")->_c("m")->__("this content inside a ", htmlentities("<p>"))," element with class m.");
+$link = l("a")->_("href","google.com)->_("target","_blank")->__("this is a link that opens a new window on google");')?>
 </pre>
 
 <p>
@@ -105,8 +105,8 @@ $link = l('a')->_('href','google.com')->_('target','_blank)->__('this is a link 
 </p>
 
 <pre class="code">
-$html = p('this content inside a ', htmlentities('<?=htmlentities('<p>')?>'), ' element with class "m".')->_c('m');
-$link = b_link('google.com','this is a link that opens a new window on google');
+<?=htmlentities('$html = p("this content inside a ", htmlentities("<p>")?>), " element with class m.")->_c("m");
+$link = b_link("google.com","this is a link that opens a new window on google");')?>
 </pre>
 
 <p>
