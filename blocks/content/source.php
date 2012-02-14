@@ -71,6 +71,10 @@
 
 <h2>oohtml syntax</h2>
 <p>
+  The recommended method of instantiating an oohtml object is to use the shortcut helper function 
+  <?=code('l($element_name')?> defined in <?=code('/oohtml.php')?>.
+</p>
+<p>
   Embedding content and setting HTML attributes in oohtml is achieved through method chaining. The embed method is
   <?=code('__($content1, $content2, ..., $contentN)')?> and the set attribute method is <?=code('_($attribute, $value)')?>.
   As mentioned before, each piece of content embedded must be a renderable object; "renderable" meaning that it is either
