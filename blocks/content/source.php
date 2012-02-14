@@ -105,7 +105,7 @@ $link = l("a")->_("href","google.com)->_("target","_blank")->__("this is a link 
 </p>
 
 <pre class="code">
-<?=htmlentities('$html = p("this content inside a ", htmlentities("<p>")?>), " element with class m.")->_c("m");
+<?=htmlentities('$html = p("this content inside a ", htmlentities("<p>")), " element with class m.")->_c("m");
 $link = b_link("google.com","this is a link that opens a new window on google");')?>
 </pre>
 
