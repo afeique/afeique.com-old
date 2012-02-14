@@ -4,6 +4,13 @@
   this page. Here we will focus on discussing the source itself.
 </p>
 
+<h1>requirements</h1>
+<ul>
+  <li>PHP 5.3+</li>
+  <li>MySQL 5.1+</li>
+  <li>Either Apache 2 or server software with <?=code('mod_rewrite')?> equivalent</li>
+</ul>
+
 <h1>introduction to the source</h1>
 
 <h2>statement of intent</h2>
