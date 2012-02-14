@@ -246,9 +246,9 @@ $(function() {
     var abel = $(this).parent();
     var old_tags = '';
     abel.find('.tags-list').children('li').each(function() {
-      old_tags += ' '+$(this).text();
+      old_tags += ', '+$(this).text();
     });
-    old_tags = old_tags.replace(/^\s+/,'');
+    old_tags = old_tags.replace(/^,\s/,'');
     
     var original_tags_html = abel.contents().clone(true);
     var post_id = abel.attr('id').replace(/[a-z\-]/g,'');
