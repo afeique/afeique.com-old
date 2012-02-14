@@ -80,7 +80,7 @@
 </p>
 <ul>
   <li><?=code('public function _index()')?>&mdash;not valid, won't be detected as a page-method, must be protected or private</li>
-  <li><?=code('protected function _index($arg=null)')?>&mdash;valid, but not recommended&mdash;in my implementation, no args are ever passed</li>
+  <li><?=code('protected function _index($arg=null)')?>&mdash;valid, but not recommended&mdash;in current implementation, no args are ever passed</li>
   <li><?=code('protected static function _index()')?>&mdash;not valid, method cannot be static</li>
   <li><?=code('protected function index()')?>&mdash;not valid, no preceding underscore</li>
 </ul>
