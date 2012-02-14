@@ -152,7 +152,7 @@
 </p>
 <p>
   Consequently, unlike in <?=b_link('http://codeigniter.com/','CodeIgniter')?> where this information is passed 
-  automatically to page-methods as arguments, the page-method must itself make an effort to get the information.
+  automatically to page-methods as arguments, the page-method must make an effort to get the information.
 </p>
 
 <h2>nothing's perfect</h2>
