@@ -54,7 +54,7 @@
   files respectively. Class <?=code('container')?> is extended by <?=code('element')?>. Class <?=code('container')?>
   represents a set of "renderable" elements: anything that is either a scalar or contains a <?=code('__toString()')?> 
   method. It has code for embedding n-many elements using 
-  <?=b_link('http://php.net/manual/en/function.func-get-args.php', code('func_get_args')?> and then rendering all its 
+  <?=b_link('http://php.net/manual/en/function.func-get-args.php',code('func_get_args'))?> and then rendering all its 
   embedded content to a single run-on string. 
 </p>
 <p>
