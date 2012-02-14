@@ -168,7 +168,7 @@ $link = b_link("google.com","this is a link that opens a new window on google");
   rendering any admin pages; else it renders a login page.
 </p>
 
-<h2>template crafter</h2>
+<h2>the template crafter</h2>
 <p>
   In the current implementation of this site, there is one intermediary parent between the abstract <?=code('crafter')?> 
   class and all other child crafters: the <?=code('template_crafter')?> class. This crafter is responsible for defining 
