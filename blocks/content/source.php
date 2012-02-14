@@ -352,7 +352,7 @@ ALTER TABLE `post_tag_relations`
 <h2>static assets</h2>
 <p>
   Static assets such as JavaScript, CSS, and images are placed into the individual directory <?=code('/static')?>. 
-  On my webhost, this directory is pointed to by the subdomain <?=code('static.afeique.com')?>, a cookieless domain.
+  On this server, that directory is pointed to by the subdomain <?=code('static.afeique.com')?>, a cookieless domain.
   Additionally, the server is configured to redirect <?=code('afeique.com')?> to <?=code('www.afeique.com')?> in order 
   that <?=code('static.afeique.com')?> remain be a cookie-less domain. Otherwise, cookies set on the 
   root domain  <?=code('afeique.com')?> would still be  sent to the subdomain <?=code('static.afeique.com')?> and in 
