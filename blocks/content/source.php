@@ -256,7 +256,7 @@ $link = b_link("google.com","this is a link that opens a new window on google");
 <p>
   Currently, the site uses <?=b_link('http://www.phpactiverecord.org/','php.activerecord')?> as a database
   ORM. There are three tables <?=code('posts')?>, <?=code('tags')?>, and a relational table called 
-  <?=code('post_tag_relations')?>. Every table utilizes the InnoDB engine. This is because The relational table has 
+  <?=code('post_tag_relations')?>. Every table utilizes the InnoDB engine. This is because the relational table has 
   <?=code('FOREIGN KEY')?> constraints to <?=code('posts')?> and <?=code('tags')?> to streamline the relational
   mapping. Below is the the <?=code('CREATE TABLE')?> SQL for each table, along with the <?=code('ALTER TABLE')?>
   SQL for <?=code('post_tag_relations')?> to establish the <?=code('FOREIGN KEY')?> constraints:
