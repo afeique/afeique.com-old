@@ -123,24 +123,6 @@ $(function() {
   var status404 = 'For some reason, the post you are editing could not be found.';
   var status500 = 'There was a problem with the database when editing your post. Try again.';
   
-  var submit_button = 
-  $(document.createElement('a')).append('submit').attr('title','submit').attr('href','javascript: void(0)')
-    .button({
-      text: false,
-      icons: {primary: 'ui-icon-check'}
-  });
-  
-  var cancel_button = 
-  $(document.createElement('a')).append('cancel').attr('title','cancel').attr('href','javascript: void(0)')
-    .button({
-      text: false,
-      icons: {primary: 'ui-icon-closethick'}
-  });
-  
-  var spinner = $(document.createElement('li'))
-  .append($(document.createElement('img')).attr('src', STATIC_URL+'images/spinner.gif').attr('alt','loading'))
-  .hide();
-  
   function input_editor(abel) {
     return bind_chars_left($(document.createElement('input')).attr('type','text'));
   }
@@ -164,8 +146,7 @@ $(function() {
     var abel = $(this).parent();
     var old_title = abel.children('.post-title').text();
     var original_title_html = abel.contents().clone(true);
-    var post_id = abel.attr('id').replace(/[a-z\-]/g,'');;
-    
+    var post_id = abel.attr('id').replace(/[a-z\-]/g,'');
     editor = input_editor(abel)
     .attr('class','post-title-input')
     .attr('value', old_title);
@@ -176,7 +157,14 @@ $(function() {
     
     var submit = $(document.createElement('li'))
     .append(
-        submit_button.clone(true)
+        $(document.createElement('a'))
+        .append('submit')
+        .attr('title','submit')
+        .attr('href','javascript: void(0)')
+          .button({
+            text: false,
+            icons: {primary: 'ui-icon-check'}
+        })
         .click(function() {
           abel.contents().find('.post-title-spinner').show();
           var new_title = abel.children('input').val().trim().replace(/\s{2,}/,' ');
@@ -220,13 +208,24 @@ $(function() {
     
     var cancel = $(document.createElement('li'))
     .append(
-        cancel_button.clone(true)
+        $(document.createElement('a'))
+        .append('cancel')
+        .attr('title','cancel')
+        .attr('href','javascript: void(0)')
+          .button({
+            text: false,
+            icons: {primary: 'ui-icon-closethick'}
+        })
         .click(function() {
           abel.empty().append(original_title_html);
         })
     );
-    
-    var title_spinner = spinner.clone(true)
+    console.log(cancel);
+    var spinner = $(document.createElement('li'))
+    .append($(document.createElement('img'))
+    .attr('src', STATIC_URL+'images/spinner.gif')
+    .attr('alt','loading'))
+    .hide()
     .attr('class','post-title-spinner');
 
     var commander = $(document.createElement('ul'))
@@ -234,7 +233,7 @@ $(function() {
     .append(chars_left)
     .append(submit)
     .append(cancel)
-    .append(title_spinner);
+    .append(spinner);
 
     abel.append(commander);
   });
@@ -266,7 +265,14 @@ $(function() {
     
     var submit = $(document.createElement('li'))
     .append(
-        submit_button.clone(true)
+        $(document.createElement('a'))
+        .append('submit')
+        .attr('title','submit')
+        .attr('href','javascript: void(0)')
+          .button({
+            text: false,
+            icons: {primary: 'ui-icon-check'}
+        })
         .click(function() {
           abel.contents().find('.post-tags-spinner').show();
           var new_tags = abel.children('input').val().trim().replace(/\s{2,}/,' ');
@@ -297,14 +303,16 @@ $(function() {
                   
                   $(new_tags_html[n]).empty();
                   
-                  var tags = data.tags.split(' ');
+                  var tags = data.tags;
                   for (var i=0; i<tags.length; i++) {
-                    var li = $(document.createElement('li'))
+                    var li = $(document.createElement('li')).append(tags[i]);
+                    /*
                     .append($(document.createElement('a'))
                       .attr('href', BASE_URL+'search-tags/'+tags[i])
                       .attr('target','_blank')
                       .append(tags[i])
                     );
+                    */
                     if (i == tags.length-1) {
                       li.addClass('last');
                     }
@@ -325,21 +333,32 @@ $(function() {
 
     var cancel = $(document.createElement('li'))
     .append(
-        cancel_button.clone(true)
+        $(document.createElement('a'))
+        .append('cancel')
+        .attr('title','cancel')
+        .attr('href','javascript: void(0)')
+          .button({
+            text: false,
+            icons: {primary: 'ui-icon-closethick'}
+        })
         .click(function() {
           abel.empty().append(original_tags_html);
         })
     );
     
-    var tags_spinner = spinner.clone(true)
+    var spinner = $(document.createElement('li'))
+    .append($(document.createElement('img'))
+    .attr('src', STATIC_URL+'images/spinner.gif')
+    .attr('alt','loading'))
+    .hide()
     .attr('class','post-tags-spinner');
 
     var commander = $(document.createElement('ul'))
     .attr('class','post-tags-commander')
-    .append(chars_left)
+    //.append(chars_left)
     .append(submit)
     .append(cancel)
-    .append(tags_spinner);
+    .append(spinner);
 
     abel.append(commander);
   });
@@ -363,10 +382,13 @@ $(function() {
     
     var submit = $(document.createElement('li'))
     .append(
-        $(document.createElement('a')).append('submit').attr('title','submit').attr('href','javascript: void(0)')
-        .button({
-          text: false,
-          icons: {primary: 'ui-icon-check'}
+        $(document.createElement('a'))
+        .append('submit')
+        .attr('title','submit')
+        .attr('href','javascript: void(0)')
+          .button({
+            text: false,
+            icons: {primary: 'ui-icon-check'}
         })
         .click(function() {
           abel.contents().find('.post-description-spinner').show();
@@ -412,13 +434,24 @@ $(function() {
 
     var cancel = $(document.createElement('li'))
     .append(
-        cancel_button.clone(true)
+        $(document.createElement('a'))
+        .append('cancel')
+        .attr('title','cancel')
+        .attr('href','javascript: void(0)')
+          .button({
+            text: false,
+            icons: {primary: 'ui-icon-closethick'}
+        })
         .click(function() {
           abel.empty().append(original_description_html);
         })
     );
     
-    var description_spinner = spinner.clone(true)
+    var spinner = $(document.createElement('li'))
+    .append($(document.createElement('img'))
+    .attr('src', STATIC_URL+'images/spinner.gif')
+    .attr('alt','loading'))
+    .hide()
     .attr('class','post-description-spinner');
 
     var commander = $(document.createElement('ul'))
@@ -426,7 +459,7 @@ $(function() {
     .append(chars_left)
     .append(submit)
     .append(cancel)
-    .append(description_spinner);
+    .append(spinner);
 
     abel.append(commander);
   });
@@ -451,7 +484,14 @@ $(function() {
     
     var submit = $(document.createElement('li'))
     .append(
-        submit_button.clone(true)
+        $(document.createElement('a'))
+        .append('submit')
+        .attr('title','submit')
+        .attr('href','javascript: void(0)')
+          .button({
+            text: false,
+            icons: {primary: 'ui-icon-check'}
+        })
         .click(function() {
           abel.contents().find('.post-directory-spinner').show();
           var new_directory = abel.children('input').val().trim().replace(/\s{2,}/,' ');
@@ -495,13 +535,24 @@ $(function() {
 
     var cancel = $(document.createElement('li'))
     .append(
-        cancel_button.clone(true)
+        $(document.createElement('a'))
+        .append('cancel')
+        .attr('title','cancel')
+        .attr('href','javascript: void(0)')
+          .button({
+            text: false,
+            icons: {primary: 'ui-icon-closethick'}
+        })
         .click(function() {
           abel.empty().append(original_directory_html);
         })
     );
     
-    var directory_spinner = spinner.clone(true)
+    var spinner = $(document.createElement('li'))
+    .append($(document.createElement('img'))
+    .attr('src', STATIC_URL+'images/spinner.gif')
+    .attr('alt','loading'))
+    .hide()
     .attr('class','post-directory-spinner');
 
     var commander = $(document.createElement('ul'))
@@ -509,7 +560,7 @@ $(function() {
     .append(chars_left)
     .append(submit)
     .append(cancel)
-    .append(directory_spinner);
+    .append(spinner);
 
     abel.append(commander);
   });

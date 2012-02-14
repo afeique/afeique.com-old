@@ -15,14 +15,14 @@ class admin_crafter extends template_crafter {
     
     $errors = array();
     
-    $vars = array('title','tags','description','directory');
+    $fields = array('title','tags','description','directory');
     $title = $tags = $description = $directory = '';
-    foreach ($vars as $v) {
+    foreach ($fields as $field) {
       if (!empty($_POST)) {
         $validate_type = 'string';
         if ($field == 'tags') {
-          $_POST[$field] = explode(',', $_POST[$field]);
-          $$field = validate::ray($_POST[$field]);
+          $_POST['tags'] = explode(',', $_POST['tags']);
+          $tags = validate::ray($_POST['tags']);
         } else
           $$field = validate::string($_POST[$field]);
         
@@ -30,7 +30,7 @@ class admin_crafter extends template_crafter {
         
         if ($field == 'directory') {
           $unpub = UNPUBLISHED_POSTS_PATH;
-          $errors[$field] = $directory->trim_slashes()->is_dir($unpub)->is_file($unpub,'/content.php');
+          $errors['directory'] = $directory->trim_slashes()->is_dir($unpub)->is_file($unpub,'/content.php');
         }
         
         $errors[$field] = $$field->errors();
@@ -98,7 +98,7 @@ class admin_crafter extends template_crafter {
         mkdir($pub);
       
       $unpub = escapeshellarg(UNPUBLISHED_POSTS_PATH.$directory);
-      exec("mv $unpub/ $pub/");
+      exec("mv $unpub $pub/");
       
       $time = time();
       
@@ -136,9 +136,9 @@ class admin_crafter extends template_crafter {
     
     $u = USERNAME;
     $p = PASSWORD;
-    $vars = array($u, $p);
+    $fields = array($u, $p);
     $errors = array();
-    foreach ($vars as $v) {
+    foreach ($fields as $field) {
       $errors[$field] = '';
       if (isset($_POST[$field])) {
         $$field = validate::string($_POST[$field])->trim()->not_empty()->spacify();
@@ -217,9 +217,9 @@ class admin_crafter extends template_crafter {
       return;
     }
     
+    $_GET[$field] = urldecode($_GET[$field]);
     if ($field == 'tags') {
-      $_GET[$field] = explode(',', $_GET[$field]);
-      $$field = validate::ray($_GET[$field]);
+      $tags = validate::ray(explode(',', $_GET['tags']));
     } else
       $$field = validate::string($_GET[$field]);
     
@@ -228,10 +228,12 @@ class admin_crafter extends template_crafter {
     $errors = $$field->errors();
     if (empty($errors)) {
       if ($field == 'tags') {
+        $new_tags = $tags->shine();
+        
         // delete old tag relations that are no longer used
         foreach ($post->tags as $old_tag) {
-          if (!in_array($old_tag->value, $tags)) {
-            $relation = PostTagRelations::find('first', array('post_id' => $post->id, 'tag_id' => $old_tag->id));
+          if (!in_array($old_tag->value, $new_tags)) {
+            $relation = PostTagRelation::find('first', array('post_id' => $post->id, 'tag_id' => $old_tag->id));
             $relation->delete();
           }
         }
@@ -242,20 +244,21 @@ class admin_crafter extends template_crafter {
           $old_tags[] = $old_tag->value;
         
         // create tags and tag relations if necessary
-        foreach ($tags as $new_tag) {
+        foreach ($new_tags as $new_tag) {
           if (!in_array($new_tag, $old_tags)) {
-            try {
-              $tag = Tag::find_by_value($new_tag);
-            } catch (ActiveRecord\RecordNotFound $e) {
+            $tag = Tag::find_by_value($new_tag);
+            if (!isset($tag))
               $tag = Tag::create(array('value' => $new_tag));
-            }
             
-            PostTagRelation::create(array('post_id' => $id, 'tag_id' => $tag->id));
+            $relation = PostTagRelation::find('first', array('post_id' => $id, 'tag_id' => $tag->id));
+            if (!isset($relation)) {
+              PostTagRelation::create(array('post_id' => $id, 'tag_id' => $tag->id));
+            }
           }
         }
       } elseif ($field == 'directory') {
-        $current_path = rtrim($this->post_path($post->directory, $post->time_first_published),'/');
-        $new_path = escapeshellarg(rtrim($this->post_path($$field, $post->time_first_published),'/'));
+        $current_path = escapeshellarg(rtrim($this->post_path($post->directory, $post->time_first_published),'/'));
+        $new_path = escapeshellarg(rtrim($this->post_path($directory, $post->time_first_published),'/'));
         
         exec("mv $current_path $new_path");
         
@@ -282,15 +285,22 @@ class admin_crafter extends template_crafter {
     }
   
     $post = Post::find($id);
-    if ($post->$field != $$field) {
-      if (!DEBUG) { 
-        header('Status: 500 Internal Server Error'); header('HTTP/1.0 500 Internal Server Error'); 
+    if ($field != 'tags') {
+      if ($post->$field != $$field) {
+        if (!DEBUG) { 
+          header('Status: 500 Internal Server Error'); header('HTTP/1.0 500 Internal Server Error'); 
+        }
+        $this->content = $this->json_error('problem updating database');
+        return;
       }
-      $this->content = $this->json_error('problem updating database');
-      return;
+      $this->content = json_encode(array($field => $post->$field));
+    } else {
+      $tags = array();
+      foreach ($post->tags as $tag)
+        $tags[] = $tag->value;
+      $this->content = json_encode(array($field => $tags));
     }
-  
-    $this->content = json_encode(array($field => $post->$field));
+    
   }
   
   protected function json_error($message) {

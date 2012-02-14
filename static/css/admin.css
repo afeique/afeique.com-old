@@ -94,8 +94,13 @@
 .post-title-input, 
 .post-tags-input,
 .post-directory-input {
-	font-size: 1.2em;
 	width: 25em;
+}
+
+.post-title-input {
+	font-size: 1.3em;
+	position: relative;
+	bottom: .2em;
 }
 
 .post-tags-input,
@@ -104,9 +109,9 @@
 }
 
 .post-description-textarea {
-	width: 30em;
-	height: 6em;
-	font-size: 1.1em;
+	width: 35em;
+	height: 5em;
+	font-size: 1em;
 }
 
 /**
@@ -115,25 +120,25 @@
 
 .post-title-commander, 
 .post-tags-commander,
+.post-description-commander,
 .post-directory-commander {
 	display: inline-block;
 	height: 1.5em;
-	vertical-align: middle;
+	vertical-align: top;
 	margin: 0;
 	padding: 0;
 	position: relative;
-	bottom: .8em;
+	top: .4em;
 	list-style-type: none;
 	font-size: .7em;
 }
 
-.post-description-commander {
-	display: inline-block;
-	vertical-align: top;
-	position: relative;
-	top: .5em;
-	list-style-type: none;
-	font-size: .7em;
+.post-tags-commander {
+	margin-left: 1em;
+}
+
+.post-title-commander {
+	top: .6em;
 }
 
 /**
@@ -141,13 +146,10 @@
  */
 .post-title-commander li, 
 .post-tags-commander li,
+.post-description-commander li,
 .post-directory-commander li {
 	display: inline-block;
-	margin-right: .1em;
-}
-
-.post-description-commander li {
-	margin-bottom: .1em;
+	margin-right: .5em;
 }
 
 /**
@@ -155,13 +157,10 @@
  */
 .post-title-commander .chars-left, 
 .post-tags-commander .chars-left, 
+.post-description-commander .chars-left,
 .post-directory-commander .chars-left {
-	font-size: 1.1em;
-	margin: 0 .5em;
-}
-
-.post-description-commander .chars-left {
-	font-size: 1.1em;
+	font-size: 1.3em;
+	margin: 0 .2em 0 .5em;
 }
 
 /**

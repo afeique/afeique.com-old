@@ -61,7 +61,7 @@ class validate {
   }
   
   public static function ray(array $array) {
-    $validator = new validate(VALIDATOR_TYPE_ARRAY, $array);
+    $validator = new validate(ARRAY_VALIDATOR, $array);
     
     return $validator;
   }
@@ -195,6 +195,16 @@ class validate {
   }
   
   public function __toString() {
+    if ($this->type == STRING_VALIDATOR)
+      return $this->what;
+    elseif ($this->type == ARRAY_VALIDATOR)
+      return implode(', ', $this->what);
+  }
+  
+  public function shine() {
+    if ($this->type != ARRAY_VALIDATOR)
+      throw validator_error::array_validator_only();
+    
     return $this->what;
   }
 }
@@ -202,6 +212,9 @@ class validate {
 class validator_error extends error {
   public static function invalid_type() {
     return self::e('invalid type for validator');
+  }
+  public static function array_validator_only() {
+    return self::e('method for array validators only');
   }
 }
 
