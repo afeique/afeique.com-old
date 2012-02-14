@@ -344,8 +344,9 @@ ALTER TABLE `post_tag_relations`
 
 <h2>htaccess</h2>
 <p>
-  The default <?=code('.htaccess')?> that comes bundled in the git repository will enable <?=code('mod_gzip')?> 
-  output compression if it's available. It will also set <?=code('Expires')?> headers to access plus a week.
+  Besides configuring <?=code('mod_rewrite')?>, the <?=code('.htaccess')?> that comes bundled in the git repository 
+  will enable <?=code('mod_gzip')?> output compression if it's available. It will also set <?=code('Expires')?> 
+  headers to access plus a week.
 </p>
 
 <h2>static assets</h2>
