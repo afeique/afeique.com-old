@@ -372,7 +372,8 @@ ALTER TABLE `post_tag_relations`
   Everything is truly contingent on what you set <?=code('DEBUG')?> to in <?=code('/config.php')?>. Setting
   <?=code('DEBUG')?> to something nonzero will make the system use development versions of scripts and load
   scripts via <?=code('<script src="..."></script>')?> tags in the head. Setting <?=code('DEBUG')?>
-  to <?=code('0')?> will make the system load "meshed" JavaScript via dynamic JavaScript-based deferment.
+  to <?=code('0')?> will make the system load "meshed" JavaScript via dynamic JavaScript-based deferment
+  (i.e. using JavaScript to load JavaScript once the document is ready).
 </p>
 <p>
   There is a tool in the admin panel for compressing JavaScript and CSS. Currently, this tool will take all
@@ -381,10 +382,9 @@ ALTER TABLE `post_tag_relations`
   resulting output will then be saved to a single file specified in <?=code('/config.php')?>.
 </p>
 <p>
-  This single file is ideal for dynamic deferment (i.e. using JavaScript to load JavaScript once the
-  document is ready). Performing dynamic deferment without the use of a special library such as
-  <?=b_link('http://labjs.com/','LABjs')?> leads to potential race conditions wherein dependencies are not loaded
-  before their dependents. However, because the tool mentioned above meshes the scripts together in the correct
+  This single file is ideal for dynamic deferment. Performing dynamic deferment without the use of a special library 
+  such as <?=b_link('http://labjs.com/','LABjs')?> leads to potential race conditions wherein dependencies are not 
+  loaded before their dependents. However, because the tool mentioned above meshes the scripts together in the correct
   order, race conditions are eliminated when the single meshed file is loaded via dynamic deferment.
 </p>
 <p>
