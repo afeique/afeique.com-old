@@ -131,7 +131,7 @@ $link = b_link("google.com","this is a link that opens a new window on google");
 <p>
   With oohtml, every controller is no longer just a controller but an entire self-contained unit for generating pages. 
   Every method isn't just the logic for a particular page, but also the view. So the term "controller" is no longer 
-  appropriate, and hence they are referred to as "crafters."
+  appropriate and instead they are referred to as "crafters."
 </p>
 <p>
   The parent of all crafters is the <?=code('abstract class crafter')?> in <?=code('/libs/crafter.php')?>.
