@@ -78,7 +78,7 @@
   Embedding content and setting HTML attributes in oohtml is achieved through method chaining. The embed method is
   <?=code('__($content1, $content2, ..., $contentN)')?> and the set attribute method is <?=code('_($attribute, $value)')?>.
   As mentioned before, each piece of content embedded must be a renderable object; "renderable" meaning that it is either
-  a scalar and therefore castable by PHP to a string; or it contains a <?=code('__toString')?> method. If there is an
+  a scalar and therefore castable by PHP to a string or it contains a <?=code('__toString')?> method. If there is an
   attempt to embed a non-renderable piece of content, an Exception will be thrown.
 </p>
 <p>
