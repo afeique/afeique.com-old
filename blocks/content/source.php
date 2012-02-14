@@ -15,62 +15,46 @@
 
 <h2>thoughts on mvc</h2>
 <p>
-  Through the course of working with MVC for the past several years, I have a few times been curious
-  about whether the mixing of view and logic is really an issue. In my experience, the real gripe
-  is the mixing of HTML and logic.
-</p>
-<p>
-  In my opinion, using separate view files introduces the burden of:
-</p>
+  Working with the MVC pattern for several years led to an interest in implementing an alternative pattern
+  for development that somehow combined logic and views into one package. Doing so reduces or eliminates:
 <ul>
-  <li>having to navigate to those separate files when making modifications;</li>
+  <li>having to navigate to separate views when making modifications;</li>
   <li>needing "sub-views" for chunks of content that are reused across multiple pages;</li>
   <li>"repeating" the logic of looping over content, first when retrieving from the model, then 
   again when displaying it.</li>
 </ul>
 <p>
-  I don't really consider any of these to be serious issues, but they are minor nuisances to me,
-  particularly the first two bullets.
-</p>
-<p>
-  In my workflow, I have a tendency to modify the view right after making changes in the logic. I've
-  long felt it would be more convenient if the view were at least in the same file. I wouldn't 
-  have to go searching for it amongst the other files in the project (sometimes numbering the hundreds), or 
-  amongst 10+ open tabs in my IDE, most of which are views. Granted, if I were using 
-  <?=b_link('http://www.gnu.org/software/emacs/','emacs')?> switching tabs would be much more streamlined,
-  but alas for numerous reasons I am bound to Windows machines for the foreseeable future.
+  The first two bullets are critical, as they force the developer to navigate numerous tabs and files.
+  Doing so seems to have a considerable impact on workflow, though the observation is completely subjective. 
+  This stance primarily applies to Windows-based development, as using 
+  <?=b_link('http://www.gnu.org/software/emacs/','emacs')?> allows for a much more streamlined interface for
+  switching between multiple files.
 </p>
 
 <h2>html as php objects</h2>
-<p>
-  At some point, I decided the solution was to be able to form HTML using PHP objects.
-  I reasoned that the PHP objects representing HTML could be embedded seamlessly within the logic, 
-  could be loaded into helper functions within the same class (representing sub-views), and best of all, 
-  could be inherited for use in child classes. It would enable a whole system of simple inheritance-based 
-  templating.
-</p>
 <p>
   HTML, like XML and JSON, already notates "objects." The objects are HTML elements, each element
   with its own set of attributes such as id, class, style, etc. Consequently, it is very simple to write a 
   small library capable of generating PHP objects that represent HTML.
 </p>
 <p>
-  I say "small" and "simple" but it's only small and simple if you forego one thing: validation. Besides being
-  considerably easier to write and maintain, skipping any sort of validation also gives you more flexibility.
+  PHP objects representing HTML can be embedded seamlessly within the logic,  can be loaded into helper functions 
+  within the same class (representing sub-views), and can be inherited for use in child classes. Using PHP objects 
+  representing HTML enables a new degree of code-reuse for views, and a whole system of inheritance-based templating.
 </p>
 <p>
-  You can find my implementation of oohtml in the <?=code('/libs/container.php')?> and <?=code('/libs/tag.php')?> 
-  files respectively. Class <?=code('container')?> is extended by <?=code('tag')?>. Class <?=code('container')?>
-  represents a set of "renderable" elements: 
-  anything that is either a scalar or contains a <?=code('__toString()')?> method. It has code for embedding n-many 
-  elements using <?=b_link('http://php.net/manual/en/function.func-get-args.php', code('func_get_args'))?> and then 
-  rendering all its contents to a single run-on string. 
+  The current site implementation of oohtml are in the <?=code('/libs/container.php')?> and <?=code('/libs/element.php')?> 
+  files respectively. Class <?=code('container')?> is extended by <?=code('element')?>. Class <?=code('container')?>
+  represents a set of "renderable" elements: anything that is either a scalar or contains a <?=code('__toString()')?> 
+  method. It has code for embedding n-many elements using 
+  <?=b_link('http://php.net/manual/en/function.func-get-args.php', code('func_get_args'))?> and then rendering all its 
+  embedded content to a single run-on string. 
 </p>
 <p>
-  The tag class in contrast is specifically for creating an HTML tag. It has to be passed a name and whether
-  or not the tag is self-closing (e.g. <?=code(htmlentities('<br />'))?>). Self-closing elements can be embedded
-  with content (as the embed method from the parent container class is not overridden), but none of this
-  content will be rendered.
+  Class <?=code('element')?> is specifically for creating an HTML element. It has to be passed a name and whether or
+  not the element is self-closing (e.g. <?=code(htmlentities('<br />'))?>). Self-closing elements can be embedded with 
+  content (as the embed method from the parent container class is not overridden), but none of this content 
+  will be rendered.
 </p>
 <p>
   Lastly, the <?=code('/html.php')?> file contains helper functions and shortcuts for using oohtml more efficiently.
@@ -78,13 +62,13 @@
 
 <h2>crafters, not controllers</h2>
 <p>
-  With oohtml, every controller is no longer just a controller&mdash;but an entire self-contained
-  unit for generating pages. Every method isn't just the logic for a particular page, but
-  also the view. So the term "controller" is no longer appropriate, and hence I call them "crafters."
+  With oohtml, every controller is no longer just a controller but an entire self-contained unit for generating pages. 
+  Every method isn't just the logic for a particular page, but also the view. So the term "controller" is no longer 
+  appropriate, and hence they are referred to as "crafters."
 </p>
 <p>
-  The parent of all crafters is the <?=code('/libs/crafter.php')?> file which defines the abstract crafter class.
-  In my implementation, crafters keep all their page-methods protected or private, all page-methods
+  The parent of all crafters is the <?=code('abstract class crafter')?> in <?=code('/libs/crafter.php')?>.
+  In the current site implementation, crafters keep all their page-methods protected or private, all page-methods
   have an _ (underscore) as their first character, and no arguments are ever passed to page-methods.
 </p>
 <ul>
@@ -95,7 +79,7 @@
 </ul>
 
 <p>
-  The abstract crafter class has three abstract methods:
+  <?=code('abstract class crafter')?> has three abstract methods:
 </p>
 
 <ul>
@@ -104,17 +88,17 @@
   <li><?=code('public abstract function craft()')?></li>
 </ul>
 <p>
-  The first two methods, <?=code('_index()')?> and <?=code('_404()')?>, define those respective pages. These
-  two pages are mandatory for all child crafters, either to define themselves or to inherit. This is because two
-  methods within the abstract crafter class (<?=code('__construct()')?> and <?=code('craft()')?>&mdash;which are expected
+  The first two methods, <?=code('_index()')?> and <?=code('_404()')?>, define pages. Those pages are mandatory
+  for all child crafters, either to define themselves or to inherit. This is because two methods within 
+  <?=code('abstract class crafter')?> (<?=code('__construct()')?> and <?=code('craft()')?>&mdash;which are expected
   to be inherited by all children to some degree) specifically point to <?=code('_index()')?> and <?=code('_404()')?>.
 </p>
 <p>
-  The third abstract method, <?=code('craft()')?>, allows children to define their own method of crafting pages.
-  Since each child crafter class will be responsible for its own set of related pages, it follows that each set
-  of pages might have a different methodology for crafting pages, either for styling, functionality, or security.
-  For example, the <?=code('admin_crafter')?> checks to ensure the user is logged in as an admin before rendering 
-  any admin pages; else it renders a login page.
+  The third <?=code('abstract')?> method, <?=code('craft()')?>, allows children to define their own method of 
+  crafting pages. Since each child crafter class will be responsible for its own set of related pages, it follows 
+  that each set of pages might have a different methodology for crafting pages, either for styling, functionality, 
+  or security. For example, the <?=code('admin_crafter')?> checks to ensure the user is logged in as an admin before 
+  rendering any admin pages; else it renders a login page.
 </p>
 
 <h2>requesting pages from crafters</h2>
@@ -128,17 +112,17 @@
 </p>
 <p>
   When a crafter is passed a request, it will check whether the request is for a valid page-method. If so, it'll 
-  prepare itself to craft it. If not, it will instead prepare to craft a 404 page.
+  prepare itself to craft it. If not, it will instead prepare to craft a <?=code('404')?> page.
 </p>
 <p>
   In order to actually craft the requested page, one can either cast the crafter to a string (the crafter's
   <?=code('__toString()')?> method calls the <?=code('craft()')?> method) or manually invoke the <?=code('craft()')?> 
-  method. The former method has the disadvantage of being vague when Exceptions are thrown, so I recommend the 
-  latter method.
+  method. The former method has the disadvantage of being vague when Exceptions are thrown, so using the latter
+  is recommended.
 </p>
 <p>
-  Typically, all crafters follow the behaviour of crafting an index page by default if no request is made to it.
-  However, this may be undesirable in certain scenarios and can be overridden by defining a customized
+  Typically, all crafters follow the behaviour of crafting an <?=code('index')?> page by default if no request is made 
+  to it. However, this may be undesirable in certain scenarios and can be overridden by defining a customized
   <?=code('__construct()')?> method.
 </p>
 <p>
@@ -147,12 +131,11 @@
 
 <h2>query string parsing</h2>
 <p>
-  The default <?=code('/.htaccess')?> file bundled in the repo defines a set of rewrite conditions which
-  redirects all dynamic requests to <?=code('index.php/$1')?>. Within <?=code('/index.php')?>, these requests
-  are parsed from <?=code('$_SERVER["QUERY_STRING"]')?> in order to determine what crafter is being called,
-  what page-method to request, and most importantly, whether or not the appropriate crafter even exists.
-  You can probably guess that if the crafter doesn't exist, a nice 404 is thrown based on what is defined
-  in <?=code('/crafters/root_crafter.php')?>.
+  The default <?=code('/.htaccess')?> file bundled defines a set of rewrite conditions which redirect all dynamic 
+  requests to <?=code('index.php/$1')?>. Within <?=code('/index.php')?>, these requests are parsed from 
+  <?=code('$_SERVER["QUERY_STRING"]')?> in order to determine what crafter to instantiate, what page-method to request, 
+  and most importantly, whether or not the appropriate crafter even exists. If the crafter doesn't exist, 
+  a <?=code('404')?> is thrown based on what is defined in <?=code('/crafters/root_crafter.php')?>.
 </p>
 <p>
   That aside, the key point for this section is that all query-string information beyond the relative path
@@ -160,26 +143,25 @@
   (<?=code('EXTRA')?> is a constant defined in <?=code('/config.php')?>). Page-methods can then glean this
   extra information. 
 </p>
-
 <p>
-  Consequently, unlike in <?=b_link('http://codeigniter.com/','CodeIgniter')?> where this
-  information is passed automatically to page-methods as arguments, the page-method must itself make an effort 
-  to get the information.
+  Consequently, unlike in <?=b_link('http://codeigniter.com/','CodeIgniter')?> where this information is passed 
+  automatically to page-methods as arguments, the page-method must itself make an effort to get the information.
 </p>
 
 <h2>nothing's perfect</h2>
 <p>
-  In the same vein of the complaints I levied against MVC at large, one can find similar small nitpicks with
-  oohtml and the manner in which I utilize it.
+  In the same vein of the critiques levied against MVC at large, one can find similar small nitpicks with
+  oohtml and the manner in which it is utilized in the current implementation.
 </p>
 <p>
-  For one thing, a lot of IDEs have HTML autocomplete features that speed up writing HTML drastically.
-  However, the oohtml syntax has poor autocompletion in Eclipse, meaning it is actually more cumbersome to
-  write oohtml than actual HTML, despite oohtml being more compact.
+  For example, <?=b_link('http://www.eclipse.org/projects/project.php?id=tools.pdt','Eclipse PDT')?> has HTML 
+  autocomplete features that speed up writing HTML drastically. However, oohtml syntax has poor autocompletion 
+  in Eclipse, meaning it is actually more cumbersome to write oohtml than actual HTML, despite oohtml being 
+  more compact.
 </p>
 <p>
-  Moreover, because the view is now integrated into the logic, crafter page-method code is generally larger
-  than its counterpart view-controller (VC) code. This means that page-method code becomes less navigable despite
+  Moreover, because the view is now integrated into the logic, crafter page-method code is naturally larger
+  than its counterpart controller (VC) code. This means that page-method code becomes less navigable despite
   not having to flip files every five seconds.
 </p>
 
@@ -187,40 +169,41 @@
 <p>
   Using helper functions dedicated to generating oohtml rather than embedding oohtml in the middle of page-methods 
   works well. This greatly minimizes the area taken up by page-methods while retaining overall code navigability.
-  The code navigability part is true primarily if you use "find" to navigate code quickly.
+  The code navigability part is true primarily if you use some sort of search to navigate code quickly.
 </p>
 <p>
-  This also has the advantage of reducing code duplication by consistently favoring the creation of reusable methods
-  and code.
+  This also has the advantage of reducing code duplication by consistently favoring the creation of reusable methods.
 </p>
 
 <h2>'b' for 'blocks'</h2>
 <p>
-  One thing is for sure: you don't want to catch yourself writing out entire sections of static content in oohtml.
-  So save yourself the time. In <?=code('/html.php')?> there is a helper function called <?=code('b($block)')?> which
-  specifically grabs a chunk of static content in <?=code('/blocks')?>, fetches it through output buffering (so php
-  content is still processed), and returns the resulting output.
+  In <?=code('/html.php')?> there is a helper function called <?=code('b($block)')?> which specifically grabs a chunk 
+  of static content in <?=code('/blocks')?>, fetches it through output buffering (so PHP content is still processed), 
+  and returns the resulting output.
 </p>
 
 <h2>template crafter</h2>
 <p>
   There is one intermediary parent between the abstract <?=code('crafter')?> class and all other child crafters: the 
   <?=code('template_crafter')?> class.
-  This crafter is responsible for defining the template for the entire website, as well as all helper methods for
-  generating content and database (model) access.
+  This crafter is responsible for defining the template for the entire website, as well as numerous helper methods for
+  generating content, and methods for connecting to the database.
 </p>
 
 <h2>models</h2>
 <p>
   Currently, the site uses <?=b_link('http://www.phpactiverecord.org/','php.activerecord')?> as a database
-  ORM. There is only one table: <?=code('posts')?>. Here is the <?=code('CREATE TABLE')?> SQL:
+  ORM. There are three tables <?=code('posts')?>, <?=code('tags')?>, and a relational table called 
+  <?=code('post_tag_relations')?>. Every table utilizes the InnoDB engine. This is because The relational table has 
+  <?=code('FOREIGN KEY')?> constraints to <?=code('posts')?> and <?=code('tags')?> to streamline the relational
+  mapping. Below is the the <?=code('CREATE TABLE')?> SQL for each table, along with the <?=code('ALTER TABLE')?>
+  SQL for <?=code('post_tag_relations')?> to establish the <?=code('FOREIGN KEY')?> constraints:
 </p>
 
 <pre class="code">
 CREATE TABLE IF NOT EXISTS `posts` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `title` varchar(250) NOT NULL,
-  `tags` varchar(250) NOT NULL,
   `description` varchar(250) NOT NULL,
   `directory` varchar(250) NOT NULL,
   `time_first_published` int(10) unsigned NOT NULL,
@@ -229,20 +212,33 @@ CREATE TABLE IF NOT EXISTS `posts` (
   UNIQUE KEY `title` (`title`),
   KEY `time_first_published` (`time_first_published`),
   KEY `time_last_modified` (`time_last_modified`),
-  KEY `description` (`directory`),
-  KEY `tags` (`tags`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-</pre>
+  KEY `description` (`directory`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
-<p>
-  InnoDB is used because I plan on separating the <?=code('tags')?> field into another table
-  and setting up <?=code('FOREIGN KEY')?> constraints. 
-</p>
+CREATE TABLE IF NOT EXISTS `tags` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `value` varchar(250) CHARACTER SET utf8 NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `tag` (`value`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
+
+CREATE TABLE IF NOT EXISTS `post_tag_relations` (
+  `post_id` int(10) unsigned NOT NULL,
+  `tag_id` int(10) unsigned NOT NULL,
+  PRIMARY KEY (`post_id`,`tag_id`),
+  KEY `tag_id` (`tag_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+ALTER TABLE `post_tag_relations`
+  ADD CONSTRAINT `post_tag_relations_ibfk_2` FOREIGN KEY (`tag_id`) REFERENCES `tags` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `post_tag_relations_ibfk_1` FOREIGN KEY (`post_id`) REFERENCES `posts` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+</pre>
 
 <h2>database access</h2>
 <p>
-  In my current setup, I have two users configured for access to the site database: a single public user who can
-  only perform <?=code('SELECT')?> queries; and an admin user who can do shenanigans. No admin credentials are 
+  The current setup utilizes two users configured for access to the site database: a single public user who can
+  only perform <?=code('SELECT')?> queries; and an admin user who can perform all operations. No admin credentials are 
   stored in any config files. Only the public access credentials are stored.
 </p>
 
@@ -250,10 +246,10 @@ CREATE TABLE IF NOT EXISTS `posts` (
 <p>
   By default, in <?=code('/config.php')?>, the "afeique.com" directory cloned from github is defined as the 
   <?=code('BASE_PATH')?> constant. The public access credentials are stored one directory above <?=code('BASE_PATH')?>, 
-  which is a folder inaccessible by remote users on my current webhost.
+  which is a directory inaccessible by remote users.
 </p>
 <p>
-  The public access credentials is the PHP file <?=code('/../mysql_credentials.php')?>. It defines the following
+  The public access credentials are stored in <?=code('/../mysql_credentials.php')?>. It defines the following
   variables:
 </p>
 <ul>
@@ -283,24 +279,17 @@ CREATE TABLE IF NOT EXISTS `posts` (
 
 <h2>security concerns</h2>
 <p>
-  I am no security expert and thus cannot vouch for the security of the current scheme. If you have
-  any thoughts on the matter, be they comments or suggestions for improvement, do contact me.
+  For any thoughts or comments regarding security vulnerabilities and flaws, please refer to the <?=l_link('contact')?>
+  page.
 </p>
 
-<h2>useful constants</h2>
+<h2>debug mode</h2>
 <p>
-  Perhaps the single-most useful constant is the <?=code('DEBUG')?> constant defined in <?=code('/config.php')?>.
-  Setting this to a nonzero value will set PHP <?=code('error_reporting')?> to <?=code('E_ALL')?> and will make
-  admin AJAX calls return more detailed debug information via JSON. These responses are currently rendered by
-  the administrative JavaScript as alerts. More useful still, setting <?=code('DEBUG')?> to a nonzero value will
-  also make the template crafter use development CSS and JavaScript files instead of their compressed counterparts
-  (the subject of JavaScript and CSS compression is covered in greater detail in another section below).
-</p>
-<p>
-  <?=code('DEBUG')?> aside, if you're using this framework for your own personal cahoots, you will probably want
-  to modify the <?=code('BASE_PATH')?> and <?=code('BASE_URL')?> constants. These are currently defined according
-  to my development and production setups and also form the key ingredient to all the other <?=code('*_PATH')?>
-  and <?=code('*_URL')?> constants defined. <?=code('TIMEZONE')?> might be something you want to change as well.
+  Setting the <?=code('DEBUG')?> constat defined in <?=code('/config.php')?> to a nonzero value will set PHP 
+  <?=code('error_reporting')?> to <?=code('E_ALL')?>; will make admin AJAX calls return more detailed debug 
+  information via JSON (currently rendered by the admin JavaScript as alerts); and will make 
+  <?=code('template_crafter')?> use development CSS and JavaScript files instead of their compressed counterparts
+  (the subject of JavaScript and CSS compression is covered in greater detail further below).
 </p>
 
 <h2>helper classes</h2>
@@ -318,25 +307,22 @@ CREATE TABLE IF NOT EXISTS `posts` (
 
 <h2>javascript and css compression</h2>
 <p>
-  I will begin first by describing how the JavaScript delivery system works.
-</p>
-<p>
-  Everything is truly contingent on what you set <?=code('DEBUG')?> to in <?=code('config.php')?>. Setting
+  Everything is truly contingent on what you set <?=code('DEBUG')?> to in <?=code('/config.php')?>. Setting
   <?=code('DEBUG')?> to something nonzero will make the system use development versions of scripts and load
   scripts via <?=code(htmlentities('<script src="..."></script>'))?> tags in the head. Setting <?=code('DEBUG')?>
-  to <?=code('0')?> will make the system use "meshed" JavaScript using dynamic JavaScript-based deferment.
+  to <?=code('0')?> will make the system load "meshed" JavaScript via dynamic JavaScript-based deferment.
 </p>
 <p>
   There is a tool in the admin panel for compressing JavaScript and CSS. Currently, this tool will take all
   JavaScript files defined in <?=code('config.php')?>, mash them together in the <em>order specified</em>, and 
   then pack them using <?=b_link('http://dean.edwards.name/packer/','Dean Edwards\' JavaScript packer')?>. The 
-  resulting output will then be saved to a single file again specified in <?=code('config.php')?>.
+  resulting output will then be saved to a single file specified in <?=code('/config.php')?>.
 </p>
 <p>
   This single file is ideal for dynamic deferment (i.e. using JavaScript to load JavaScript once the
   document is ready). Performing dynamic deferment without the use of a special library such as
   <?=b_link('http://labjs.com/','LABjs')?> leads to potential race conditions wherein dependencies are not loaded
-  before their dependents. However, because the tool mentioned above meshed the scripts together in the correct
+  before their dependents. However, because the tool mentioned above meshes the scripts together in the correct
   order, race conditions are eliminated when the single meshed file is loaded via dynamic deferment.
 </p>
 <p>
@@ -345,8 +331,8 @@ CREATE TABLE IF NOT EXISTS `posts` (
   CSS files generated by the admin tool are used.
 </p>
 <p>
-  Additionally, it's worth mentioning that you can force JavaScript to be rendered inline via the <?=code('INLINE_JS')?>
-  option in <?=code('config.php')?>.
+  Additionally, JavaScript can be forced to be render inline via the <?=code('INLINE_JS')?> constant in 
+  <?=code('/config.php')?>.
 </p>
 
 <h2>htaccess</h2>
