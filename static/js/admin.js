@@ -184,9 +184,9 @@ $(function() {
             $.ajax({
               dataType: 'json',
               url: BASE_URL+'admin/update/title/'+post_id,
-              type: 'POST',
+              type: 'get',
               data: {
-                title: new_title
+                title: escape(new_title)
               },
               statusCode: {
                 400: function() {
@@ -274,9 +274,9 @@ $(function() {
             $.ajax({
               dataType: 'json',
               url: BASE_URL+'admin/update/tags/'+post_id,
-              type: 'POST',
+              type: 'get',
               data: {
-                tags: new_tags
+                tags: escape(new_tags)
               },
               statusCode: {
                 400: function() {
@@ -375,9 +375,9 @@ $(function() {
             $.ajax({
               dataType: 'json',
               url: BASE_URL+'admin/update/description/'+post_id,
-              type: 'POST',
+              type: 'get',
               data: {
-                description: new_description
+                description: escape(new_description)
               },
               statusCode: {
                 400: function() {
@@ -459,9 +459,9 @@ $(function() {
             $.ajax({
               dataType: 'json',
               url: BASE_URL+'admin/update/directory/'+post_id,
-              type: 'POST',
+              type: 'get',
               data: {
-                directory: new_directory
+                directory: escape(new_directory)
               },
               statusCode: {
                 400: function() {

@@ -218,10 +218,10 @@ class admin_crafter extends template_crafter {
     }
     
     if ($field == 'tags') {
-      $_POST[$field] = explode(',', $_POST[$field]);
-      $$field = validate::ray($_POST[$field]);
+      $_GET[$field] = explode(',', $_GET[$field]);
+      $$field = validate::ray($_GET[$field]);
     } else
-      $$field = validate::string($_POST[$field]);
+      $$field = validate::string($_GET[$field]);
     
     $$field->trim()->not_empty()->spacify()->max_length(250);
     
@@ -345,11 +345,11 @@ class admin_crafter extends template_crafter {
       return 'post with specified id "'.$id.'" not found';
     }
     
-    if (!isset($_POST[$field])) {
+    if (!isset($_GET[$field])) {
       if (!DEBUG) {
         header('Status: 400 Bad Request'); header('HTTP/1.0 400 Bad Request');
       }
-      return 'no data given for '.$field.' update via POST';
+      return 'no data given for '.$field.' update via GET';
     }
   }
   
