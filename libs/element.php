@@ -3,7 +3,7 @@
 require 'container.php';
 
 /**
- * a tag represents an html tag
+ * an element represents an html element
  * it is a container so it can contain other tags as well
  * 
  * besides having shortcuts for setting common attributes,
@@ -26,7 +26,7 @@ require 'container.php';
  * checking
  * 
  */
-class tag extends container {
+class element extends container {
   protected $name;
   protected $self_closing;
   protected $attributes;

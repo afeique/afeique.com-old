@@ -25,9 +25,6 @@ require 'html.php';
 // validator
 require 'libs/validate.php';
 
-// helper functions
-require 'helpers.php';
-
 // base crafters
 require 'libs/crafter.php';
 require 'crafters/template_crafter.php';

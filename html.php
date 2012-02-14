@@ -1,7 +1,7 @@
 <?php
 
 require_once 'config.php';
-require_once 'libs/tag.php';
+require_once 'libs/element.php';
 
 /**
  * this file simply contains numerous helper methods
@@ -45,7 +45,7 @@ function b($block) {
  * as in 'html element'
  */
 function l($name) {
-  return new tag($name);
+  return new element($name);
 }
 
 /**
@@ -55,7 +55,7 @@ function l($name) {
  * aka ll
  */
 function ll($name) {
-  return new tag("$name", $self_closing=1);
+  return new element($name, $self_closing=1);
 }
 
 function shortcut($name, array $contents) {
