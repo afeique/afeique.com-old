@@ -188,7 +188,7 @@ class template_crafter extends crafter {
         html(
             head(
                 css_link('blueprint/screen.min.css'),
-                html_if('lt IE 8', css_link('blueprint/ie.css')),
+                html_if('lt IE 8', css_link('blueprint/ie.min.css')),
                 css_link('jquery-ui-lightness/jquery-ui-1.8.17.min.css'),
                 implode('', $this->styles),
                 html_if('lt IE 9', script_src('html5shiv.min.js')),
