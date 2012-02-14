@@ -1,7 +1,7 @@
 <p>
   The site source is available via a <?=b_link('http://github.com/afeique/afeique.com.git','github repository')?>. 
   Git-specific discussion, such as how to setup Git, how to clone a repository, and so on, are beyond the scope of 
-  this page. Here we will focus on discussing the source itself.
+  this page. Here, discussion will be focused upon the source itself.
 </p>
 
 <h1>requirements</h1>
@@ -54,17 +54,72 @@
   files respectively. Class <?=code('container')?> is extended by <?=code('element')?>. Class <?=code('container')?>
   represents a set of "renderable" elements: anything that is either a scalar or contains a <?=code('__toString()')?> 
   method. It has code for embedding n-many elements using 
-  <?=b_link('http://php.net/manual/en/function.func-get-args.php', code('func_get_args'))?> and then rendering all its 
+  <?=b_link('http://php.net/manual/en/function.func-get-args.php', code('func_get_args')?> and then rendering all its 
   embedded content to a single run-on string. 
 </p>
 <p>
   Class <?=code('element')?> is specifically for creating an HTML element. It has to be passed a name and whether or
-  not the element is self-closing (e.g. <?=code(htmlentities('<br />'))?>). Self-closing elements can be embedded with 
+  not the element is self-closing (e.g. <?=code('<br />')?>). Self-closing elements can be embedded with 
   content (as the embed method from the parent container class is not overridden), but none of this content 
   will be rendered.
 </p>
 <p>
-  Lastly, the <?=code('/html.php')?> file contains helper functions and shortcuts for using oohtml more efficiently.
+  Lastly, the <?=code('/oohtml.php')?> file contains helper functions and shortcuts for using oohtml more efficiently.
+</p>
+
+
+<h2>oohtml syntax</h2>
+<p>
+  Embedding content and setting HTML attributes in oohtml is achieved through method chaining. The embed method is
+  <?=code('__($content1, $content2, ..., $contentN)')?> and the set attribute method is <?=code('_($attribute, $value)')?>.
+  As mentioned before, each piece of content embedded must be a renderable object; "renderable" meaning that it is either
+  a scalar and therefore castable by PHP to a string; or it contains a <?=code('__toString')?> method. If there is an
+  attempt to embed a non-renderable piece of content, an Exception will be thrown.
+</p>
+<p>
+  There are numerous shortcuts for setting the most widely used attributes. For example, to set the id attribute of an
+  element, <?=code('_i($id)')?> can be used. For an exhaustive list of shortcuts, it is recommended to peruse the
+  <?=code('/libs/element.php')?> file.
+</p>
+<p>
+  Because of this, there are many ways to produce the same content. For example,
+</p>
+
+<pre class="code">
+$html = l('p')->__('this content inside a ', htmlentities('<?=htmlentities('<p>')?>'), ' element with class "m".')->_c('m');
+$link = l('a')->__('this is a link that opens a new window on google')->_('href','google.com')->_('target','_blank);
+$html->__(' ', $link); # embed a space and a link in <?=htmlentities('<p>')?>
+</pre>
+
+<p>
+  can both be reorganized into
+</p>
+
+<pre class="code">
+$html = l('p')->_c('m')->__('this content inside a ', htmlentities('<?=htmlentities('<p>')?>'), ' element with class "m".');
+$link = l('a')->_('href','google.com')->_('target','_blank)->__('this is a link that opens a new window on google');
+</pre>
+
+<p>
+  Moreover, using helper methods from <?=code('/oohtml.php')?>, one could instead use
+</p>
+
+<pre class="code">
+$html = p('this content inside a ', htmlentities('<?=htmlentities('<p>')?>'), ' element with class "m".')->_c('m');
+$link = b_link('google.com','this is a link that opens a new window on google');
+</pre>
+
+<p>
+  So what is the best way? For sake of consistency with the HTML that oohtml seeks to represent, it is recommended
+  to do things in the same order. That is, follow the second example and set element attributes <em>before</em>
+  embedding content. In cases where there are helper methods available, if there is an intent to set element
+  attributes, use <?=code('l($element_name)')?> to create the element and then immediately chain attributes to it.
+</p>
+<p>
+  Additionally, one should have picked up on the fact that embedding content within an element does not automatically
+  escape it with <?=code('htmlentities')?>. This is on purpose, as in numerous instances, blocks of html from external
+  files are embedded within elements alongside other oohtml objects. An example is this very page: it is written using 
+  straight HTML with some PHP, but rendered from within an oohtml object.
 </p>
 
 <h2>crafters, not controllers</h2>
@@ -168,7 +223,7 @@
 </p>
 <p>
   Moreover, because the view is now integrated into the logic, crafter page-method code is naturally larger
-  than its counterpart controller (VC) code. This means that page-method code becomes less navigable despite
+  than its counterpart controller code. This means that page-method code becomes less navigable despite
   not having to flip files every five seconds.
 </p>
 
@@ -184,7 +239,7 @@
 
 <h2>'b' for 'blocks'</h2>
 <p>
-  In <?=code('/html.php')?> there is a helper function called <?=code('b($block)')?> which specifically grabs a chunk 
+  In <?=code('/oohtml.php')?> there is a helper function called <?=code('b($block)')?> which specifically grabs a chunk 
   of static content in <?=code('/blocks')?>, fetches it through output buffering (so PHP content is still processed), 
   and returns the resulting output.
 </p>
@@ -316,7 +371,7 @@ ALTER TABLE `post_tag_relations`
 <p>
   Everything is truly contingent on what you set <?=code('DEBUG')?> to in <?=code('/config.php')?>. Setting
   <?=code('DEBUG')?> to something nonzero will make the system use development versions of scripts and load
-  scripts via <?=code(htmlentities('<script src="..."></script>'))?> tags in the head. Setting <?=code('DEBUG')?>
+  scripts via <?=code('<script src="..."></script>')?> tags in the head. Setting <?=code('DEBUG')?>
   to <?=code('0')?> will make the system load "meshed" JavaScript via dynamic JavaScript-based deferment.
 </p>
 <p>
