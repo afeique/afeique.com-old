@@ -7,6 +7,9 @@ class template_crafter extends crafter {
   // the page heading
   protected $heading;
   
+  // id for the page heading
+  protected $heading_id;
+  
   // additional stylesheets to use
   protected $styles;
   
@@ -25,15 +28,15 @@ class template_crafter extends crafter {
   // whether or not to use the page template
   protected $use_template;
   
-  // whether or not to use the commander
-  protected $use_commander;
-  
-  // whether or not to use the commander heading
+  // whether or not to display the heading
   protected $use_heading;
+  
+  // whether or not to display the heading commander
+  protected $use_heading_commander;
   
   // whether or not a post can override page heading
   // also used by the commander to detect whether a page _has_ overridden the heading
-  protected $post_can_override_heading;
+  protected $override_heading;
   
   // enables anti-robot sentries
   protected $no_robots;
@@ -58,17 +61,17 @@ class template_crafter extends crafter {
     );
     
     $this->use_template = 1;
-    $this->use_commander = 1;
     $this->use_heading = 1;
+    $this->use_heading_commander = 1;
     
-    $this->post_can_override_heading = 1;
+    $this->override_heading = 0;
     
     $this->no_robots = 0;
     
     $this->db_error = '';
     $this->db_access_level = 'public';
     $this->meta_redirect = '';
-    $this->ppp = 30;
+    $this->ppp = 1;
     
     $this->styles = array();
     $this->scripts = array();
@@ -85,19 +88,9 @@ class template_crafter extends crafter {
   protected function _browse() {
     $this->title = 'browse posts';
     
-    $posts = Post::find('all', array('order' => 'id desc'));
-    $posts_html = o();
-    if (!empty($posts)) {
-      foreach ($posts as $post) {
-        $posts_html->__($this->post_row($post));
-      }
-    } else {
-      $posts_html->__(
-          l('h2')->_c('text-center')->__(
-              em('no posts to display')
-          )
-      );
-    }
+    $page = $this->get_page();
+    $posts = Post::find('all', array('order' => 'id desc', 'limit' => $this->ppp, 'offset' => ($page-1)*$this->ppp));
+    $posts_html = $this->list_posts($posts);
   
     $middot = ' &middot; ';
     $this->content = o(
@@ -114,9 +107,6 @@ class template_crafter extends crafter {
   
   public function craft() {
     $this->{$this->request}();
-    
-    if (empty($this->heading))
-      $this->heading = $this->title;
     
     if (!$this->use_template)
       return "{$this->content}";
@@ -203,7 +193,7 @@ class template_crafter extends crafter {
                 l('div')->_i('main-container')->_c('container')->__(
                     b('main/header'),
                     l('div')->_i('main-content')->_c('span-24')->__(
-                        $this->commander($this->title),
+                        $this->heading(),
                         $this->content
                     ),
                     b('main/footer')
@@ -278,37 +268,20 @@ class template_crafter extends crafter {
     require_once MODELS_PATH.strtolower($model).'.php';
   }
   
-  protected function commander() {
+  protected function heading() {
     // if commander is called without a heading set, use the page title for the heading
     if (empty($this->heading))
-      $this->heading = $this->title;
+      $this->heading = h1($this->title);
     
-    // if a post can no longer override the heading,
-    // the header has already been overridden
-    $post_title = '';
-    $heading_id = '';
-    $heading_commanders = '';
-    if (!$this->post_can_override_heading) {
-      $post_title = ' post-title';
-      $this->post_commanders($edit_title, $edit_tags, $delete_post);
-      $heading_commanders = o($edit_title, $delete_post);
-      
-      // parse post id from heading
-      $heading = "{$this->heading}";
-      preg_match('/href="([^"]+)"/', $heading, $match);
-      $href = $match[1];
-      preg_match('/(\d+)$/', $href, $match);
-      $post_id = (int)$match[1];
-      $heading_id = 'post-'.$post_id.'-title';
-    }
+    if (!$this->use_heading && !$this->use_heading_commander)
+      return '';
     
-    return !$this->use_commander ? '' :
-    l('div')->_c('span-24'.$post_title)->__(
-        l('div')->_i($heading_id)->_c('span-16'.$post_title)->__(
-            h1(($this->use_heading ? $this->heading : '&nbsp;'))->_c($post_title),
-            $heading_commanders
+    return 
+    l('div')->_c('span-24')->__(
+        l('div')->_i($this->heading_id)->_c('span-16')->__(
+            $this->use_heading ? $this->heading : '&nbsp;'
         ),
-        l('nav')->_i('commander')->_c('span-8 last text-right')->__($this->commands())
+        l('nav')->_i('commander')->_c('span-8 last text-right')->__($this->use_heading_commander ? $this->commands() : '&nbsp;')
     );
   }
   
@@ -353,7 +326,9 @@ class template_crafter extends crafter {
     
     $last_modified = '';
     if ($post->time_first_published != $post->time_last_modified)
-      $last_modified = li(strong('last modified:'),' ', date(POST_DATE_FORMAT, $post->time_last_modified))->_c('post-last-modified');
+      $last_modified = l('li')->_c('post-last-modified')->__(
+          strong('last modified:'),' ', date(POST_DATE_FORMAT, $post->time_last_modified)
+      );
     
     $tags_html = l('ul')->_c('tags-list');
     $num_tags = count($post->tags);
@@ -368,11 +343,12 @@ class template_crafter extends crafter {
   
     return
     l('div')->_i('post-'.$post->id.'-row')->_c('span-24 post-row')->__(
+        !empty($heading) ?
         l('div')->_i('post-'.$post->id.'-title')->_c('span-24 post-title')->__(
             $heading,
             $delete_post,
             $edit_title
-        ),
+        ) : '',
         l('div')->_i('post-'.$post->id.'-tags')->_c('span-24 post-tags')->__(
             strong('tagged'),' ', $tags_html,' ', $edit_tags
         ),
@@ -387,33 +363,59 @@ class template_crafter extends crafter {
     );
   }
   
-  protected function post_row(Post $post) {
-    $heading = 
-    l('h2')->_c('post-title')->__(
-        l_link('view/'.$post->id, htmlentities($post->title))->_('title','link to post')->_('target','_blank')
-    );
-    $content = 
-    l('div')->_i('post-'.$post->id.'-description')->_c('span-24 post-description')->__(
-        p(htmlentities($post->description))
-    );
+  /**
+   * list_posts renders a list of posts with only their descriptions
+   * for searching & browsing
+   */
+  protected function list_posts(array $posts) {
+    $posts_html = o();
+    if (empty($posts))
+      return l('h2')->_c('text-center')->__(
+          em('no posts to display')
+      );
     
-    return $this->post_template($post, $heading, $content);
+    foreach ($posts as $post) {
+      $heading = 
+      l('h2')->_c('post-title')->__(
+          l_link('view/'.$post->id, htmlentities($post->title))->_('title','link to post')->_('target','_blank')
+      );
+      $content = 
+      l('div')->_i('post-'.$post->id.'-description')->_c('span-24 post-description')->__(
+          p(htmlentities($post->description))
+      );
+    
+      $posts_html->__($this->post_template($post, $heading, $content));
+    }
+    
+    return $posts_html;
   }
   
-  protected function view_posts(array $posts) {
+  /**
+   * read_posts renders a list of posts with their actual content
+   * for reading one or more posts simultaneously
+   */
+  protected function read_posts(array $posts) {
     $posts_html = o();
+    if (empty($posts))
+      return l('h2')->_c('text-center')->__(
+          em('no posts to display')
+      );
+    
+    $first = 1;
     foreach ($posts as $post) {
       $content = $this->get_post_content($post);
       
-      if (!$this->post_can_override_heading) {
-        $heading = 
+      if ($first) {
+        $heading = '';
+        $this->heading = h1(
+            l_link('view/'.$post->id, htmlentities($post->title))->_('title','link to post')->_('target','_blank')
+        );
+        $this->heading_id = 'post-'.$post->id.'-title';
+      } else {
+        $heading =
         l('h1')->_c('post-title')->__(
             l_link('view/'.$post->id, htmlentities($post->title))->_('title','link to post')->_('target','_blank')
         );
-      } else {
-        $heading = '';
-        $this->heading = l_link('view/'.$post->id, htmlentities($post->title))->_('title','link to post')->_('target','_blank');
-        $this->post_can_override_heading = 0;
       }
       
       $content =
@@ -447,6 +449,18 @@ class template_crafter extends crafter {
     }
     
     return $content;
+  }
+  
+  protected function get_page($offset=0) {
+    if (!isset($GLOBALS[EXTRA][$offset+1]))
+      $page = 1;
+    else {
+      $page = (int)$GLOBALS[EXTRA][$offset+1];
+      if ($page < 1)
+        $page = 1;
+    }
+    
+    return $page;
   }
   
   protected function post_path($directory, $time_first_published) {

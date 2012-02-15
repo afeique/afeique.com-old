@@ -16,7 +16,7 @@ class view_crafter extends template_crafter {
   
   protected function _index() {
     $this->title = $this->post->title;
-    $this->content = $this->view_posts(array($this->post));
+    $this->content = $this->read_posts(array($this->post));
   }
   
   protected function _400() {
@@ -67,7 +67,12 @@ class view_crafter extends template_crafter {
     
     $path = $this->post_path($this->post->directory, $this->post->time_first_published);
     if (!is_file($path.'content.php')) {
-      $this->debug[] = 'content.php either not a file or not found in '.$path;
+      if (!file_exists($path))
+        $this->debug[] = $path.' and content.php do not exist';
+      elseif (is_dir($path.'content.php'))
+        $this->debug[] = 'content.php is a a directory in '.$path.' but must be a file';
+      else
+        $this->debug[] = 'content.php not found in '.$path;
       $this->request = '_404';
       return;
     }

@@ -3,18 +3,12 @@
 class root_crafter extends template_crafter {
   protected function _index() {
     $this->title = 'home';
-    try {
-      $posts = Post::find('all', array('order' => 'id desc'));
-    } catch (Exception $e) {
-      unset($posts);
-    }
-    if (!empty($posts)) {
-      $this->content = $this->view_posts($posts);
-    } else {
-      $this->content = l('h2')->_c('text-center')->__(
-          em('no posts to display')
-      );
-    }
+    $this->ppp = 1;
+    $this->post_can_override_heading = 1;
+    
+    $page = $this->get_page();
+    $posts = Post::find('all', array('order' => 'id desc', 'limit' => $this->ppp, 'offset' => ($page-1)*$this->ppp));
+    $this->content = $this->read_posts($posts);
   }
   
   protected function _source() {

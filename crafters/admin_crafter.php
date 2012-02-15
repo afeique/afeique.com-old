@@ -132,7 +132,8 @@ class admin_crafter extends template_crafter {
   
   protected function _login() {
     $this->title = 'login';
-    $this->use_commander = 0;
+    $this->use_heading = 0;
+    $this->use_heading_commander = 0;
     
     $u = USERNAME;
     $p = PASSWORD;
@@ -195,7 +196,8 @@ class admin_crafter extends template_crafter {
    */
   protected function _logout() {
     $this->title = 'logged out';
-    $this->use_commander = 0;
+    $this->use_heading = 0;
+    $this->use_heading_commander = 0;
     $this->meta_redirect = 'admin/';
     
     unset($_SESSION[USERNAME], $_SESSION[PASSWORD]);
@@ -280,6 +282,7 @@ class admin_crafter extends template_crafter {
       if (!DEBUG) { 
         header('Status: 400 Bad Request'); header('HTTP/1.0 400 Bad Request');
       }
+      
       $this->content = $this->json_error($message);
       return;
     }
@@ -365,7 +368,8 @@ class admin_crafter extends template_crafter {
   
   protected function _compress_assets() {
     $this->title = 'compress assets';
-    $this->use_commander = 0;
+    $this->use_heading = 0;
+    $this->use_heading_commander = 0;
     $this->content = $this->notification(
         p('JavaScript assets have been packed and meshed; CSS assets have been minified!'),
         'success!'
