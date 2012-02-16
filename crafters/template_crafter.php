@@ -10,6 +10,9 @@ class template_crafter extends crafter {
   // id for the page heading
   protected $heading_id;
   
+  // additional classes for the page heading
+  protected $heading_class;
+  
   // additional stylesheets to use
   protected $styles;
   
@@ -33,10 +36,6 @@ class template_crafter extends crafter {
   
   // whether or not to display the heading commander
   protected $use_heading_commander;
-  
-  // whether or not a post can override page heading
-  // also used by the commander to detect whether a page _has_ overridden the heading
-  protected $override_heading;
   
   // enables anti-robot sentries
   protected $no_robots;
@@ -66,8 +65,6 @@ class template_crafter extends crafter {
     $this->use_template = 1;
     $this->use_heading = 1;
     $this->use_heading_commander = 1;
-    
-    $this->override_heading = 0;
     
     $this->no_robots = 0;
     
@@ -261,19 +258,19 @@ class template_crafter extends crafter {
   }
   
   protected function heading() {
-    // if commander is called without a heading set, use the page title for the heading
-    if (empty($this->heading))
-      $this->heading = h1($this->title);
-    
     if (!$this->use_heading && !$this->use_heading_commander)
       return '';
     
+    // if no heading is set, use the page title for the heading
+    if (empty($this->heading))
+      $this->heading = h1($this->title);
+    
     return 
     l('div')->_c('span-24')->__(
-        l('div')->_i($this->heading_id)->_c('span-16')->__(
+        l('div')->_i($this->heading_id)->_c('span-16 last '.$this->heading_class)->__(
             $this->use_heading ? $this->heading : '&nbsp;'
         ),
-        l('nav')->_i('commander')->_c('span-8 last text-right')->__($this->use_heading_commander ? $this->commands() : '&nbsp;')
+        l('nav')->_i('commander')->__($this->use_heading_commander ? $this->commands() : '&nbsp;')
     );
   }
   
@@ -393,21 +390,26 @@ class template_crafter extends crafter {
           em('no posts to display')
       );
     
+    $this->post_commanders($edit_title, $edit_tags, $delete_post);
+    
     $first = 1;
     foreach ($posts as $post) {
       $content = $this->get_post_content($post);
       
       if ($first) {
         $heading = '';
-        $this->heading = h1(
-            l_link('view/'.$post->id, htmlentities($post->title))->_('title','link to post')->_('target','_blank')
+        $this->heading = o(
+            l('h1')->_c('post-title')->__(htmlentities($post->title)),
+            $edit_title
         );
         $this->heading_id = 'post-'.$post->id.'-title';
+        $this->heading_class = 'post-title';
         $first = 0;
       } else {
         $heading =
-        l('h1')->_c('post-title')->__(
-            l_link('view/'.$post->id, htmlentities($post->title))->_('title','link to post')->_('target','_blank')
+        l('div')->_i('post-'.$post->id.'-title')->_c('span-24 post-title')->__(
+            l('h1')->_c('post-title')->__(htmlentities($post->title)),
+            $edit_title
         );
       }
       
@@ -440,12 +442,14 @@ class template_crafter extends crafter {
     $html = l('nav')->_c('span-24 page-bar text-center');
     $list = ol();
   
-    $i = 0;
-    if ($lepsilon < 1)
-      $i++;
+    $i = 1;
+    if ($lepsilon > 1)
+      $i = $lepsilon;
   
     if ($page > 1)
       $list->__(l_link($uri,'&laquo;'));
+    else
+      $list->__(span('&laquo;'));
   
     for (; $i<=$num_pages && $i<=$upsilon; $i++) {
       switch ($i) {
@@ -465,6 +469,8 @@ class template_crafter extends crafter {
   
     if ($page < $num_pages)
       $list->__(l_link($uri.$num_pages,'&raquo;'));
+    else
+      $list->__(l_link('&raquo;'));
   
     $html->__($list);
     return $html;

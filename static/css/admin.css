@@ -1,12 +1,17 @@
 /**
  * 	
- * #COMMANDER
+ * COMMANDER
  * a.k.a. sub-nav
  * 
  */
-#commander, .post-commander {
+#commander ul, .post-commander ul {
+	margin: 0;
 	padding: 0;
 	font-size: .9em;
+}
+
+#commander {
+	float: right;
 }
 
 #commander li, .post-commander li {
@@ -42,30 +47,6 @@
 
 .delete-post {
 	float: right;
-}
-
-
-/**
- * 	TITLE (h2), TAGS (.post-tags), DESCRIPTION (.post-description), META (.post-meta)
- */
-.post-title h1, .post-title h2 {
-	display: inline-block;
-	margin: 0;
-	margin-right: .3em;
-	line-height: 2em;
-}
-
-.post-tags {
-	margin: 0;
-	line-height: 1.7em;
-}
-
-.post-description {
-}
-
-.post-meta li {
-	list-style-type: square;
-	margin: 0 .1em;
 }
 
 /**

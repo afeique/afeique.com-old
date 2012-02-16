@@ -18,7 +18,6 @@ class view_crafter extends template_crafter {
     $this->title = $this->post->title;
     $prev_next = $this->prev_next();
     $this->content = o(
-        $prev_next,
         $this->read_posts(array($this->post)),
         $prev_next
     );
@@ -85,22 +84,28 @@ class view_crafter extends template_crafter {
   }
   
   protected function prev_next() {
-    $first = Post::find('first', array('order' => 'id asc'));
-    $last = Post::find('first', array('order' => 'id desc'));
-    $prev = Post::find('first', array('conditions' => 'id <'.$this->post->id, 'order' => 'id desc'));
-    $next = Post::find('first', array('conditions' => 'id >'.$this->post->id, 'order' => 'id asc'));
+    $first = Post::find('first', array('order' => 'id asc', 'limit' => '1'));
+    $last = Post::find('first', array('order' => 'id desc', 'limit' => '1'));
+    $prev = Post::find('first', array('conditions' => 'id <'.$this->post->id, 'order' => 'id desc', 'limit' => '1'));
+    $next = Post::find('first', array('conditions' => 'id >'.$this->post->id, 'order' => 'id asc', 'limit' => '1'));
     
     $html = l('nav')->_c('span-24 page-bar text-center');
     $buttons = ol();
     
-    if ($first->id < $prev->id)
-      $buttons->__(li(l_link('view/'$first->id, '&laquo;')));
-    if (isset($prev))
-      $buttons->__(li(l_link('view/'.$prev->id, '&lsaquo;')));
-    if (isset($next))
-      $buttons->__(li(l_link('view/'.$prev->id, '&lsaquo;')));
-    if ($last->id > $next->id)
-      $buttons->__(li(l_link('view/'$last->id, '&raquo;')));
+    if (isset($prev)) {
+      $buttons->__(li(l_link('view/'.$prev->id,'&laquo;')->_('title','first post')));
+      $buttons->__(li(l_link('view/'.$first->id,'&lsaquo;')->_('title','previous post')));
+    } else {
+      $buttons->__(li(span('&laquo;')->_('title','already at first post')));
+      $buttons->__(li(span('&lsaquo;')->_('title','no previous post')));
+    }
+    if (isset($next)) {
+      $buttons->__(li(l_link('view/'.$next->id,'&rsaquo;')->_('title','next post')));
+      $buttons->__(li(l_link('view/'.$last->id,'&raquo;')->_('title','most recent post')));
+    } else {
+      $buttons->__(li(span('&raquo;')->_('title','already at most recent post')));
+      $buttons->__(li(span('&rsaquo;')->_('title','no more posts')));
+    }
     
     $html->__($buttons);
     

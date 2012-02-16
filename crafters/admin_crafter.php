@@ -98,7 +98,7 @@ class admin_crafter extends template_crafter {
         mkdir($pub);
       
       $unpub = escapeshellarg(UNPUBLISHED_POSTS_PATH.$directory);
-      exec("mv $unpub $pub/");
+      exec("mv $unpub $pub");
       
       $time = time();
       
@@ -264,16 +264,18 @@ class admin_crafter extends template_crafter {
         
         exec("mv $current_path $new_path");
         
-        $post->directory = $directory;
-        $post->save();
-        
         $prepend = rtrim($this->post_path('', $post->time_first_published),'/').'/';
-        $new_value->trim_slashes()->is_dir($prepend,'/')->is_file($prepend,'/content.php');
+        $directory->trim_slashes()->is_dir($prepend)->is_file($prepend,'/content.php');
         
         $errors = $directory->errors();
         if (!empty($errors)) {
           $message = 'problem moving file to new directory';
+          $this->content = $this->json_error($message);
+          return;
         }
+        
+        $post->directory = $directory;
+        $post->save();
       } else {
         $post->$field = $$field;
         $post->save();

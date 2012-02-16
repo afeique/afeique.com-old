@@ -114,12 +114,12 @@ $link = b_link("google.com","this is a link that opens a new window on google");
 </pre>
 
 <p>
-  So what is the best way? For sake of consistency with the HTML that oohtml seeks to represent, it is recommended
-  to do things in the same order. That is, follow the second example and set element attributes <em>before</em>
-  embedding content. In cases where there are helper methods available, if there is an intent to set element
-  attributes, use <?=code('l($element_name)')?> to create the element, immediately chain attributes to it, and
-  then embed the desired content.
+  So what is the best way? In cases where large chunks of content are being embedded, it is recommended to specify
+  element attributes <em>before</em> embedding content. This also remains consistent with the HTML the oohtml represents.
+  In cases where only a small chunk of content is being embedded, it seems more prudent to chain attributes off of a 
+  helper function.
 </p>
+
 <p>
   Additionally, one should have picked up on the fact that embedding content within an element does not automatically
   escape it with <?=code('htmlentities')?>. This is on purpose, as in numerous instances, blocks of html from external

@@ -193,7 +193,14 @@ $(function() {
                   var new_title_html = original_title_html;
                   var n = 0;
                   
-                  $(new_title_html[n]).children('a').text(data.title);
+                  var linked = 0;
+                  $(new_title_html[n]).children('a').each(function() {linked = 1;});
+                  
+                  if (linked)
+                    $(new_title_html[n]).children('a').text(data.title);
+                  else
+                    $(new_title_html[n]).text(data.title);
+                    
                   abel.empty().append(new_title_html);
                 } else {
                   alert(data.error);
@@ -220,7 +227,7 @@ $(function() {
           abel.empty().append(original_title_html);
         })
     );
-    console.log(cancel);
+    
     var spinner = $(document.createElement('li'))
     .append($(document.createElement('img'))
     .attr('src', STATIC_URL+'images/spinner.gif')

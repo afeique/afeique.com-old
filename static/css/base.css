@@ -73,10 +73,24 @@ textarea {
 }
 
 /**
- * 	
- * TAGS LIST
- * 
+ * 	TITLE (h2), TAGS (.post-tags, .tags-list), DESCRIPTION (.post-description), META (.post-meta)
  */
+.post-title h1, .post-title h2 {
+	display: inline-block;
+	margin: 0;
+	margin-right: .3em;
+	line-height: 2em;
+}
+
+.post-tags {
+	margin: 0;
+	line-height: 1.7em;
+}
+
+.post-meta li {
+	list-style-type: square;
+	margin: 0 .1em;
+}
 .tags-list, .tags-list li {
 	list-style-type: none;
 	display: inline-block;
