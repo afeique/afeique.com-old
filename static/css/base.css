@@ -181,3 +181,27 @@ span.error {
 .code {
 	font-family: "Lucida Console", monospace;
 }
+
+.page-bar ol {
+	list-style-type: none;
+	margin: 0;
+	padding: 0;
+}
+
+.page-bar li {
+	display: inline-block;
+	margin: 0;
+	padding: 0;
+}
+
+.page-bar a, .page-bar span {
+	padding: .2em .4em;
+	margin: 0 .2em;
+	border: 1px solid #ddd;
+	background-color: #efefef;
+}
+
+.page-bar a:hover {
+	border-color: #aaa;
+	background-color: #ddd;
+}

@@ -50,6 +50,9 @@ class template_crafter extends crafter {
   // posts per page
   protected $ppp;
   
+  // page epsilon - number of pages on either side of current page to display when paginating
+  protected $pepsilon;
+  
   public function __construct() {
     parent::__construct();
   
@@ -72,6 +75,7 @@ class template_crafter extends crafter {
     $this->db_access_level = 'public';
     $this->meta_redirect = '';
     $this->ppp = 1;
+    $this->pepsilon = 2;
     
     $this->styles = array();
     $this->scripts = array();
@@ -90,12 +94,15 @@ class template_crafter extends crafter {
     
     $page = $this->get_page();
     $posts = Post::find('all', array('order' => 'id desc', 'limit' => $this->ppp, 'offset' => ($page-1)*$this->ppp));
+    
+    $page_bar = $this->page_bar(Post::count(), 'browse');
     $posts_html = $this->list_posts($posts);
   
     $middot = ' &middot; ';
     $this->content = o(
         p('Posts are displayed in descending order of date last modified.'),
-        $posts_html
+        $posts_html,
+        $page_bar
     );
   }
   
@@ -411,6 +418,7 @@ class template_crafter extends crafter {
             l_link('view/'.$post->id, htmlentities($post->title))->_('title','link to post')->_('target','_blank')
         );
         $this->heading_id = 'post-'.$post->id.'-title';
+        $first = 0;
       } else {
         $heading =
         l('h1')->_c('post-title')->__(
@@ -427,6 +435,54 @@ class template_crafter extends crafter {
     }
     
     return $posts_html;
+  }
+  
+  protected function page_bar($count, $uri, array $conditions=null) {
+    $page = $this->get_page();
+    $num_pages = ceil($count / $this->ppp);
+    if ($num_pages < 1)
+      $num_pages = 1;
+  
+  
+    if ($num_pages == 1)
+      return '';
+  
+    $uri = trim($uri,'/');
+    $uri .= '/';
+  
+    $lepsilon = $page-$this->pepsilon;
+    $upsilon = $page+$this->pepsilon;
+    $html = l('nav')->_c('span-24 page-bar text-center');
+    $list = l('ol');
+  
+    $i = 0;
+    if ($lepsilon < 1)
+      $i++;
+  
+    if ($page > 1)
+      $list->__(l_link($uri,'&laquo;'));
+  
+    for (; $i<=$num_pages && $i<=$upsilon; $i++) {
+      switch ($i) {
+        case ($i < 1 || $i == 0 || $i < $lepsilon || $i > $upsilon):
+          $link = '';
+          break;
+        case ($i == $page):
+          $link = l('span')->__($i);
+          break;
+        default:
+          $link = l_link($uri.$i, $i);
+        break;
+      }
+  
+      $list->__($link);
+    }
+  
+    if ($page < $num_pages)
+      $list->__(l_link($uri.$num_pages,'&raquo;'));
+  
+    $html->__($list);
+    return $html;
   }
   
   protected function get_post_content(Post $post) {
