@@ -30,12 +30,11 @@ class container {
     $contents = func_get_args();
 
     foreach ($contents as $content) {
-      if ($this->is_renderable($content)) {
-        if (is_array($content)) {
-          foreach ($content as $c)
-            $this->embed($c);
-        } else
-          $this->content[] = $content;
+      if (is_array($content)) {
+        foreach ($content as $c)
+          $this->__($c);
+      } elseif ($this->is_renderable($content)) {
+        $this->content[] = $content;
       }
     }
 

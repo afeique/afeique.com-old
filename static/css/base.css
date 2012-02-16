@@ -3,7 +3,6 @@
  * HEADER
  * 
  */
-
 header {
 	margin-bottom: .5em;
 }
@@ -28,7 +27,6 @@ header h2 {
  * usually in the header	
  * 
  */
-
 #main-nav ul {
 	text-align: right;
 }
@@ -49,7 +47,6 @@ a {
  * #MAIN-CONTENT	
  * 
  */
-
 #main-content {
 	font-size: 1.2em;
 }
@@ -77,10 +74,67 @@ textarea {
 
 /**
  * 	
+ * TAGS LIST
+ * 
+ */
+.tags-list, .tags-list li {
+	list-style-type: none;
+	display: inline-block;
+	margin: 0;
+	padding: 0;
+	margin-left: .1em;
+}
+
+.tags-list li:after {
+	content: ",";
+	margin-right: .3em;
+}
+
+.tags-list li.last:after {
+	content: "";
+	margin-right: 0;
+}
+
+/**
+ * 	
+ * PAGE BAR (PAGINATION BAR)
+ * 
+ */
+.page-bar ol, .prev-next ol {
+	list-style-type: none;
+	margin: 0;
+	padding: 0;
+}
+
+.page-bar li, .prev-next li {
+	display: inline-block;
+	margin: 0;
+	padding: 0;
+}
+
+.page-bar a, .page-bar span, .prev-next a, .prev-next span {
+	padding: .2em .4em;
+	margin: 0 .2em;
+	border: 1px solid #ddd;
+	background-color: #efefef;
+	color: #349ED2;
+}
+
+.page-bar span {
+	color: #afafaf;
+}
+
+.page-bar a:hover, .prev-next a:hover {
+	border-color: #aaa;
+	background-color: #ececec;
+	color: #294ACA;
+}
+
+/**
+ * 	
  * SMALL FORM
  * 
  */
-
 .small-form label {
 	display: block;
 	font-size: 1.1em;
@@ -111,7 +165,6 @@ textarea {
  * FOOTER
  * 
  */
-
 footer {
 	margin-top: 1em;
 	padding: .5em;
@@ -146,7 +199,6 @@ footer li.last:after {
  * INLINE ERROR STYLING
  * 
  */
-
 span.error {
 	padding: 0;
 	background-color: transparent;
@@ -158,8 +210,6 @@ span.error {
  * HELPFUL CLASSES
  * 
  */
-
-
 .text-left {
 	text-align: left;
 }
@@ -180,28 +230,4 @@ span.error {
 
 .code {
 	font-family: "Lucida Console", monospace;
-}
-
-.page-bar ol {
-	list-style-type: none;
-	margin: 0;
-	padding: 0;
-}
-
-.page-bar li {
-	display: inline-block;
-	margin: 0;
-	padding: 0;
-}
-
-.page-bar a, .page-bar span {
-	padding: .2em .4em;
-	margin: 0 .2em;
-	border: 1px solid #ddd;
-	background-color: #efefef;
-}
-
-.page-bar a:hover {
-	border-color: #aaa;
-	background-color: #ddd;
 }

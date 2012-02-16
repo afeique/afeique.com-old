@@ -16,9 +16,11 @@ class view_crafter extends template_crafter {
   
   protected function _index() {
     $this->title = $this->post->title;
+    $prev_next = $this->prev_next();
     $this->content = o(
+        $prev_next,
         $this->read_posts(array($this->post)),
-        $this->page_bar(1,'view')
+        $prev_next
     );
   }
   
@@ -42,8 +44,7 @@ class view_crafter extends template_crafter {
       );
     
     $this->content = o(
-        p('Sorry, no post could be found. Either no post with the given id exists in the database, or its content 
-            could not be found.'),
+        p('Sorry, either no post with the given id exists, or its content could not be found.'),
         $debug
     );
   }
@@ -81,6 +82,29 @@ class view_crafter extends template_crafter {
     }
     
     $this->request = '_index';
+  }
+  
+  protected function prev_next() {
+    $first = Post::find('first', array('order' => 'id asc'));
+    $last = Post::find('first', array('order' => 'id desc'));
+    $prev = Post::find('first', array('conditions' => 'id <'.$this->post->id, 'order' => 'id desc'));
+    $next = Post::find('first', array('conditions' => 'id >'.$this->post->id, 'order' => 'id asc'));
+    
+    $html = l('nav')->_c('span-24 page-bar text-center');
+    $buttons = ol();
+    
+    if ($first->id < $prev->id)
+      $buttons->__(li(l_link('view/'$first->id, '&laquo;')));
+    if (isset($prev))
+      $buttons->__(li(l_link('view/'.$prev->id, '&lsaquo;')));
+    if (isset($next))
+      $buttons->__(li(l_link('view/'.$prev->id, '&lsaquo;')));
+    if ($last->id > $next->id)
+      $buttons->__(li(l_link('view/'$last->id, '&raquo;')));
+    
+    $html->__($buttons);
+    
+    return $html;
   }
 }
 

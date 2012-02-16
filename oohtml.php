@@ -58,68 +58,69 @@ function ll($name) {
   return new element($name, $self_closing=1);
 }
 
-function shortcut($name, array $contents) {
-  $l = l($name);
-  foreach ($contents as $content)
-    $l->__($content);
-  
-  return $l;
-}
-
 function html() {
   $args = func_get_args();
-  return shortcut('html', $args);
+  return l('html')->__($args);
 }
 
 function head() {
   $args = func_get_args();
-  return shortcut('head', $args);
+  return l('head')->__($args);
 }
 
 function body() {
   $args = func_get_args();
-  return shortcut('body', $args);
+  return l('body')->__($args);
 }
 
 function h1() {
   $args = func_get_args();
-  return shortcut('h1', $args);
+  return l('h1')->__($args);
 }
 
 function h2() {
   $args = func_get_args();
-  return shortcut('h2', $args);
+  return l('h2')->__($args);
 }
 
 function h3() {
   $args = func_get_args();
-  return shortcut('h3', $args);
+  return l('h3')->__($args);
 }
 
 function ul() {
   $args = func_get_args();
-  return shortcut('ul', $args);
+  return l('ul')->__($args);
+}
+
+function ol() {
+  $args = func_get_args();
+  return l('ol')->__($args);
 }
 
 function li() {
   $args = func_get_args();
-  return shortcut('li', $args);
+  return l('li')->__($args);
 }
 
+function span() {
+  $args = func_get_args();
+  return l('span')->__($args);
+}
 
 function p() {
   $args = func_get_args();
-  return shortcut('p', $args);
+  return l('p')->__($args);
 }
 
 function em() {
   $args = func_get_args();
-  return shortcut('em', $args);
+  return l('em')->__($args);
 }
 
 function strong() {
   $args = func_get_args();
-  return shortcut('strong', $args);
+  return l('strong')->__($args);
 }
 
 function html5_doctype() {
@@ -127,7 +128,7 @@ function html5_doctype() {
 }
 
 function title($text) {
-  return shortcut('title', array( htmlentities($text) ));
+  return l('title')->__(htmlentities($text));
 }
 
 function css_link($file, $media='all') {

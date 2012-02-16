@@ -4,7 +4,6 @@
  * a.k.a. sub-nav
  * 
  */
-
 #commander, .post-commander {
 	padding: 0;
 	font-size: .9em;
@@ -28,7 +27,6 @@
  * 
  */
 
-
 /**
  * 	EDIT BUTTONS
  */
@@ -48,7 +46,7 @@
 
 
 /**
- * 	TITLE (h2), TAGS (.post-tags, .tags-list), DESCRIPTION (.post-description), META (.post-meta)
+ * 	TITLE (h2), TAGS (.post-tags), DESCRIPTION (.post-description), META (.post-meta)
  */
 .post-title h1, .post-title h2 {
 	display: inline-block;
@@ -68,24 +66,6 @@
 .post-meta li {
 	list-style-type: square;
 	margin: 0 .1em;
-}
-
-.tags-list, .tags-list li {
-	list-style-type: none;
-	display: inline-block;
-	margin: 0;
-	padding: 0;
-	margin-left: .1em;
-}
-
-.tags-list li:after {
-	content: ",";
-	margin-right: .3em;
-}
-
-.tags-list li.last:after {
-	content: "";
-	margin-right: 0;
 }
 
 /**

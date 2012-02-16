@@ -87,23 +87,8 @@ class template_crafter extends crafter {
   }
   
   protected function _index() {
-  }
-  
-  protected function _browse() {
-    $this->title = 'browse posts';
-    
-    $page = $this->get_page();
-    $posts = Post::find('all', array('order' => 'id desc', 'limit' => $this->ppp, 'offset' => ($page-1)*$this->ppp));
-    
-    $page_bar = $this->page_bar(Post::count(), 'browse');
-    $posts_html = $this->list_posts($posts);
-  
-    $middot = ' &middot; ';
-    $this->content = o(
-        p('Posts are displayed in descending order of date last modified.'),
-        $posts_html,
-        $page_bar
-    );
+    $this->title = 'emptiness';
+    $this->content = '';
   }
   
   protected function _404() {
@@ -437,7 +422,7 @@ class template_crafter extends crafter {
     return $posts_html;
   }
   
-  protected function page_bar($count, $uri, array $conditions=null) {
+  protected function page_bar($count, $uri) {
     $page = $this->get_page();
     $num_pages = ceil($count / $this->ppp);
     if ($num_pages < 1)
@@ -453,7 +438,7 @@ class template_crafter extends crafter {
     $lepsilon = $page-$this->pepsilon;
     $upsilon = $page+$this->pepsilon;
     $html = l('nav')->_c('span-24 page-bar text-center');
-    $list = l('ol');
+    $list = ol();
   
     $i = 0;
     if ($lepsilon < 1)
@@ -468,7 +453,7 @@ class template_crafter extends crafter {
           $link = '';
           break;
         case ($i == $page):
-          $link = l('span')->__($i);
+          $link = span($i);
           break;
         default:
           $link = l_link($uri.$i, $i);

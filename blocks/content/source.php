@@ -143,6 +143,8 @@ $link = b_link("google.com","this is a link that opens a new window on google");
   <li><?=code('protected function _index($arg=null)')?>&mdash;valid, but not recommended&mdash;in current implementation, no args are ever passed</li>
   <li><?=code('protected static function _index()')?>&mdash;not valid, method cannot be static</li>
   <li><?=code('protected function index()')?>&mdash;not valid, no preceding underscore</li>
+  <li><?=code('protected function _index()')?>&mdash;valid</li>
+  <li><?=code('private function index()')?>&mdash;valid</li>
 </ul>
 
 <p>

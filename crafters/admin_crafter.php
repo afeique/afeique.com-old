@@ -6,7 +6,7 @@ class admin_crafter extends template_crafter {
   }
   
   protected function _index() {
-    $this->_browse();
+    header('Location: '.BASE_URL.'browse');
   }
   
   protected function _publish() {
@@ -161,7 +161,7 @@ class admin_crafter extends template_crafter {
     
     if ($this->logged_in()) {
       $this->title = 'logged in';
-      $this->meta_redirect = 'admin/index';
+      $this->meta_redirect = 'browse';
       $this->content = $this->notification(
           p('You have successfully logged in. This page will reconstruct in '.META_REFRESH_TIME.' seconds. ',
               l_link('admin/index','Speed it up?')),
