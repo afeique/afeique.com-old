@@ -22,7 +22,7 @@ class root_crafter extends template_crafter {
   
     $middot = ' &middot; ';
     $this->content = o(
-        p('Posts are displayed in descending order of date last modified.'),
+        p('Posts are displayed in descending order of date and time published.'),
         $posts_html,
         $page_bar
     );
