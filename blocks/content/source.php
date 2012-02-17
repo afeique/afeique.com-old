@@ -11,61 +11,36 @@
 
 <h2>statement of intent</h2>
 <p>
-  This site's code was written by me for me, with the sole intention of having fun programming. Being 
-  used by other people was never on the agenda. Nevertheless, below is a general overview of the
-  framework I wrote, provided in part as documentation and in part as reading for anyone interested.
+  This site's code was written by me for me, with the sole intention of having fun programming. Being used by other people was never on the agenda. Nevertheless, below is a general overview of the framework I wrote, provided in part as documentation and in part as reading for anyone interested.
 </p>
 
 <h2>thoughts on mvc</h2>
 <p>
-  Working with the MVC pattern for several years led to an interest in combining controllers and views. 
-  The thought is that doing so may reduce or eliminate the following:
+  Working with the MVC pattern for several years led to an interest in combining controllers and views. The thought is that doing so may reduce or eliminate the following:
 <ul>
   <li>having to navigate to separate views when making modifications;</li>
   <li>needing "sub-views" for chunks of content that are reused across multiple pages;</li>
-  <li>repetition of logic.</li>
-</ul>
+  <li>repetition of logic.</li></ul>
 <p>
-  The first two bullets are important, as they force the developer to constantly navigate numerous files.
-  This seems to have a considerable impact on workflow, though the observation is completely subjective.
-  The last bullet refers to cases where <?=code('if')?>, <?=code('for')?>, and <?=code('foreach')?> clauses
-  are used to set variables passed to the view. Typically the view then has to contain some minute bits
-  of logic itself for either looping over the data, or conditionally responding to the data passed.
-</p>
+  The first two bullets are important, as they force the developer to constantly navigate numerous files. This seems to have a considerable impact on workflow, though the observation is completely subjective. The last bullet refers to cases where <?=code('if')?>, <?=code('for')?>, and <?=code('foreach')?> clauses are used to set variables passed to the view. Typically the view then has to contain some minute bits of logic itself for either looping over the data, or conditionally responding to the data passed.</p>
 <p>
-  By combining controller logic and views, it would eliminate the need for external view files. Instead,
-  HTML&mdash;or rather a representation of HTML&mdash;would be either inline with logic or offloaded into 
-  helper methods within the same class. During development, this allows for faster navigation between logic 
-  and view. Additionally, methods could be inherited by child classes, allowing for an inheritance-based 
-  templating system. Last, HTML could be generated through the same loops and conditionals that check data 
-  from the model, eliminating repetitive variables and statements.
-</p>
+  By combining controller logic and views, it would eliminate the need for external view files. Instead, HTML&mdash;or rather a representation of HTML&mdash;would be either inline with logic or offloaded into  helper methods within the same class. During development, this allows for faster navigation between logic and view. Additionally, methods could be inherited by child classes, allowing for an inheritance-based  templating system. Last, HTML could be generated through the same loops and conditionals that check data from the model, eliminating repetitive variables and statements.</p>
 
 <h2>html as php objects</h2>
 <p>
-  HTML, like XML and JSON, already notates "objects." Each HTML element is an object with its own set of attributes 
-  such as id, class, style, etc. Consequently, it is very simple to write a small library capable of generating PHP 
-  objects that represent and render to HTML.
-</p>
+  HTML, like XML and JSON, already notates "objects." Each HTML element is an object with its own set of attributes  such as id, class, style, etc. Consequently, it is very simple to write a small library capable of generating PHP  objects that represent and render to HTML.</p>
 <p>
-  PHP objects representing HTML can be embedded seamlessly within the logic,  can be loaded into helper functions 
-  within the same class (representing sub-views), and can be inherited for use in child classes. Using PHP objects 
-  representing HTML enables a new degree of code-reuse for views, and a whole system of inheritance-based templating.
-</p>
+  PHP objects representing HTML can be embedded seamlessly within the logic,  can be loaded into helper functions  within the same class (representing sub-views), and can be inherited for use in child classes. Using PHP objects  representing HTML enables a new degree of code-reuse for views, and a whole system of inheritance-based templating.</p>
 
 <h2>they call it oohtml</h2>
 <p>
-  An aside: "oohtml" stands for "object oriented HTML." While it's poorly phrased in that the HTML itself is hardly
-  object-oriented, it's aimed to convey the fact that objects represent HTML, and consequently all manner of
-  OOP advantages are now usable when constructing HTML.
-</p>
+  An aside: "oohtml" stands for "object oriented HTML." While it's poorly phrased in that the HTML itself is not object-oriented, it's aimed to convey the fact that objects represent HTML, and consequently all manner of OOP advantages are now applicable when constructing HTML.</p>
 <p>
   The current implementation of oohtml rests on three files: <?=code('/libs/container.php')?>, <?=code('/libs/element.php')?>, and <?=code('/oohtml.php')?>. Class <?=code('container')?> represents a set of "renderable" elements: anything that is either a scalar or contains a <?=code('__toString()')?> method. It has a <?=code('__($arg1, $arg2, ..., $argN)')?> method for embedding N-many elements. Once content is embedded, <?=code('container')?> can render everything as a single run-on string.</p>
 <p>
-  Perhaps intuitively, an <?=code('element')?> extends <?=code('container')?> because an <?=code('element')?> can contain N-many other elements. In contrast to  and is specifically for creating HTML elements. When being instantiated, <?=code('element')?> to be passed a name and whether or not the HTML element being represented  is self-closing (e.g. <?=code('<br />')?>). Self-closing elements can be embedded with content (as the <?=('__($arg1, $arg2, ..., $argN)')?> method from the parent container class is not overridden), but none of this content will be rendered.</p>
+  Perhaps intuitively, an <?=code('element')?> extends <?=code('container')?> because an <?=code('element')?> can contain N-many other elements. In contrast to  and is specifically for creating HTML elements. When being instantiated, <?=code('element')?> to be passed a name and whether or not the HTML element being represented  is self-closing (e.g. <?=code('<br />')?>). Self-closing elements can be embedded with content as the <?=('__($arg1, $arg2, ..., $argN)')?> method from the parent container class is not overridden, but none of this content will be rendered.</p>
 <p>
   Lastly, the <?=code('/oohtml.php')?> file contains helper functions and shortcuts for using oohtml more efficiently.</p>
-
 
 <h2>oohtml syntax</h2>
 <p>
