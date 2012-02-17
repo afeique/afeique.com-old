@@ -1,5 +1,5 @@
 <p>
-  The site source is available via a <?=b_link('http://github.com/afeique/afeique.com.git','github repository')?>.  Git-specific discussion, such as how to setup Git, how to clone a repository, and so on, are beyond the scope of this page. Here, the focus is to provide an overview of the site source. Additional documentation for the source can be written on request.</p>
+  The site source is available via a <?=b_link('http://github.com/afeique/afeique.com.git','github repository')?>.  Git-specific discussion, such as how to setup Git, how to clone a repository, and so on, are beyond the scope of this page. Here, the focus is to provide an overview of the site source. Additional documentation for the source can be written on request; refer to the <?=l_link('contact')?> page.</p>
 
 <h1>requirements</h1>
 <ul>
@@ -75,7 +75,7 @@ $link = b_link("google.com","this is a link that opens a new window on google");
   The parent of all crafters is the <?=code('abstract class crafter')?> in <?=code('/libs/crafter.php')?>. In the current site implementation, crafters keep all their page-methods protected or private, all page-methods have an _ (underscore) as their first character, and no arguments are ever passed to page-methods.</p>
 <ul>
   <li><?=code('public function _index()')?>&mdash;not valid, won't be detected as a page-method, must be protected or private</li>
-  <li><?=code('protected function _index($arg=null)')?>&mdash;valid, but not recommended&mdash;in current implementation, no args are ever passed</li>
+  <li><?=code('protected function _index($arg=null)')?>&mdash;valid, but not recommended: in the current implementation, no args are ever passed</li>
   <li><?=code('protected static function _index()')?>&mdash;not valid, method cannot be static</li>
   <li><?=code('protected function index()')?>&mdash;not valid, no preceding underscore</li>
   <li><?=code('protected function _index()')?>&mdash;valid</li>
@@ -134,7 +134,7 @@ $link = b_link("google.com","this is a link that opens a new window on google");
 <h2>
   'b' for 'blocks'</h2>
 <p>
-  In <?=code('/oohtml.php')?> there is a helper function called <?=code('b($block)')?> which specifically grabs a chunk  of static content in <?=code('/blocks')?>, fetches it through output buffering (so PHP content is still processed),  and returns the resulting output.</p>
+  In <?=code('/oohtml.php')?> there is a helper function called <?=code('b($block)')?>. This function grabs a chunk of static content in <?=code('/blocks')?> via output buffering (so PHP content is still processed),  and returns the resulting output.</p>
 
 <h2>models</h2>
 <p>
@@ -149,9 +149,7 @@ CREATE TABLE IF NOT EXISTS `posts` (
   `time_last_modified` int(10) unsigned NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `title` (`title`),
-  KEY `time_first_published` (`time_first_published`),
-  KEY `time_last_modified` (`time_last_modified`),
-  KEY `description` (`directory`)
+  KEY `description` (`description`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
 CREATE TABLE IF NOT EXISTS `tags` (
@@ -168,9 +166,23 @@ CREATE TABLE IF NOT EXISTS `post_tag_relations` (
   KEY `tag_id` (`tag_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+ALTER TABLE `posts`
+  ADD CONSTRAINT `posts_ibfk_1` FOREIGN KEY (`id`) REFERENCES `post_tag_relations` (`post_id`) 
+    ON DELETE CASCADE 
+    ON UPDATE CASCADE;
+
+ALTER TABLE `tags`
+  ADD CONSTRAINT `tags_ibfk_1` FOREIGN KEY (`id`) REFERENCES `post_tag_relations` (`tag_id`) 
+    ON DELETE CASCADE 
+    ON UPDATE CASCADE;
+
 ALTER TABLE `post_tag_relations`
-  ADD CONSTRAINT `post_tag_relations_ibfk_2` FOREIGN KEY (`tag_id`) REFERENCES `tags` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `post_tag_relations_ibfk_1` FOREIGN KEY (`post_id`) REFERENCES `posts` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+ADD CONSTRAINT `post_tag_relations_ibfk_1` FOREIGN KEY (`post_id`) REFERENCES `posts` (`id`)
+    ON DELETE RESTRICT
+    ON UPDATE RESTRICT,
+  ADD CONSTRAINT `post_tag_relations_ibfk_2` FOREIGN KEY (`tag_id`) REFERENCES `tags` (`id`)
+    ON DELETE RESTRICT
+    ON UPDATE RESTRICT;
 </pre>
 
 <h2>database access</h2>
@@ -188,7 +200,7 @@ ALTER TABLE `post_tag_relations`
   <li><?=code('$mysql_host')?></li>
   <li><?=code('$mysql_db')?></li></ul>
 <p>
-  Connect code can be found in <?=code('/crafters/template_crafter.php')?> in the <?=code('db_connect()')?> method. This method is called automatically within the <?=code('template_crafter::craft()')?> method. </p>
+  Connect code can be found in <?=code('/crafters/template_crafter.php')?> in the <?=code('db_connect()')?> method. This method is called automatically within <?=code('template_crafter::__construct()')?>. </p>
 
 <h2>admin access</h2>
 <p>
@@ -230,4 +242,4 @@ ALTER TABLE `post_tag_relations`
 
 <h2>static assets</h2>
 <p>
-  Static assets such as JavaScript, CSS, and images are placed into the individual directory <?=code('/static')?>.  On this server, that directory is pointed to by the subdomain <?=code('static.afeique.com')?>, a cookieless domain. Additionally, the server is configured to redirect <?=code('afeique.com')?> to <?=code('www.afeique.com')?> in order  that <?=code('static.afeique.com')?> remain be a cookie-less domain. Otherwise, cookies set on the  root domain  <?=code('afeique.com')?> would still be  sent to the subdomain <?=code('static.afeique.com')?> and in  some cases it would no longer be a cookieless domain.</p>
+  Static assets such as JavaScript, CSS, and images are placed into the individual directory <?=code('/static')?>.  On this server, that directory is pointed to by the subdomain <?=code('static.afeique.com')?>, a cookieless domain. Additionally, the server is configured to redirect <?=code('afeique.com')?> to <?=code('www.afeique.com')?> in order  that <?=code('static.afeique.com')?> remain a cookie-less domain. Otherwise, cookies set on the  root domain  <?=code('afeique.com')?> would still be  sent to the subdomain <?=code('static.afeique.com')?> and in  some cases it would no longer be a cookieless domain.</p>

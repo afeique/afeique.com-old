@@ -244,4 +244,6 @@ span.error {
 
 .code {
 	font-family: "Lucida Console", monospace;
+	background-color: #eaeaea;
+	padding: .2em .2em;
 }

@@ -3,6 +3,7 @@
  * stages things to give more detailed information useful for debugging
  * (e.g. ajax calls, database connects, etc)
  * sets php error_reporting to E_ALL
+ * template uses development JS and CSS instead of compressed versions
  */
 define('DEBUG', 0);
 
