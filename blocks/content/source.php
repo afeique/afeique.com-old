@@ -7,16 +7,11 @@
   <li>MySQL 5.1+</li>
   <li>Either Apache 2 or server software with <?=code('mod_rewrite')?> equivalent</li></ul>
 
-<h1>overview source</h1>
+<h1>source overview</h1>
 
-<h2>statement of intent</h2>
+<h2>relation to mvc</h2>
 <p>
-  This site's code was written by me for me, with the sole intention of having fun programming. Being used by other people was never on the agenda. Nevertheless, below is a general overview of the framework I wrote, provided in part as documentation and in part as reading for anyone interested.
-</p>
-
-<h2>thoughts on mvc</h2>
-<p>
-  Working with the MVC pattern for several years led to an interest in combining controllers and views. The thought is that doing so may reduce or eliminate the following:
+  The source code is in part an experiment in integrating views and controllers in the MVC pattern. The thought is that doing so may reduce or eliminate the following:</p>
 <ul>
   <li>having to navigate to separate views when making modifications;</li>
   <li>needing "sub-views" for chunks of content that are reused across multiple pages;</li>
