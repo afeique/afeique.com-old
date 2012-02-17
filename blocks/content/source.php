@@ -1,7 +1,7 @@
 <p>
   The site source is available via a <?=b_link('http://github.com/afeique/afeique.com.git','github repository')?>. 
   Git-specific discussion, such as how to setup Git, how to clone a repository, and so on, are beyond the scope of 
-  this page. Here, discussion will be focused upon the source itself.
+  this page. Here, the focus is to provide an overview of the site source.
 </p>
 
 <h1>requirements</h1>
