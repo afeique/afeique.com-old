@@ -252,9 +252,8 @@ class admin_crafter extends template_crafter {
               $tag = Tag::create(array('value' => $new_tag));
             
             $relation = PostTagRelation::find('first', array('post_id' => $id, 'tag_id' => $tag->id));
-            if (!isset($relation)) {
+            if (!isset($relation))
               PostTagRelation::create(array('post_id' => $id, 'tag_id' => $tag->id));
-            }
           }
         }
       } elseif ($field == 'directory') {
