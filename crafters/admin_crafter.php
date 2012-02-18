@@ -98,7 +98,7 @@ class admin_crafter extends template_crafter {
         mkdir($pub);
       
       $unpub = escapeshellarg(UNPUBLISHED_POSTS_PATH.$directory);
-      exec("mv $unpub $pub);
+      exec("mv $unpub $pub");
       
       $time = time();
       

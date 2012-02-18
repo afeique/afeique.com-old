@@ -12,7 +12,7 @@ function notes() {
       
       $html[] = implode('/', $split_notes);
     } else {
-      $strlen = strlen($note)
+      $strlen = strlen($note);
       if ($strlen > 2 || $strlen == 0)
         continue;
       
@@ -29,7 +29,8 @@ function notes() {
             $mod = '';
             break;
         }
-      }
+      } else
+        $mod = '';
       
       $note = substr($note, 0, 1);
       if (!preg_match('/[A-F]/i', $note))
