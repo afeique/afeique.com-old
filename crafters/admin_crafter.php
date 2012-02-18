@@ -98,7 +98,7 @@ class admin_crafter extends template_crafter {
         mkdir($pub);
       
       $unpub = escapeshellarg(UNPUBLISHED_POSTS_PATH.$directory);
-      exec("mv $unpub $pub");
+      exec("mv $unpub $pub);
       
       $time = time();
       
@@ -113,12 +113,11 @@ class admin_crafter extends template_crafter {
       $post = Post::create($post);
       
       // create tags if they don't exist, and create tag relations
+      $tags = $tags->shine();
       foreach ($tags as $value) {
-        try {
-          $tag = Tag::find_by_value($value);
-        } catch (ActiveRecord\RecordNotFound $e) {
+        $tag = Tag::find_by_value($value);
+        if (!isset($tag))
           $tag = Tag::create(array('value' => $value));
-        }
         
         PostTagRelation::create(array('post_id' => $post->id, 'tag_id' => $tag->id));
       }

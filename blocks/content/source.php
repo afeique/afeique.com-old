@@ -162,27 +162,16 @@ CREATE TABLE IF NOT EXISTS `tags` (
 CREATE TABLE IF NOT EXISTS `post_tag_relations` (
   `post_id` int(10) unsigned NOT NULL,
   `tag_id` int(10) unsigned NOT NULL,
-  PRIMARY KEY (`post_id`,`tag_id`),
-  KEY `tag_id` (`tag_id`)
+  PRIMARY KEY (`post_id`,`tag_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-ALTER TABLE `posts`
-  ADD CONSTRAINT `posts_ibfk_1` FOREIGN KEY (`id`) REFERENCES `post_tag_relations` (`post_id`) 
-    ON DELETE CASCADE 
-    ON UPDATE CASCADE;
-
-ALTER TABLE `tags`
-  ADD CONSTRAINT `tags_ibfk_1` FOREIGN KEY (`id`) REFERENCES `post_tag_relations` (`tag_id`) 
-    ON DELETE CASCADE 
-    ON UPDATE CASCADE;
-
 ALTER TABLE `post_tag_relations`
-ADD CONSTRAINT `post_tag_relations_ibfk_1` FOREIGN KEY (`post_id`) REFERENCES `posts` (`id`)
-    ON DELETE RESTRICT
-    ON UPDATE RESTRICT,
-  ADD CONSTRAINT `post_tag_relations_ibfk_2` FOREIGN KEY (`tag_id`) REFERENCES `tags` (`id`)
-    ON DELETE RESTRICT
-    ON UPDATE RESTRICT;
+ADD CONSTRAINT `post_fk` FOREIGN KEY (`post_id`) REFERENCES `posts` (`id`)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE,
+  ADD CONSTRAINT `tag_fk` FOREIGN KEY (`tag_id`) REFERENCES `tags` (`id`)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE;
 </pre>
 
 <h2>database access</h2>

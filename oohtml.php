@@ -123,6 +123,16 @@ function strong() {
   return l('strong')->__($args);
 }
 
+function sub() {
+  $args = func_get_args();
+  return l('sub')->__($args);
+}
+
+function sup() {
+  $args = func_get_args();
+  return l('sup')->__($args);
+}
+
 function html5_doctype() {
   return '<!DOCTYPE html>';
 }
