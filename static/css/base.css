@@ -67,6 +67,10 @@ a {
 	margin-bottom: 0;
 }
 
+#main content ul {
+	list-style-type: square;
+}
+
 textarea {
 	font-size: .9em;
 	font-family: Helvetica, sans-serif;

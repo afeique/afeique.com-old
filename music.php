@@ -5,10 +5,12 @@ function notes() {
   $html = array();
   
   foreach ($notes as $note) {
-    if (strpos($note,'/') !== false ) {
+    if (strpos($note,'/') !== false) {
       $split_notes = explode('/', $note);
-      array_walk($split_notes,'trim');
-      array_walk($split_notes,'notes');
+      
+      foreach ($split_notes as $i => $split_note) {
+        $split_notes[$i] = notes($split_note);
+      }
       
       $html[] = implode('/', $split_notes);
     } else {
@@ -33,7 +35,7 @@ function notes() {
         $mod = '';
       
       $note = substr($note, 0, 1);
-      if (!preg_match('/[A-F]/i', $note))
+      if (!preg_match('/[A-G]/i', $note))
         $note = '';
       
       if (empty($note) && empty($mod))
