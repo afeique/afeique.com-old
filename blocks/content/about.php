@@ -12,7 +12,7 @@
 
 <h2>professional experience</h2>
 <p>
-   Afeique's professional development experience includes deployment and management of best-practice HTML/CSS/JavaScript websites using <?=b_link('http://apache.org/','Apache')?>/<?=b_link('http://php.net/','PHP')?>/<?=b_link('http://dev.mysql.com/','MySQL')?>/<?=b_link('http://jquery.com','jQuery')?> running on LAMP stacks. In his current position, he primarily works with the <?=b_link('http://codeigniter.com/','CodeIgniter')?> MVC framework, and for this site, a personal framework built upon MVC principles without being "strictly MVC." His Resumé/CV is available on request.</p>
+   Afeique's professional development experience includes deployment and management of best-practice HTML/CSS/JavaScript websites using <?=b_link('http://apache.org/','Apache')?>/<?=b_link('http://dev.mysql.com/','MySQL')?>/<?=b_link('http://php.net/','PHP')?>/<?=b_link('http://jquery.com','jQuery')?> running on LAMP stacks. In his current position, he primarily works with the <?=b_link('http://codeigniter.com/','CodeIgniter')?> MVC framework, and for this site, a personal framework built upon MVC principles without being "strictly MVC." His Resumé/CV is available on request.</p>
 <ul>
   <li><?=b_link('https://plus.google.com/u/0/106624377204443744556','google+ profile')->_('rel','me')?></li>
   <li><?=b_link('http://www.linkedin.com/pub/afeique-sheikh/8/4b7/bb2','linkedin profile')?></li></ul>
