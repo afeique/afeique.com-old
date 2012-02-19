@@ -1,10 +1,10 @@
 <h2>contact</h2>
 <p>
-  To contact Afeique with personal thoughts, questions, or professional inquiries, feel free to send an e-mail to <?=strong('root at afeique dot com')?>. </p>
+  To contact Afeique with thoughts, questions, or professional inquiries, feel free to send an e-mail to <?=strong('root at afeique dot com')?>.</p>
 
 <h2>about this site</h2>
 <p>
-  This site is meant to serve as a simple area for Afeique (the author and maintainer of this site) to make posts about things he is learning and doing. It is not aimed to disperse his opinions, but rather to help him reflect upon his learnings and activities by writing about them.</p>
+  This site is meant to serve as a simple area for Afeique (the author and maintainer of this site) to make posts about things he learns and does. It is not aimed to disperse his opinions, but rather to help him review and reflect upon his activities by writing about them.</p>
 
 <h2>about afeique</h2>
 <p>
