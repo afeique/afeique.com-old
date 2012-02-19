@@ -4,7 +4,7 @@
 
 <h2>about this site</h2>
 <p>
-  This site is meant to serve as a simple area for Afeique (the author and maintainer of this site) to post things he learns and makes. It is not aimed to disperse his opinions, but to publish his creations and help him reflect upon and review his activities.</p>
+  This site is meant to serve as an area for Afeique (the author and maintainer of this site) to post things he's learned and created. It is not aimed to disperse his opinions, but to publish his creations and help him reflect upon and review his activities.</p>
 
 <h2>about afeique</h2>
 <p>
