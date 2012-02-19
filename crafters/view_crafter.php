@@ -15,7 +15,9 @@ class view_crafter extends template_crafter {
   }
   
   protected function _index() {
-    $this->title = $this->post->title;
+    $this->title = htmlentities($this->post->title);
+    $this->meta_description = htmlentities($this->post->description);
+    
     $prev_next = $this->prev_next();
     $this->content = o(
         $this->read_posts(array($this->post)),

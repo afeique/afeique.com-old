@@ -145,6 +145,11 @@ function css_link($file, $media='all') {
   return ll('link')->_('rel','stylesheet')->_t('text/css')->_h(CSS_URL.$file)->_('media', $media);
 }
 
+function script() {
+  $args = func_get_args();
+  return l('script')->__($args);
+}
+
 function script_src($src) {
   return l('script')->_t('text/javascript')->_('src', JS_URL.$src);
 }

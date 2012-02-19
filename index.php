@@ -2,21 +2,26 @@
 
 require_once 'config.php';
 
+/**
+ * if we're in DEBUG mode, show all errors;
+ * otherwise don't display any errors
+ */
 if (DEBUG)
   error_reporting(E_ALL);
 else
   error_reporting(0);
 
+// set default timezone according to config.php
 date_default_timezone_set(TIMEZONE);
 
+// start session
 session_start();
 
+// set internal language and encoding to utf-8
 mb_language('uni');
 mb_internal_encoding('utf-8');
 
-$uri = $_SERVER['REQUEST_URI'];
-
-// query lib
+// ActiveRecord ORM
 require 'libs/ActiveRecord/ActiveRecord.php';
 
 // oohtml
@@ -25,10 +30,18 @@ require 'oohtml.php';
 // validator
 require 'libs/validate.php';
 
-// base crafters
+// crafter dependencies
 require 'libs/crafter.php';
 require 'crafters/template_crafter.php';
-require 'crafters/root_crafter.php';
+
+// base crafter (crafter for pages on BASE_URL)
+require 'crafters/base_crafter.php';
+
+// google analytics tracking id
+if (is_file('analytics.php'))
+  require 'analytics.php';
+else
+  define('ANALYTICS_TRACKING_ID', 0);
 
 // parse query string
 $request = $_SERVER['QUERY_STRING'];
@@ -106,8 +119,7 @@ foreach (array_reverse($request_parts, $preserve_keys=1) as $i => $p) {
   break;
 }
 
-// if $extra array nonempty, make it
-// superglobal for easy access
+// if $extra array nonempty, make it superglobal for easy access
 if (!empty($extra)) {
   $extra = array_reverse($extra);
   $GLOBALS[EXTRA] = $extra;
@@ -115,13 +127,13 @@ if (!empty($extra)) {
 
 /**
  * if no crafter was found, create an instance
- * of root_crafter
+ * of base_crafter (crafter for pages on the BASE_URL)
  * 
  * if there was a query string, pass on the first
  * part of that request as the page request
  */
 if (!isset($crafter)) {
-  $crafter = new root_crafter;
+  $crafter = new base_crafter;
   if (!empty($request_parts))
     $page = $request_parts[0];
 }

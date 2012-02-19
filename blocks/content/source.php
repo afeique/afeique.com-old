@@ -1,5 +1,5 @@
 <p>
-  The site source is available via a <?=b_link('http://github.com/afeique/afeique.com.git','github repository')?>.  Git-specific discussion, such as how to setup Git, how to clone a repository, and so on, are beyond the scope of this page. Here, the focus is to provide an overview of the site source. Additional documentation for the source can be written on request; refer to the <?=l_link('contact')?> page.</p>
+  The site source is available via a <?=b_link('http://github.com/afeique/afeique.com.git','github repository')?>.  Git-specific discussion, such as how to setup Git, how to clone a repository, and so on, are beyond the scope of this page. Here, the focus is to provide an overview of the site source. Additional documentation for the source can be written on request; to contact me, refer to the <?=l_link('about')?> page.</p>
 
 <h1>requirements</h1>
 <ul>
@@ -201,7 +201,7 @@ ADD CONSTRAINT `post_fk` FOREIGN KEY (`post_id`) REFERENCES `posts` (`id`)
 
 <h2>security concerns</h2>
 <p>
-  For any thoughts or comments regarding security vulnerabilities and flaws, please refer to the <?=l_link('contact')?> page.</p>
+  To contact me with any thoughts or comments regarding security vulnerabilities and flaws, please refer to the <?=l_link('about')?> page.</p>
 
 <h2>debug mode</h2>
 <p>
@@ -217,7 +217,7 @@ ADD CONSTRAINT `post_fk` FOREIGN KEY (`post_id`) REFERENCES `posts` (`id`)
 <p>
   Everything is truly contingent on what you set <?=code('DEBUG')?> to in <?=code('/config.php')?>. Setting <?=code('DEBUG')?> to something nonzero will make the system use development versions of scripts and load scripts via <?=code('<script src="..."></script>')?> tags in the head. Setting <?=code('DEBUG')?> to <?=code('0')?> will make the system load "meshed" JavaScript via dynamic JavaScript-based deferment (i.e. using JavaScript to load JavaScript once the document is ready).</p>
 <p>
-  There is a tool in the admin panel for compressing JavaScript and CSS. Currently, this tool will take all JavaScript files defined in <?=code('config.php')?>, mash them together in the <em>order specified</em>, and  then pack them using <?=b_link('http://dean.edwards.name/packer/','Dean Edwards\' JavaScript packer')?>. The  resulting output will then be saved to a single file specified in <?=code('/config.php')?>.</p>
+  There is a tool in the admin panel for compressing JavaScript and CSS. Currently, this tool will take all JavaScript files defined in <?=code('/config.php')?>, mash them together in the <em>order specified</em>, and  then pack them using <?=b_link('http://dean.edwards.name/packer/','Dean Edwards\' JavaScript packer')?>. The  resulting output will then be saved to a single file specified in <?=code('/config.php')?>.</p>
 <p>
   This single file is ideal for dynamic deferment. Performing dynamic deferment without the use of a special library  such as <?=b_link('http://labjs.com/','LABjs')?> leads to potential race conditions wherein dependencies are not loaded before their dependents. However, because the tool mentioned above meshes the scripts together in the correct order, race conditions are eliminated when the single meshed file is loaded via dynamic deferment.</p>
 <p>
@@ -232,3 +232,17 @@ ADD CONSTRAINT `post_fk` FOREIGN KEY (`post_id`) REFERENCES `posts` (`id`)
 <h2>static assets</h2>
 <p>
   Static assets such as JavaScript, CSS, and images are placed into the individual directory <?=code('/static')?>.  On this server, that directory is pointed to by the subdomain <?=code('static.afeique.com')?>, a cookieless domain. Additionally, the server is configured to redirect <?=code('afeique.com')?> to <?=code('www.afeique.com')?> in order  that <?=code('static.afeique.com')?> remain a cookie-less domain. Otherwise, cookies set on the  root domain  <?=code('afeique.com')?> would still be  sent to the subdomain <?=code('static.afeique.com')?> and in  some cases it would no longer be a cookieless domain.</p>
+
+<h2>google analytics</h2>
+<p>
+  The system automatically attempts to use google analytics for tracking site metrics. Within <?=code('/index.php')?> there is a small conditional that checks for the existence of <?=code('/analytics.php')?>. The file <?=code('/analytics.php')?>  defines the constant containing the Google Analytics tracking ID and nothing more. If the file isn't found, the constant is automatically set to 0.</p>
+<p>
+  If the constant is set to a nonzero value, the <?=code('template_crafter::page_template()')?> method will embed the Google Analytics JavaScript, including the tracking ID in the constant, in the page <?=code('<head>')?>.</p>
+  
+<h2>meta</h2>
+<p>
+  To set a meta redirect to another page relative to the <?=code('BASE_URL')?>, set <?=code('$this->meta_redirect')?> from within a crafter to the URI that would be appended to the <?=code('BASE_URL')?>. The redirect time will be the value of the <?=code('META_REDIRECT_TIME')?> constant defined in <?=code('/config.php')?>.</p>
+<p>
+  Similarly, to set the meta description of a page or a set of pages, simply set the value of <?=code('$this->meta_description')?> from within a crafter.</p>
+<p>
+  Handling of these meta variables is done within the <?=code('template_crafter::page_template()')?> method.</p>

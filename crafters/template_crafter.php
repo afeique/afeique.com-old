@@ -46,6 +46,9 @@ class template_crafter extends crafter {
   // used to redirect using a meta http-equiv="refresh" with time META_REFRESH_TIME
   protected $meta_redirect;
   
+  // provides a meta description in the header
+  protected $meta_description;
+  
   // posts per page
   protected $ppp;
   
@@ -70,7 +73,10 @@ class template_crafter extends crafter {
     
     $this->db_error = '';
     $this->db_access_level = 'public';
+    
     $this->meta_redirect = '';
+    $thsi->meta_description = '';
+    
     $this->ppp = 1;
     $this->pepsilon = 2;
     
@@ -154,6 +160,11 @@ class template_crafter extends crafter {
     else
       $scripts = l('script')->_t('text/javascript')->__('function deferred_js(){var a=['.implode(',', $this->scripts).'];for(var b=0;b<a.length;b++){var c=document.createElement("script");c.src="'.JS_URL.'"+a[b];document.body.appendChild(c)}}if(window.addEventListener)window.addEventListener("load",deferred_js,false);else if(window.attachEvent)window.attachEvent("onload",deferred_js);else window.onload=deferred_js');
     
+    if (ANALYTICS_TRACKING_ID) {
+      $analytics = 'var _gaq=_gaq||[];_gaq.push(["_setAccount","'.ANALYTICS_TRACKING_ID.'"]);_gaq.push(["_trackPageview"]);(function(){var a=document.createElement("script");a.type="text/javascript";a.async=true;a.src=("https:"==document.location.protocol?"https://ssl":"http://www")+".google-analytics.com/ga.js";var b=document.getElementsByTagName("script")[0];b.parentNode.insertBefore(a,b)})()';
+      $analytics = script($analytics);
+    }
+    
     /**
      * trim slashes from meta redirect
      */
@@ -172,20 +183,22 @@ class template_crafter extends crafter {
                 implode('', $this->styles),
                 html_if('lt IE 9', script_src('html5shiv.min.js')),
                 l('script')->_t('text/javascript')->__('var BASE_URL="'.BASE_URL.'";var STATIC_URL="'.STATIC_URL.'";'),
-                ($this->no_robots ? ll('meta')->_n('robots')->_('content','noindex, noarchive, nofollow') : ''),
-                (!empty($this->meta_redirect) ? ll('meta')->_('http-equiv','refresh')->_('content', META_REFRESH_TIME.'; '.BASE_URL.$this->meta_redirect) : ''),
+                $this->no_robots ? ll('meta')->_n('robots')->_('content','noindex, noarchive, nofollow') : '',
+                $this->meta_description ? ll('meta')->_n('description')->_('content', $this->meta_description) : '',
+                $this->meta_redirect ? ll('meta')->_('http-equiv','refresh')->_('content', META_REFRESH_TIME.'; '.BASE_URL.$this->meta_redirect) : '',
                 title($this->title.' @ afeique.com'),
+                $analytics ? $analytics : '',
                 $scripts
             ),
 
             body(
                 l('div')->_i('main-container')->_c('container')->__(
-                    b('main/header'),
+                    b('template/header'),
                     l('div')->_i('main-content')->_c('span-24')->__(
                         $this->heading(),
                         $this->content
                     ),
-                    b('main/footer')
+                    b('template/footer')
                 )
             )
         )

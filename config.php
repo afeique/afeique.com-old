@@ -5,7 +5,7 @@
  * sets php error_reporting to E_ALL
  * template uses development JS and CSS instead of compressed versions
  */
-define('DEBUG', 0);
+define('DEBUG', 1);
 
 /**
  * loads all javascript inline instead of via deferment

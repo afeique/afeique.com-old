@@ -218,7 +218,7 @@ class admin_crafter extends template_crafter {
       return;
     }
     
-    $_GET[$field] = urldecode($_GET[$field]);
+    $_GET[$field] = utf8_encode(urldecode($_GET[$field]));
     if ($field == 'tags') {
       $tags = validate::ray(explode(',', $_GET['tags']));
     } else
