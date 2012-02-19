@@ -19,4 +19,4 @@
 
 <h2>additional experience</h2>
 <p>
-  Afeique also has a range of experience with other programming languages: perl, python, ruby, c, c++, assembly, shell scripting, and tcl with the tk toolkit. His preferred programming platform is Linux with either emacs or vim (he is partial to both). However, he also has experience working on Windows and Mac OS X (usually using Eclipse) and in a professional setting, is unbiased about the operating system so long as he can "get the job done."</p>
+  Afeique also has a range of experience with other programming languages: perl, python, ruby, c, c++, assembly, shell scripting, and tcl with the tk toolkit. His preferred programming platform is Linux with either emacs or vim (he is partial to both). However, he has just as much professional experience working on Windows and Mac OS X (usually using Eclipse) and is unbiased about the operating system so long as he can "get the job done."</p>
