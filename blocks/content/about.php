@@ -19,4 +19,4 @@
 
 <h2>additional experience</h2>
 <p>
-  I also has a range of experience with other programming languages: perl, python, ruby, c, c++, assembly, shell scripting, and tcl with the tk toolkit. My preferred programming platform is Linux with either emacs or vim (I'm partial to both), but I have just as much professional experience working on Windows and Mac OS X (usually using Eclipse). Consequently, I'm not concerned about what operating system I use as long as I can get the job done.</p>
+  I also has a range of experience with other programming languages: perl, python, ruby, c, c++, assembly, shell scripting, and tcl with the tk toolkit. My preferred programming platform is Linux with either emacs or vim (I'm partial to both). I have just as much professional experience working on Windows and Mac OS X (usually using Eclipse), so I'm not concerned about what operating system I use as long as I can get the job done.</p>
