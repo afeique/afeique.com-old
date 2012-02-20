@@ -140,6 +140,7 @@ textarea {
 
 .page-bar span {
 	color: #afafaf;
+	background-color: #e7e7e7;
 }
 
 .page-bar a:hover, .prev-next a:hover {

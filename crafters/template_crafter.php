@@ -77,7 +77,7 @@ class template_crafter extends crafter {
     $this->meta_redirect = '';
     $thsi->meta_description = '';
     
-    $this->ppp = 1;
+    $this->ppp = 30;
     $this->pepsilon = 2;
     
     $this->styles = array();
@@ -379,7 +379,7 @@ class template_crafter extends crafter {
     foreach ($posts as $post) {
       $heading = 
       l('h2')->_c('post-title')->__(
-          l_link('view/'.$post->id, htmlentities($post->title))->_('title','link to post')->_('target','_blank')
+          l_link('view/'.$post->id, htmlentities($post->title))->_('title','link to post')
       );
       $content = 
       l('div')->_i('post-'.$post->id.'-description')->_c('span-24 post-description')->__(
