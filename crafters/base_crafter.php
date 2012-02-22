@@ -43,10 +43,8 @@ class base_crafter extends template_crafter {
   }
   
   protected function _maintenance() {
-    $this->title = 'home';
-    $this->meta_description = "Afeique Sheikh's home on the web.";
-    $this->ppp = 1;
-    $this->post_can_override_heading = 1;
+    $this->title = 'maintenance';
+    $this->meta_description = "Site currently down for maintenance.";
     $this->use_heading = 0;
     
     $this->content = l('h1')->_c('text-center')->__('Site Down For Maintenance');
