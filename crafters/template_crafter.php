@@ -273,6 +273,9 @@ class template_crafter extends crafter {
   protected function heading() {
     if (!$this->use_heading && !$this->use_heading_commander)
       return '';
+    $c = $this->commands();
+    if (!$this->use_heading && !$c)
+      return '';
     
     // if no heading is set, use the page title for the heading
     if (empty($this->heading))
@@ -283,7 +286,7 @@ class template_crafter extends crafter {
         l('div')->_i($this->heading_id)->_c('span-16 last '.$this->heading_class)->__(
             $this->use_heading ? $this->heading : '&nbsp;'
         ),
-        l('nav')->_i('commander')->__($this->use_heading_commander ? $this->commands() : '&nbsp;')
+        l('nav')->_i('commander')->__($this->use_heading_commander ? ($c ? $c : '&nbsp;') : '&nbsp;')
     );
   }
   
@@ -295,7 +298,7 @@ class template_crafter extends crafter {
           li(l_link('admin/logout','logout')->_c('logout-button')->_('title','logout'))
       );
     } else {
-      return '&nbsp;';
+      return '';
     }
   }
   

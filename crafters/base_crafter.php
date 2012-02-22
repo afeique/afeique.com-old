@@ -42,14 +42,14 @@ class base_crafter extends template_crafter {
     $this->meta_description = 'Who is Afeique Sheikh?';
   }
   
-  protected function maintenance() {
+  protected function _maintenance() {
     $this->title = 'home';
     $this->meta_description = "Afeique Sheikh's home on the web.";
     $this->ppp = 1;
     $this->post_can_override_heading = 1;
+    $this->use_heading = 0;
     
-    $this->heading = l('h1')->_c('text-center')->__('Site Down For Maintenance');
-    $this->content = '';
+    $this->content = l('h1')->_c('text-center')->__('Site Down For Maintenance');
   }
     
 }
