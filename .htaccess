@@ -1,8 +1,6 @@
 RewriteEngine On
 RewriteCond $1 !^(index\.php|favicon\.ico|favicon\.gif|static|posts)
 RewriteRule ^(.*)$ index.php?$1 [QSA,L]
-
-# Site down for maintenance
 #RewriteRule ^(.*)$ index.php?maintenance [L]
 
 <ifmodule mod_expires.c>

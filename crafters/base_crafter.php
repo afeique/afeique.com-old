@@ -44,10 +44,10 @@ class base_crafter extends template_crafter {
   
   protected function _maintenance() {
     $this->title = 'maintenance';
-    $this->meta_description = "Site currently down for maintenance.";
+    $this->meta_description = "Down for maintenance.";
     $this->use_heading = 0;
     
-    $this->content = l('h1')->_c('text-center')->__('Site Down For Maintenance');
+    $this->content = l('h1')->_c('text-center')->__('Down for maintenance.');
   }
     
 }
