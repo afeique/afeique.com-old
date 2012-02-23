@@ -138,7 +138,7 @@ function html5_doctype() {
 }
 
 function title($text) {
-  return l('title')->__(htmlentities($text));
+  return l('title')->__(htmlspecialchars($text));
 }
 
 function css_link($file, $media='all') {
