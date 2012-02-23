@@ -15,8 +15,8 @@ class view_crafter extends template_crafter {
   }
   
   protected function _index() {
-    $this->title = htmlentities($this->post->title);
-    $this->meta_description = htmlentities($this->post->description);
+    $this->title = htmlentities($this->post->fulltext->title);
+    $this->meta_description = htmlentities($this->post->fulltext->description);
     
     $prev_next = $this->prev_next();
     $this->content = o(
@@ -70,7 +70,7 @@ class view_crafter extends template_crafter {
       return;
     }
     
-    $path = $this->post_path($this->post->directory, $this->post->time_first_published);
+    $path = $this->post_path($this->post->directory, $this->post->created_at);
     if (!is_file($path.'content.php')) {
       if (!file_exists($path))
         $this->debug[] = $path.' and content.php do not exist';

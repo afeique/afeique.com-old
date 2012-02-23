@@ -136,44 +136,6 @@ $link = b_link("google.com","this is a link that opens a new window on google");
 <p>
   In <?=code('/oohtml.php')?> there is a helper function called <?=code('b($block)')?>. This function grabs a chunk of static content in <?=code('/blocks')?> via output buffering (so PHP content is still processed),  and returns the resulting output.</p>
 
-<h2>models</h2>
-<p>
-  Currently, the site uses <?=b_link('http://www.phpactiverecord.org/','php.activerecord')?> as a database ORM. There are three tables <?=code('posts')?>, <?=code('tags')?>, and a relational table called  <?=code('post_tag_relations')?>. Every table utilizes the InnoDB engine. This is because the relational table has  <?=code('FOREIGN KEY')?> constraints to <?=code('posts')?> and <?=code('tags')?> to streamline the relational mapping. Below is the the <?=code('CREATE TABLE')?> SQL for each table, along with the <?=code('ALTER TABLE')?> SQL for <?=code('post_tag_relations')?> to establish the <?=code('FOREIGN KEY')?> constraints:</p>
-<pre class="code">
-CREATE TABLE IF NOT EXISTS `posts` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `title` varchar(250) NOT NULL,
-  `description` varchar(250) NOT NULL,
-  `directory` varchar(250) NOT NULL,
-  `time_first_published` int(10) unsigned NOT NULL,
-  `time_last_modified` int(10) unsigned NOT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `title` (`title`),
-  KEY `description` (`description`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
-
-CREATE TABLE IF NOT EXISTS `tags` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `value` varchar(250) CHARACTER SET utf8 NOT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `tag` (`value`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
-
-CREATE TABLE IF NOT EXISTS `post_tag_relations` (
-  `post_id` int(10) unsigned NOT NULL,
-  `tag_id` int(10) unsigned NOT NULL,
-  PRIMARY KEY (`post_id`,`tag_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-ALTER TABLE `post_tag_relations`
-ADD CONSTRAINT `post_fk` FOREIGN KEY (`post_id`) REFERENCES `posts` (`id`)
-    ON DELETE CASCADE
-    ON UPDATE CASCADE,
-  ADD CONSTRAINT `tag_fk` FOREIGN KEY (`tag_id`) REFERENCES `tags` (`id`)
-    ON DELETE CASCADE
-    ON UPDATE CASCADE;
-</pre>
-
 <h2>database access</h2>
 <p>
   The current setup utilizes two users configured for access to the site database: a single public user who can only perform <?=code('SELECT')?> queries; and an admin user who can perform all operations. No admin credentials are  stored in any config files. Only the public access credentials are stored.</p>

@@ -103,16 +103,22 @@ class admin_crafter extends template_crafter {
       $time = time();
       
       $post = array(
-          'title' => $title,
-          'description' => $description,
           'directory' => $directory,
-          'time_first_published' => $time,
-          'time_last_modified' => $time    
       );
       
       $post = Post::create($post);
+      $text = $this->prepare_post_text($this->get_post_content($post));
       
-      // create tags if they don't exist, and create tag relations
+      // set post fulltext
+      $post->fulltext->title = $title;
+      $post->fulltext->description = $description;
+      $post->fulltext->content = $text;
+      
+      // save post fulltext
+      $post->save();
+      
+      // create tags if they don't exist and create tag relations
+      $post->tags = array();
       $tags = $tags->shine();
       foreach ($tags as $value) {
         $tag = Tag::find_by_value($value);
@@ -232,8 +238,9 @@ class admin_crafter extends template_crafter {
         $new_tags = $tags->shine();
         
         // delete old tag relations that are no longer used
-        foreach ($post->tags as $old_tag) {
+        foreach ($post->tags as $i => $old_tag) {
           if (!in_array($old_tag->value, $new_tags)) {
+            unset($post->tags[$i]); //
             $relation = PostTagRelation::find('first', array('post_id' => $post->id, 'tag_id' => $old_tag->id));
             $relation->delete();
           }
@@ -274,9 +281,9 @@ class admin_crafter extends template_crafter {
         
         $post->directory = $directory;
         $post->save();
-      } else {
-        $post->$field = $$field;
-        $post->save();
+      } elseif (in_array($field, array('title','description'))) {
+        $post->fulltext->$field = $$field;
+        $post->fulltext->save();
       }
     } else {
       if (!DEBUG) { 
@@ -287,21 +294,10 @@ class admin_crafter extends template_crafter {
       return;
     }
   
-    $post = Post::find($id);
     if ($field != 'tags') {
-      if ($post->$field != $$field) {
-        if (!DEBUG) { 
-          header('Status: 500 Internal Server Error'); header('HTTP/1.0 500 Internal Server Error'); 
-        }
-        $this->content = $this->json_error('problem updating database');
-        return;
-      }
-      $this->content = json_encode(array($field => $post->$field));
+      $this->content = json_encode(array($field => "{$$field}"));
     } else {
-      $tags = array();
-      foreach ($post->tags as $tag)
-        $tags[] = $tag->value;
-      $this->content = json_encode(array($field => $tags));
+      $this->content = json_encode(array($field => $tags->shine()));
     }
     
   }
@@ -346,16 +342,12 @@ class admin_crafter extends template_crafter {
       return 'invalid post id "'.$id.'" specified in url; require nonzero positive integer';
     }
     
-    try {
-      $post = Post::find($id);
-    } catch (ActiveRecord\RecordNotFound $e) {
-      unset($post);
-    }
+    $post = Post::find($id);
     if (empty($post)) {
       if (!DEBUG) {
         header('Status: 404 Not Found'); header('HTTP/1.0 404 Not Found');
       }
-      return 'post with specified id "'.$id.'" not found';
+      return 'post with id "'.$id.'" not found';
     }
     
     if (!isset($_GET[$field])) {

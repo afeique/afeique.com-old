@@ -324,15 +324,15 @@ class template_crafter extends crafter {
     if ($this->logged_in()) {
       $path = l('li')->_c('post-path')->__(
           strong('path:'),' ',
-          htmlentities(rtrim($this->post_path('', $post->time_first_published),'/').'/'),
+          htmlentities(rtrim($this->post_path('', $post->created_at),'/').'/'),
           l('span')->_i('post-'.$post->id.'-directory')->_c('post-directory')->__(htmlentities($post->directory))
       );
     }
     
     $last_modified = '';
-    if ($post->time_first_published != $post->time_last_modified)
+    if ($post->created_at != $post->updated_at)
       $last_modified = l('li')->_c('post-last-modified')->__(
-          strong('last modified:'),' ', date(POST_DATE_FORMAT, $post->time_last_modified)
+          strong('updated:'),' ', date(POST_DATE_FORMAT, $post->updated_at)
       );
     
     $tags_html = l('ul')->_c('tags-list');
@@ -361,7 +361,7 @@ class template_crafter extends crafter {
         l('div')->_c('span-24 post-meta')->__(
             l('ul')->__(
                 $path,
-                li(strong('published:'),' ', date(POST_DATE_FORMAT, $post->time_first_published)),
+                li(strong('published:'),' ', date(POST_DATE_FORMAT, $post->created_at)),
                 $last_modified
             )
         )
@@ -382,11 +382,11 @@ class template_crafter extends crafter {
     foreach ($posts as $post) {
       $heading = 
       l('h2')->_c('post-title')->__(
-          l_link('view/'.$post->id, htmlentities($post->title))->_('title','link to post')
+          l_link('view/'.$post->id, htmlentities($post->fulltext->title))->_('title','link to post')
       );
       $content = 
       l('div')->_i('post-'.$post->id.'-description')->_c('span-24 post-description')->__(
-          p(htmlentities($post->description))
+          p(htmlentities($post->fulltext->description))
       );
     
       $posts_html->__($this->post_template($post, $heading, $content));
@@ -415,7 +415,7 @@ class template_crafter extends crafter {
       if ($first) {
         $heading = '';
         $this->heading = o(
-            l('h1')->_c('post-title')->__(htmlentities($post->title)),
+            l('h1')->_c('post-title')->__(htmlentities($post->fulltext->title)),
             $edit_title
         );
         $this->heading_id = 'post-'.$post->id.'-title';
@@ -424,7 +424,7 @@ class template_crafter extends crafter {
       } else {
         $heading =
         l('div')->_i('post-'.$post->id.'-title')->_c('span-24 post-title')->__(
-            l('h1')->_c('post-title')->__(htmlentities($post->title)),
+            l('h1')->_c('post-title')->__(htmlentities($post->fulltext->title)),
             $edit_title
         );
       }
@@ -493,11 +493,21 @@ class template_crafter extends crafter {
   }
   
   protected function get_post_content(Post $post) {
+    $content_file = $this->post_path($post->directory, $post->created_at).'content.php';
+    
     ob_start();
-    require $this->post_path($post->directory, $post->time_first_published).'content.php';
+    require $content_file;
     $content = ob_get_clean();
     
-    $this->use_template = isset($no_template) ? 0 : 1;
+    // update post text and time last modified if the content file was modified
+    $mtime = filemtime($content_file);
+    if ($mtime && $post->updated_at != $mtime) {
+      $text = $this->prepare_post_text($content);
+      $post->fulltext->content = $text;
+      $post->fulltext->save();
+      
+      $post->update_attributes(array('updated_at' => $mtime));
+    }
     
     if (isset($styles)) {
       if (!is_array($styles))
@@ -514,6 +524,13 @@ class template_crafter extends crafter {
     return $content;
   }
   
+  protected function prepare_post_text($content) {
+    $text = preg_replace('/<\/?[^>]+\/?>/','', $content);
+    $text = preg_replace('/\s+/',' ', $text);
+    
+    return $text;
+  }
+  
   protected function get_page($offset=0) {
     if (!isset($GLOBALS[EXTRA][$offset+1]))
       $page = 1;
@@ -526,8 +543,8 @@ class template_crafter extends crafter {
     return $page;
   }
   
-  protected function post_path($directory, $time_first_published) {
-    $t = $time_first_published;
+  protected function post_path($directory, $created_at) {
+    $t = $created_at;
     return PUBLISHED_POSTS_DIR.date('Y', $t).'/'.date('n', $t).'/'.date('j', $t).'/'.$directory.'/';
   }
   

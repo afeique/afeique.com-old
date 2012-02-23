@@ -268,7 +268,7 @@ $(function() {
     .append(' ')
     .append(editor);
     
-    var chars_left = chars_left_li(abel, 'input');
+    //var chars_left = chars_left_li(abel, 'input');
     
     var submit = $(document.createElement('li'))
     .append(
