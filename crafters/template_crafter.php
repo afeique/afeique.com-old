@@ -528,7 +528,7 @@ class template_crafter extends crafter {
     $text = preg_replace('/<\/?[^>]+\/?>/','', $content);
     $text = preg_replace('/\s+/',' ', $text);
     
-    return html_entity_decode($text);
+    return html_entity_decode($text, ENT_COMPAT, 'UTF-8');
   }
   
   protected function get_page($offset=0) {
