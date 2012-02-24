@@ -358,7 +358,7 @@ class template_crafter extends crafter {
             strong('tagged'),' ', $tags_html,' ', $edit_tags
         ),
         l('div')->_c('span-10 text-right')->__(
-            $prev_next ? $this->prev_next($post) : '&nbsp;';
+            $prev_next ? $this->prev_next($post) : '&nbsp;'
         ),
         $content,
         l('div')->_c('span-24 post-meta')->__(
