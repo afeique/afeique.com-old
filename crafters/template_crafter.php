@@ -177,6 +177,7 @@ class template_crafter extends crafter {
         html5_doctype(),
         html(
             head(
+                ll('meta')->_('charset','UTF-8'),
                 css_link('blueprint/screen.min.css'),
                 html_if('lt IE 8', css_link('blueprint/ie.min.css')),
                 css_link('jquery-ui-lightness/jquery-ui-1.8.17.min.css'),
