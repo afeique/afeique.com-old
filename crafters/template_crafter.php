@@ -317,7 +317,7 @@ class template_crafter extends crafter {
     }
   }
   
-  protected function post_template(Post $post, $heading, $content) {
+  protected function post_template(Post $post, $heading, $content, $prev_next=0) {
     $this->post_commanders($edit_title, $edit_tags, $delete_post);
     
     $path = '';
@@ -358,7 +358,7 @@ class template_crafter extends crafter {
             strong('tagged'),' ', $tags_html,' ', $edit_tags
         ),
         l('div')->_c('span-10 text-right')->__(
-            $this->prev_next($post)
+            $prev_next ? $this->prev_next($post) : '&nbsp;';
         ),
         $content,
         l('div')->_c('span-24 post-meta')->__(
@@ -437,7 +437,7 @@ class template_crafter extends crafter {
           $content
       );
     
-      $posts_html->__($this->post_template($post, $heading, $content));
+      $posts_html->__($this->post_template($post, $heading, $content, $prev_next=1));
     }
     
     return $posts_html;
