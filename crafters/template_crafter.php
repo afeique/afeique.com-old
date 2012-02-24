@@ -354,8 +354,11 @@ class template_crafter extends crafter {
             $delete_post,
             $edit_title
         ) : '',
-        l('div')->_i('post-'.$post->id.'-tags')->_c('span-24 post-tags')->__(
+        l('div')->_i('post-'.$post->id.'-tags')->_c('span-14 post-tags')->__(
             strong('tagged'),' ', $tags_html,' ', $edit_tags
+        ),
+        l('div')->_c('span-10 text-right')->__(
+            $this->prev_next($post)
         ),
         $content,
         l('div')->_c('span-24 post-meta')->__(
@@ -489,6 +492,36 @@ class template_crafter extends crafter {
       $list->__(l_link('&raquo;'));
   
     $html->__($list);
+    return $html;
+  }
+  
+  protected function prev_next(Post $post) {
+    if (!$post->prev_post_id && !$post->next_post_id)
+      return '';
+  
+    $html = l('nav')->_c('prev-next');
+    $buttons = ol();
+  
+    if ($post->prev_post_id) {
+      $prev = Post::find($post->prev_post_id);
+      $buttons->__(
+          li(
+              l_link('view/'.$prev->id, '&lsaquo; '.$prev->fulltext->title)->_('title', $prev->fulltext->title)
+          )
+      );
+    }
+  
+    if ($post->next_post_id) {
+      $next = Post::find($post->next_post_id);
+      $buttons->__(
+          li(
+              l_link('view/'.$next->id, $next->fulltext->title.' &rsaquo;')->_('title', $next->fulltext->title)
+          )
+      );
+    }
+  
+    $html->__($buttons);
+  
     return $html;
   }
   

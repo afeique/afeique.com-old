@@ -18,10 +18,8 @@ class view_crafter extends template_crafter {
     $this->title = htmlentities($this->post->fulltext->title);
     $this->meta_description = htmlentities($this->post->fulltext->description);
     
-    $prev_next = $this->prev_next();
     $this->content = o(
-        $this->read_posts(array($this->post)),
-        $prev_next
+        $this->read_posts(array($this->post))
     );
   }
   
@@ -83,35 +81,6 @@ class view_crafter extends template_crafter {
     }
     
     $this->request = '_index';
-  }
-  
-  protected function prev_next() {
-    $first = Post::find('first', array('order' => 'id asc', 'limit' => '1'));
-    $last = Post::find('first', array('order' => 'id desc', 'limit' => '1'));
-    $prev = Post::find('first', array('conditions' => 'id <'.$this->post->id, 'order' => 'id desc', 'limit' => '1'));
-    $next = Post::find('first', array('conditions' => 'id >'.$this->post->id, 'order' => 'id asc', 'limit' => '1'));
-    
-    $html = l('nav')->_c('span-24 page-bar text-center');
-    $buttons = ol();
-    
-    if (isset($prev)) {
-      $buttons->__(li(l_link('view/'.$prev->id,'&laquo;')->_('title','first post')));
-      $buttons->__(li(l_link('view/'.$first->id,'&lsaquo;')->_('title','previous post')));
-    } else {
-      $buttons->__(li(span('&laquo;')->_('title','already at first post')));
-      $buttons->__(li(span('&lsaquo;')->_('title','no previous post')));
-    }
-    if (isset($next)) {
-      $buttons->__(li(l_link('view/'.$next->id,'&rsaquo;')->_('title','next post')));
-      $buttons->__(li(l_link('view/'.$last->id,'&raquo;')->_('title','most recent post')));
-    } else {
-      $buttons->__(li(span('&raquo;')->_('title','already at most recent post')));
-      $buttons->__(li(span('&rsaquo;')->_('title','no more posts')));
-    }
-    
-    $html->__($buttons);
-    
-    return $html;
   }
 }
 

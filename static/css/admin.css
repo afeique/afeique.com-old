@@ -12,6 +12,7 @@
 
 #commander {
 	float: right;
+	padding-right: .6em;
 }
 
 #commander li, .post-commander li {
