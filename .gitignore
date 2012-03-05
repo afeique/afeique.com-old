@@ -7,3 +7,4 @@ unpublished/*
 static/files/*
 analytics.php
 sitemap.xml
+mysql_credentials.php

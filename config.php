@@ -52,4 +52,6 @@ define('EXTRA', 'extra'); // extra queries
 define('META_REFRESH_TIME', 3);
 define('POST_DATE_FORMAT', 'M j, Y @ H:i');
 
+define('MYSQL_CREDENTIALS', BASE_PATH.'mysql_credentials.php');
+
 ?>

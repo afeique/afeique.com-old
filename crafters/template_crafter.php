@@ -207,7 +207,7 @@ class template_crafter extends crafter {
   }
   
   protected function db_connect($admin_user=null, $admin_pass=null) {
-    require BASE_PATH.'../mysql_credentials.php';
+    require MYSQL_CREDENTIALS;
     
     if (isset($admin_user, $admin_pass)) {
       if (!is_string($admin_user))

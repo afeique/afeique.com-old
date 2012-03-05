@@ -131,8 +131,8 @@ $link = b_link("google.com","this is a link that opens a new window on google");
   Using helper functions dedicated to generating oohtml rather than embedding oohtml in the middle of page-methods  works well. This greatly minimizes the area taken up by page-methods while retaining overall code navigability. The code navigability part is true primarily if you use some sort of search to navigate code quickly.</p>
 <p>
   This also has the advantage of reducing code duplication by consistently favoring the creation of reusable methods.</p>
-<h2>
-  'b' for 'blocks'</h2>
+
+<h2>'b' for 'blocks'</h2>
 <p>
   In <?=code('/oohtml.php')?> there is a helper function called <?=code('b($block)')?>. This function grabs a chunk of static content in <?=code('/blocks')?> via output buffering (so PHP content is still processed),  and returns the resulting output.</p>
 
@@ -142,9 +142,7 @@ $link = b_link("google.com","this is a link that opens a new window on google");
 
 <h2>public access credentials</h2>
 <p>
-  By default, in <?=code('/config.php')?>, the "afeique.com" directory cloned from github is defined as the  <?=code('BASE_PATH')?> constant. The public access credentials are stored one directory above <?=code('BASE_PATH')?>,  which is a directory inaccessible by remote users in this setup.</p>
-<p>
-  The public access credentials are stored in <?=code('/../mysql_credentials.php')?>. It defines the following variables:</p>
+  The public access credentials are stored in <?=code('/mysql_credentials.php')?>. It defines the following variables:</p>
 <ul>
   <li><?=code('$mysql_public_user')?></li>
   <li><?=code('$mysql_public_pass')?></li>
