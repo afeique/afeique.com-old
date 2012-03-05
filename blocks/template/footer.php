@@ -6,8 +6,5 @@ else
   $date = '2011';
 
 echo l('footer')->_c('span-24 text-center')->__(
-    "&copy; $date",
-    ul(
-        li(l_link('source'))->_c('last')
-    )
+    "&copy; $date"
 );

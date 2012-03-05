@@ -30,12 +30,6 @@ class base_crafter extends template_crafter {
     );
   }
   
-  protected function _source() {
-    $this->title = 'site source';
-    $this->content = b('content/source');
-    $this->meta_description = 'Overview of the source-code and framework behind afeique.com.';
-  }
-  
   protected function _about() {
     $this->title = 'about';
     $this->content = b('content/about');
