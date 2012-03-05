@@ -37,16 +37,15 @@ define('UNPUBLISHED_POSTS_DIR','unpublished/');
 define('PUBLISHED_POSTS_PATH', BASE_PATH.PUBLISHED_POSTS_DIR);
 define('UNPUBLISHED_POSTS_PATH', BASE_PATH.UNPUBLISHED_POSTS_DIR);
 
-define('BASE_URL', 'http://'.$_SERVER['HTTP_HOST'].($_SERVER['HTTP_HOST'] == 'localhost' ? '/afeique.com/' : '/'));
-define('STATIC_URL', 'http://'.($_SERVER['HTTP_HOST'] == 'localhost' ? 'localhost/afeique.com/static/' : 'static.afeique.com/'));
+define('LOCALHOST', $_SERVER['HTTP_HOST'] == 'localhost' ? 1 : 0);
+
+define('BASE_URL', 'http://'.$_SERVER['HTTP_HOST'].(LOCALHOST ? '/afeique.com/' : '/'));
+define('STATIC_URL', 'http://'.(LOCALHOST ? 'localhost/afeique.com/static/' : 'static.afeique.com/'));
 define('CSS_URL', STATIC_URL.'css/');
 define('JS_URL', STATIC_URL.'js/');
 
 // kinda stupid... hey, at least it saves typing quotes :D
 define('LOGOUT', 'logout');
-define('USERNAME','username');
-define('PASSWORD','password');
-
 define('EXTRA', 'extra'); // extra queries
 
 define('META_REFRESH_TIME', 3);

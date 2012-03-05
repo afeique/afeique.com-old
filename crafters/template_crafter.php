@@ -536,7 +536,7 @@ class template_crafter extends crafter {
     // update post text and time last modified if the content file was modified
     $mtime = filemtime($content_file);
     if ($mtime && $post->updated_at != $mtime) {
-      $text = $this->prepare_post_text($content);
+      $text = $this->prepare_fulltext($content);
       $post->fulltext->content = $text;
       $post->fulltext->save();
       
@@ -558,7 +558,7 @@ class template_crafter extends crafter {
     return $content;
   }
   
-  protected function prepare_post_text($content) {
+  protected function prepare_fulltext($content) {
     $text = preg_replace('/<\/?[^>]+\/?>/','', $content);
     $text = preg_replace('/\s+/',' ', $text);
     
