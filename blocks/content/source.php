@@ -50,7 +50,7 @@ $link = b_link("google.com","this is a link that opens a new window on google");
 <p>
   So what is the best way? In cases where large chunks of content are being embedded, it is recommended to specify element attributes <em>before</em> embedding content. This also remains consistent with the HTML the oohtml represents. In cases where only a small chunk of content is being embedded, it seems more prudent to chain attributes off of a helper function.</p>
 <p>
-  Additionally, one should have picked up on the fact that embedding content within an element does not automatically escape it with <?=code('htmlentities')?>. This is on purpose, as in numerous instances, blocks of html from external files are embedded within elements alongside other oohtml objects. An example is this very page: it is written using straight HTML with some PHP, but rendered from within an oohtml object.</p>
+  Additionally, one should have picked up on the fact that embedding content within an element does not automatically escape it with <?=code('htmlentities')?>. This is on purpose, so blocks of html from external files are embedded within elements alongside other oohtml objects.</p>
 
 <h2>crafters, not controllers</h2>
 <p>
